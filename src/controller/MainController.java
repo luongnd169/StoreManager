@@ -1,10 +1,15 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import dao.BillDAO;
+import dao.BillDetailDAO;
 import dao.ItemDAO;
 import gui.Main;
+import model.Bill;
+import model.BillDetail;
 import model.Item;
 
 public class MainController {
@@ -23,6 +28,43 @@ public class MainController {
 			return null;
 		}
 		return listItem;
+	}
+
+	public void saveSaleBill(List<Item> listItem) {
+		Integer nextBillNo = BillDAO.getBills().get(BillDAO.getBills().size() - 1).getBillNo() + 1;
+		List<Item> list = ItemDAO.getItemes();
+		for (Item i : list) {
+			for (Item i1 : listItem) {
+				if (i1.getItemId() == i.getItemId()) {
+					i.setQuantity(i.getQuantity() - i1.getQuantity());
+				}
+			}
+		}
+		for (int i = 0; i < listItem.size(); i++) {
+			ItemDAO.update(list.get(i));
+		}
+
+		Bill bill = new Bill();
+		bill.setBillId(nextBillNo);
+		bill.setType(false);
+		bill.setDate(new Date());
+		int totalPrice = 0;
+		for (Item i : listItem) {
+			totalPrice += Integer.parseInt(i.getPrice()) * i.getQuantity();
+		}
+		bill.setTotalPrice(totalPrice + "");
+		BillDAO.insert(bill);
+		BillDetail detail = new BillDetail();
+		detail.setBillNo(nextBillNo);
+		detail.setBillType("Bán");
+		detail.setDate(new Date());
+		for(Item i : listItem){
+			detail.setName(i.getName());
+			detail.setPrice(i.getPrice());
+			BillDetailDAO.insert(detail);
+		}
+		
+
 	}
 
 	public static void main(String[] args) {

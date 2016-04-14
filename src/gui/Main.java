@@ -232,7 +232,7 @@ public class Main {
 		table_1 = new JTable();
 		table_1.setBounds(10, 150, 745, 400);
 		JScrollPane scrollPane1 = new JScrollPane(table_1);
-		scrollPane1.setBounds(10, 100, 750, 421);
+		scrollPane1.setBounds(10, 100, 750, 348);
 //		try {
 //			table_1.setModel(new TableModel(ItemDAO.getItemes()) {
 //
@@ -247,6 +247,15 @@ public class Main {
 //			e.printStackTrace();
 //		}
 		panel_3.add(scrollPane1);
+		
+		JButton btnLu = new JButton("Lưu");
+		btnLu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnLu.setBounds(602, 470, 89, 23);
+		panel_3.add(btnLu);
 		comboBox_1.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

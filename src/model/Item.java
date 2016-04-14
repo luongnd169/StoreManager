@@ -1,9 +1,14 @@
 package model;
 
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Item {
@@ -20,6 +25,7 @@ public class Item {
 
 	@Id
 	@GeneratedValue
+	@Column(name = "itemId", unique = true, nullable = false)
 	public Integer getItemId() {
 		return itemId;
 	}
