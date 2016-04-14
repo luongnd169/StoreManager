@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,18 +20,21 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 
+import controller.ComboBoxModel;
+import controller.TableModel;
 import dao.ItemDAO;
-import model.TableModel;
 
 public class Main {
 
 	private JFrame frame;
 	private JTextField txtSearch;
 	private JTable table;
-	private JTextField textField;
+	private JComboBox comboBox_1;
+	ComboBoxModel model = new ComboBoxModel();
 
 	public JTable getTable() {
 		return table;
@@ -39,9 +46,15 @@ public class Main {
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @throws InterruptedException
+	 * @throws InvocationTargetException
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+	public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+		// Auto Complete Combobox Java
+		// Enable Editing Combobox Java
+		// EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -102,6 +115,12 @@ public class Main {
 
 		txtSearch = new JTextField();
 		txtSearch.setBounds(470, 17, 200, 32);
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
 		panel_1.add(txtSearch);
 		txtSearch.setColumns(10);
 
@@ -135,22 +154,66 @@ public class Main {
 		lblName.setBounds(10, 11, 100, 40);
 		panel_2.add(lblName);
 
-		textField = new JTextField();
-		textField.setBounds(120, 11, 250, 40);
-		panel_2.add(textField);
-		textField.setColumns(10);
+		List<String> listName = ItemDAO.getItemName();
+		for (String s : listName) {
+			System.out.println(s);
+		}
+		comboBox_1 = new JComboBox<>();
+		comboBox_1.setBounds(120, 17, 250, 32);
+		comboBox_1.setEditable(true);
+		comboBox_1.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String s = comboBox_1.getEditor().getItem().toString();
+				// if(e.getKeyCode() == KeyEvent.VK_ENTER){
+				// if(comparar(s)){
+				//
+				// }
+				// } else {
+				// comboBox_1.setSelectedIndex(0);
+				// }
 
-		JButton btnAdd = new JButton("Thêm");
-		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
+						|| e.getKeyCode() == 8) {
+					comboBox_1.setModel(model.getList(s));
+					if (comboBox_1.getItemCount() > 0) {
+						comboBox_1.showPopup();
+						if (e.getKeyCode() != 8) {
+							((JTextComponent) comboBox_1.getEditor().getEditorComponent()).select(s.length(),
+									comboBox_1.getEditor().getItem().toString().length());
+							;
+						} else {
+							comboBox_1.getEditor().setItem(s);
+						}
+					} else {
+						comboBox_1.addItem(s);
+					}
+				}
+
+				super.keyReleased(e);
 			}
+
 		});
-		btnAdd.setBounds(409, 15, 67, 32);
-		panel_2.add(btnAdd);
+		panel_2.add(comboBox_1);
 
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Thống kê", null, panel_4, null);
 	}
 
+	private boolean compare(String s) {
+		Object[] list = comboBox_1.getComponents();
+		boolean flag = false;
+		for (Object object : list) {
+			if (s.equals(object)) {
+				flag = true;
+				break;
+			}
+
+		}
+		return flag;
+	}
+
+	public void search(String name) {
+
+	}
 }

@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+import model.Item;
 
 public class TableModel extends AbstractTableModel {
 
@@ -47,7 +49,7 @@ public class TableModel extends AbstractTableModel {
 
 		for (int i = 0; i < list.size(); i++) {
 			Vector dataRow = new Vector(count);
-			dataRow.addElement(list.get(i).getSn());
+			dataRow.addElement(list.get(i).getModel());
 			dataRow.addElement(list.get(i).getName());
 			dataRow.addElement(list.get(i).getType());
 			dataRow.addElement(list.get(i).getQuantity());

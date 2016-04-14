@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -37,6 +38,7 @@ public class ItemDAO {
 	}
 
 	public static List<Item> getItem(String query) {
+		System.out.println(query);
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
@@ -82,6 +84,26 @@ public class ItemDAO {
 			session.beginTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static List<String> getItemName(){
+		try {
+			Session session = utils.getSession();
+			session.beginTransaction();
+			@SuppressWarnings("unchecked")
+			List<Item> list = session.createQuery("FROM Item").list();
+			session.beginTransaction().commit();
+			List<String> listName = new ArrayList<String>();
+			if(!list.isEmpty()){
+				for(Item i : list){
+					listName.add(i.getName());
+				}
+			}
+			return listName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
