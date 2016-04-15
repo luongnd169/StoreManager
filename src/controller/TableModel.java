@@ -14,31 +14,8 @@ public class TableModel extends AbstractTableModel {
 
 	private Vector colHeaders;
 	private Vector tbData;
-	String[] colsName = { "Mã sản phẩm", "Tên sản phẩm", "Loại", "Số lượng", "Giá"};
-
-	// public TableModel(ResultSet rsData) throws Exception {
-	// ResultSetMetaData rsMeta = rsData.getMetaData();
-	//
-	// int count = rsMeta.getColumnCount();
-	//
-	// colHeaders = new Vector(count);
-	// tbData = new Vector();
-	//
-	// for (int i = 0; i < count; i++) {
-	// colHeaders.addElement(colsName[i]);
-	// }
-	//
-	// while (rsData.next()) {
-	//
-	// Vector<Object> dataRow = new Vector(count);
-	//
-	// for (int i = 1; i <= count; i++) {
-	// dataRow.addElement(rsData.getObject(i));
-	// }
-	// tbData.addElement(dataRow);
-	// }
-	// }
-
+	String[] colsName = { "Mã sản phẩm", "Tên sản phẩm", "Loại", "Số lượng", "Giá" };
+	
 	public TableModel(List<Item> list) {
 		int count = colsName.length;
 		colHeaders = new Vector(count);
