@@ -1,4 +1,3 @@
-/gui/
-/controller/
 /dao/
-/model/
+/controller/
+/gui/

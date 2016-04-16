@@ -15,7 +15,7 @@ public class TableModel extends AbstractTableModel {
 	private Vector colHeaders;
 	private Vector tbData;
 	String[] colsName = { "Mã sản phẩm", "Tên sản phẩm", "Loại", "Số lượng", "Giá" };
-	
+
 	public TableModel(List<Item> list) {
 		int count = colsName.length;
 		colHeaders = new Vector(count);
@@ -57,6 +57,12 @@ public class TableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		// return (String) colHeaders.elementAt(column);
 		return colsName[column];
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		boolean[] columnEditables = new boolean[] { false, false, false, true, true };
+		return true;
 	}
 
 }

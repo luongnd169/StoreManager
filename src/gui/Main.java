@@ -155,7 +155,7 @@ public class Main {
 			table.setModel(new TableModel(ItemDAO.getItemes()) {
 
 				private static final long serialVersionUID = 1L;
-				boolean[] columnEditables = new boolean[] { false, false, false, false, false, true, false };
+				boolean[] columnEditables = new boolean[] { false, false, false, true, true };
 
 				public boolean isCellEditable(int row, int column) {
 					return columnEditables[column];
@@ -170,10 +170,10 @@ public class Main {
 		tabbedPane.addTab("Nhập/Xuất", null, panel_2, null);
 		panel_2.setLayout(null);
 
-//		List<String> listName = ItemDAO.getItemName();
-//		for (String s : listName) {
-//			System.out.println(s);
-//		}
+		// List<String> listName = ItemDAO.getItemName();
+		// for (String s : listName) {
+		// System.out.println(s);
+		// }
 
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_1.setBounds(0, 0, 769, 532);
@@ -185,77 +185,83 @@ public class Main {
 		panel_3.setLayout(null);
 
 		JLabel lblName = new JLabel("Sản phẩm");
-		lblName.setBounds(63, 25, 62, 17);
+		lblName.setBounds(63, 18, 62, 17);
 		panel_3.add(lblName);
 		lblName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		comboBox_1 = new JComboBox<>();
-		comboBox_1.setBounds(169, 18, 240, 34);
+		comboBox_1.setBounds(169, 11, 240, 34);
 		panel_3.add(comboBox_1);
 		comboBox_1.setEditable(true);
-
-		JButton btnThm = new JButton("Thêm");
-		btnThm.setBounds(446, 24, 72, 23);
-		btnThm.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Before: " + listItem.size());
-				controller = new MainController();
-				listItem.add(controller.addItemToList(listItem, comboBox_1.getEditor().getItem().toString()).get(0));
-//				listItem = controller.addItemToList(listItem, comboBox_1.getEditor().getItem().toString());
-				System.out.println("After: " + listItem.size());
-				try {
-				table_1.setModel(new TableModel(listItem) {
-					private static final long serialVersionUID = 1L;
-					boolean[] columnEditables = new boolean[] { false, false, false, false, false, true, false };
-	
-					public boolean isCellEditable(int row, int column) {
-						return columnEditables[column];
-					}
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			}
-		});
-		panel_3.add(btnThm);
-
-		JRadioButton rdbtnThanhTonNgay = new JRadioButton("Thanh toán");
-		rdbtnThanhTonNgay.setBounds(582, 7, 109, 23);
-		panel_3.add(rdbtnThanhTonNgay);
-
-		JRadioButton rdbtnCngN = new JRadioButton("Công nợ");
-		rdbtnCngN.setBounds(582, 29, 109, 23);
-		panel_3.add(rdbtnCngN);
-
+		
 		table_1 = new JTable();
 		table_1.setBounds(10, 150, 745, 400);
 		JScrollPane scrollPane1 = new JScrollPane(table_1);
 		scrollPane1.setBounds(10, 100, 750, 348);
-//		try {
-//			table_1.setModel(new TableModel(ItemDAO.getItemes()) {
-//
-//				private static final long serialVersionUID = 1L;
-//				boolean[] columnEditables = new boolean[] { false, false, false, false, false, true, false };
-//
-//				public boolean isCellEditable(int row, int column) {
-//					return columnEditables[column];
-//				}
-//			});
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		table_1.setEditingColumn(3);
 		panel_3.add(scrollPane1);
 		
+		JButton btnThm = new JButton("Thêm");
+		btnThm.setBounds(419, 17, 72, 23);
+		btnThm.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller = new MainController();
+				listItem.add(controller.addItemToList(listItem, comboBox_1.getEditor().getItem().toString()).get(0));
+				for(Item i : listItem){
+					i.setQuantity(0);
+					i.setPrice("");
+				}
+				// listItem = controller.addItemToList(listItem,
+				// comboBox_1.getEditor().getItem().toString());
+				try {
+					table_1.setModel(new TableModel(listItem) {
+						// private static final long serialVersionUID = 1L;
+						// boolean[] columnEditables = new boolean[] { false,
+						// false, false, true, true };
+						//
+						// public boolean isCellEditable(int row, int column) {
+						// return columnEditables[column];
+						// }
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		panel_3.add(btnThm);
+
+//		JRadioButton rdbtnThanhTonNgay = new JRadioButton("Thanh toán");
+//		rdbtnThanhTonNgay.setBounds(582, 7, 109, 23);
+//		panel_3.add(rdbtnThanhTonNgay);
+//
+//		JRadioButton rdbtnCngN = new JRadioButton("Công nợ");
+//		rdbtnCngN.setBounds(582, 29, 109, 23);
+//		panel_3.add(rdbtnCngN);
+
+	
+
 		JButton btnLu = new JButton("Lưu");
 		btnLu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				// System.out.println(table.getCellEditor().getCellEditorValue().toString());
+				controller.saveSaleBill(listItem);
+				System.out.println("done");
 			}
 		});
 		btnLu.setBounds(602, 470, 89, 23);
 		panel_3.add(btnLu);
+		
+		JLabel lblSLng = new JLabel("Số lượng\r\n");
+		lblSLng.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSLng.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSLng.setBounds(63, 61, 62, 17);
+		panel_3.add(lblSLng);
+		
+		final JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setBounds(169, 61, 50, 20);
+		panel_3.add(comboBox_2);
 		comboBox_1.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -275,13 +281,20 @@ public class Main {
 						if (e.getKeyCode() != 8) {
 							((JTextComponent) comboBox_1.getEditor().getEditorComponent()).select(s.length(),
 									comboBox_1.getEditor().getItem().toString().length());
-							;
+							String name = comboBox_1.getEditor().getItem().toString();
+							int index = 0 ;
+							index = ItemDAO.getItem("FROM Item where name = '" + name + "'").get(0).getQuantity();
+							for(int i = 1; i <= index; i++){
+								comboBox_2.addItem(i);
+							}
 						} else {
 							comboBox_1.getEditor().setItem(s);
+							
 						}
 					} else {
 						comboBox_1.addItem(s);
 					}
+					
 				}
 
 				super.keyReleased(e);

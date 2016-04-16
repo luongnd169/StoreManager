@@ -13,6 +13,7 @@ public class BillDetail {
 	private Integer billNo;
 	private String billType;
 	private String price;
+	private Integer quantity;
 	private Date date;
 
 	public BillDetail() {
@@ -67,6 +68,14 @@ public class BillDetail {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 }

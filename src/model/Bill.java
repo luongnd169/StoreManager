@@ -12,7 +12,7 @@ import javax.persistence.TemporalType;
 public class Bill {
 	private Integer billId;
 	private Integer billNo;
-	private Boolean type;
+	private String type;
 	private String totalPrice;
 	private Date date;
 
@@ -38,11 +38,11 @@ public class Bill {
 		this.billNo = billNo;
 	}
 
-	public Boolean isType() {
+	public String isType() {
 		return type;
 	}
 
-	public void setType(Boolean type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
@@ -61,6 +61,12 @@ public class Bill {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	@Override
+	public String toString() {
+		return "Bill [billId=" + billId + ", billNo=" + billNo + ", type=" + type + ", totalPrice=" + totalPrice
+				+ ", date=" + date + "]";
 	}
 
 }
