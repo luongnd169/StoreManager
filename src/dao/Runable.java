@@ -1,11 +1,7 @@
 package dao;
 
-import java.util.Date;
-
-import org.hibernate.Session;
-
-import model.Bill;
-import model.Item;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Runable {
 
@@ -46,6 +42,7 @@ public class Runable {
 //
 //		session.getTransaction().commit();
 //		System.out.println("done");
+		System.out.println(Integer.parseInt(NumberFormat.getNumberInstance(Locale.US).format(35634646)));
 
 	}
 
