@@ -20,14 +20,9 @@ public class MainController {
 
 	}
 
-	public List<Item> addItemToList(List<Item> listItem, String name) {
-		System.out.println("Item name: " + name);
-		listItem = ItemDAO.getItem("FROM Item where name = '" + name + "'");
-		System.out.println("Size: " + listItem.size());
-		if (listItem.isEmpty()) {
-			return null;
-		}
-		return listItem;
+	public void addItemToList(List<Item> listItem, String name) {
+		System.out.println("Name = " + ItemDAO.getItem("FROM Item where name = '" + name + "'").get(0).getName());
+		listItem.add(ItemDAO.getItem("FROM Item where name = '" + name + "'").get(0));
 	}
 
 	public void saveSaleBill(List<Item> listItem) {
@@ -36,15 +31,15 @@ public class MainController {
 			nextBillNo = BillDAO.getBills().get(BillDAO.getBills().size() - 1).getBillNo() + 1;
 		}
 		List<Item> list = ItemDAO.getItemes();
-		for (Item i : list) {
-			for (Item i1 : listItem) {
-				if (i1.getItemId() == i.getItemId()) {
-					i.setQuantity(i.getQuantity() - i1.getQuantity());
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < listItem.size(); j++) {
+				if (list.get(i).getItemId().equals(listItem.get(j).getItemId())) {
+					list.get(i).setQuantity(list.get(i).getQuantity() - listItem.get(j).getQuantity());
 				}
 			}
 		}
-		for (int i = 0; i < listItem.size(); i++) {
-			ItemDAO.update(list.get(i));
+		for (Item i : list) {
+			ItemDAO.update(i);
 		}
 
 		Bill bill = new Bill();
@@ -60,11 +55,12 @@ public class MainController {
 		BillDAO.insert(bill);
 		BillDetail detail = new BillDetail();
 		detail.setBillNo(nextBillNo);
-		detail.setBillType("Bán");
+		detail.setBillType("Xuất");
 		detail.setDate(new Date());
 		for (Item i : listItem) {
 			detail.setName(i.getName());
 			detail.setPrice(i.getPrice());
+			detail.setQuantity(i.getQuantity());
 			BillDetailDAO.insert(detail);
 		}
 
