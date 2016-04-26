@@ -1,8 +1,5 @@
 package controller;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -14,7 +11,7 @@ public class TableModel extends AbstractTableModel {
 
 	private Vector colHeaders;
 	private Vector tbData;
-	String[] colsName = { "Mã sản phẩm", "Tên sản phẩm", "Loại", "Số lượng", "Giá" };
+	String[] colsName = {"Tên sản phẩm", "Loại", "Số lượng", "Giá" };
 
 	public TableModel(List<Item> list) {
 		int count = colsName.length;
@@ -26,7 +23,7 @@ public class TableModel extends AbstractTableModel {
 
 		for (int i = 0; i < list.size(); i++) {
 			Vector dataRow = new Vector(count);
-			dataRow.addElement(list.get(i).getModel());
+//			dataRow.addElement(list.get(i).getModel());
 			dataRow.addElement(list.get(i).getName());
 			dataRow.addElement(list.get(i).getType());
 			dataRow.addElement(list.get(i).getQuantity());

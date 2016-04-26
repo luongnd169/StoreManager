@@ -4,33 +4,43 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 
 import controller.ComboBoxModel;
 import controller.MainController;
 import controller.TableModel;
 import dao.ItemDAO;
+import dao.ItemDetailDAO;
 import lib.Convert;
 import model.Item;
+import model.ItemDetail;
 
 public class Main {
 
@@ -48,6 +58,78 @@ public class Main {
 	JComboBox comboBoxSearch;
 	int index = 0;
 	private JTextField txtTongTien;
+	private JTextField txtMaSP;
+	private JTextField txtChungLoai;
+	private JTextField txtSoLng;
+	private JTextField txtTenSP;
+	private JTextField txtMauSac;
+	private JTextField txtGia;
+	private JTextField txtGhiChu;
+	private JTextField txtKhac;
+
+	public JTextField getTxtMaSP() {
+		return txtMaSP;
+	}
+
+	public void setTxtMaSP(JTextField txtMaSP) {
+		this.txtMaSP = txtMaSP;
+	}
+
+	public JTextField getTxtChungLoai() {
+		return txtChungLoai;
+	}
+
+	public void setTxtChungLoai(JTextField txtChungLoai) {
+		this.txtChungLoai = txtChungLoai;
+	}
+
+	public JTextField getTxtSoLng() {
+		return txtSoLng;
+	}
+
+	public void setTxtSoLng(JTextField txtSoLng) {
+		this.txtSoLng = txtSoLng;
+	}
+
+	public JTextField getTxtTenSP() {
+		return txtTenSP;
+	}
+
+	public void setTxtTenSP(JTextField txtTenSP) {
+		this.txtTenSP = txtTenSP;
+	}
+
+	public JTextField getTxtMauSac() {
+		return txtMauSac;
+	}
+
+	public void setTxtMauSac(JTextField txtMauSac) {
+		this.txtMauSac = txtMauSac;
+	}
+
+	public JTextField getTxtGia() {
+		return txtGia;
+	}
+
+	public void setTxtGia(JTextField txtGia) {
+		this.txtGia = txtGia;
+	}
+
+	public JTextField getTxtGhiChu() {
+		return txtGhiChu;
+	}
+
+	public void setTxtGhiChu(JTextField txtGhiChu) {
+		this.txtGhiChu = txtGhiChu;
+	}
+
+	public JTextField getTxtKhac() {
+		return txtKhac;
+	}
+
+	public void setTxtKhac(JTextField txtKhac) {
+		this.txtKhac = txtKhac;
+	}
 
 	public JComboBox getComboBox_1() {
 		return comboBoxTimSP;
@@ -98,11 +180,13 @@ public class Main {
 	 */
 	public Main() {
 		initialize();
+		controller = new MainController();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 800, 600);
@@ -125,14 +209,14 @@ public class Main {
 		JLabel lblSearch = new JLabel("Tìm kiếm");
 		lblSearch.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearch.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSearch.setBounds(38, 27, 100, 40);
+		lblSearch.setBounds(10, 27, 100, 40);
 		panelTonKho.add(lblSearch);
 
 		table = new JTable();
-		table.setBounds(10, 100, 750, 421);
+		table.setBounds(10, 100, 750, 215);
 		table.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scrollPaneTonKho = new JScrollPane(table);
-		scrollPaneTonKho.setBounds(10, 100, 750, 421);
+		scrollPaneTonKho.setBounds(10, 306, 750, 215);
 		try {
 			table.setModel(new TableModel(ItemDAO.getItemes()) {
 
@@ -146,11 +230,40 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		if (true) { // true by default
+			ListSelectionModel rowSM = table.getSelectionModel();
+			rowSM.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					// Ignore extra messages.
+					if (e.getValueIsAdjusting())
+						return;
+
+					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+					if (lsm.isSelectionEmpty()) {
+						System.out.println("No rows are selected.");
+					} else {
+						Item item = ItemDAO.getItemes().get(lsm.getMinSelectionIndex());
+						ItemDetail itemDetail = ItemDetailDAO.getItemDetail(item.getItemId());
+						txtMaSP.setText(item.getModel());
+						txtTenSP.setText(item.getName());
+						txtChungLoai.setText(item.getType());
+						txtSoLng.setText(item.getQuantity() + "");
+						txtGia.setText(item.getPrice());
+						txtMauSac.setText(itemDetail.getColor());
+						txtKhac.setText(itemDetail.getImei());
+					}
+				}
+			});
+		} else {
+			table.setRowSelectionAllowed(false);
+		}
 		panelTonKho.add(scrollPaneTonKho);
 
 		comboBoxSearch = new JComboBox();
 		comboBoxSearch.setEditable(true);
-		comboBoxSearch.setBounds(148, 33, 200, 32);
+		comboBoxSearch.setBounds(120, 33, 200, 32);
 		comboBoxSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -192,6 +305,149 @@ public class Main {
 		});
 		panelTonKho.add(comboBoxSearch);
 
+		JRadioButton rdbtnTenSP = new JRadioButton("Tên sản phẩm");
+		rdbtnTenSP.setBounds(120, 7, 109, 23);
+		panelTonKho.add(rdbtnTenSP);
+		rdbtnTenSP.setSelected(true);
+		ButtonModel btnModel = rdbtnTenSP.getModel();
+
+		JRadioButton rdbtnSoImei = new JRadioButton("Số imei");
+		rdbtnSoImei.setBounds(231, 7, 109, 23);
+		panelTonKho.add(rdbtnSoImei);
+
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnSoImei);
+		group.add(rdbtnTenSP);
+
+		JPanel panelThongtin = new JPanel();
+		panelThongtin.setBounds(10, 78, 750, 217);
+		panelTonKho.add(panelThongtin);
+		panelThongtin.setLayout(null);
+
+		JLabel lblMaSP = new JLabel("Mã sản phẩm");
+		lblMaSP.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblMaSP.setBounds(10, 12, 90, 25);
+		panelThongtin.add(lblMaSP);
+
+		txtMaSP = new JTextField();
+		txtMaSP.setEditable(false);
+		txtMaSP.setBounds(110, 14, 190, 22);
+		panelThongtin.add(txtMaSP);
+		txtMaSP.setColumns(10);
+
+		JLabel lblTenSP = new JLabel("Tên sản phẩm");
+		lblTenSP.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblTenSP.setBounds(372, 12, 90, 25);
+		panelThongtin.add(lblTenSP);
+
+		txtChungLoai = new JTextField();
+		txtChungLoai.setEditable(false);
+		txtChungLoai.setColumns(10);
+		txtChungLoai.setBounds(110, 67, 190, 22);
+		panelThongtin.add(txtChungLoai);
+
+		JLabel lblGia = new JLabel("Giá");
+		lblGia.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblGia.setBounds(372, 119, 90, 25);
+		panelThongtin.add(lblGia);
+
+		txtSoLng = new JTextField();
+		txtSoLng.setEditable(false);
+		txtSoLng.setColumns(10);
+		txtSoLng.setBounds(110, 119, 190, 22);
+		panelThongtin.add(txtSoLng);
+
+		JLabel lblChungLoai = new JLabel("Chủng loại");
+		lblChungLoai.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblChungLoai.setBounds(10, 65, 90, 25);
+		panelThongtin.add(lblChungLoai);
+
+		txtTenSP = new JTextField();
+		txtTenSP.setEditable(false);
+		txtTenSP.setColumns(10);
+		txtTenSP.setBounds(472, 15, 190, 22);
+		panelThongtin.add(txtTenSP);
+
+		JLabel lblSoLng = new JLabel("Số lượng");
+		lblSoLng.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblSoLng.setBounds(10, 119, 90, 25);
+		panelThongtin.add(lblSoLng);
+
+		txtMauSac = new JTextField();
+		txtMauSac.setEditable(false);
+		txtMauSac.setColumns(10);
+		txtMauSac.setBounds(472, 68, 190, 22);
+		panelThongtin.add(txtMauSac);
+
+		JLabel lblMauSac = new JLabel("Màu sắc");
+		lblMauSac.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblMauSac.setBounds(372, 65, 90, 25);
+		panelThongtin.add(lblMauSac);
+
+		txtGia = new JTextField();
+		txtGia.setEditable(false);
+		txtGia.setColumns(10);
+		txtGia.setBounds(472, 120, 190, 22);
+		panelThongtin.add(txtGia);
+
+		JLabel lblGhiChu = new JLabel("Ghi chú");
+		lblGhiChu.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblGhiChu.setBounds(10, 169, 90, 25);
+		panelThongtin.add(lblGhiChu);
+
+		txtGhiChu = new JTextField();
+		txtGhiChu.setEditable(false);
+		txtGhiChu.setColumns(10);
+		txtGhiChu.setBounds(110, 169, 190, 22);
+		panelThongtin.add(txtGhiChu);
+
+		JLabel lblKhac = new JLabel("Khác");
+		lblKhac.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblKhac.setBounds(372, 169, 90, 25);
+		panelThongtin.add(lblKhac);
+
+		txtKhac = new JTextField();
+		txtKhac.setEditable(false);
+		txtKhac.setColumns(10);
+		txtKhac.setBounds(472, 170, 190, 22);
+		panelThongtin.add(txtKhac);
+
+		JLabel lblKho = new JLabel("Kho");
+		lblKho.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblKho.setBounds(455, 36, 50, 25);
+		panelTonKho.add(lblKho);
+
+		JComboBox comboKho = new JComboBox();
+		comboKho.setBounds(506, 39, 100, 20);
+		comboKho.addItem("Tất cả");
+		comboKho.addItem("Điện thoại");
+		comboKho.addItem("Máy tính bảng");
+		comboKho.addItem("Linh kiện");
+		comboKho.addItem("Phụ kiện");
+		ItemListener itemListener = new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getItem().equals("Tất cả")){
+					table.setModel(new TableModel(ItemDAO.getItemes()));
+				}
+				else if (e.getItem().equals("Điện thoại")) {
+					System.out.println("Kho 1");
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Smartphone'")));
+				} else if (e.getItem().equals("Máy tính bảng")) {
+					System.out.println("Kho 2");
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Tablet'")));
+				} else if (e.getItem().equals("Linh kiện")) {
+					System.out.println("Kho 3");
+				} else if (e.getItem().equals("Phụ kiện")) {
+					System.out.println("Kho 4");
+				}
+
+			}
+		};
+		comboKho.addItemListener(itemListener);
+		panelTonKho.add(comboKho);
+
 		JPanel panelNhapXuat = new JPanel();
 		tabbedPane.addTab("Nhập/Xuất", null, panelNhapXuat, null);
 		panelNhapXuat.setLayout(null);
@@ -229,7 +485,8 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Item i = ItemDAO.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
+				Item i = ItemDAO
+						.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
 						.get(0);
 				i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
 				i.setPrice(txtGiaXuat.getText().trim());

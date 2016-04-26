@@ -1,20 +1,21 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import dao.BillDAO;
 import dao.BillDetailDAO;
 import dao.ItemDAO;
+import dao.ItemDetailDAO;
 import gui.Main;
 import model.Bill;
 import model.BillDetail;
 import model.Item;
+import model.ItemDetail;
 
 public class MainController {
 
-	Main main = new Main();
+	Main main;
 
 	public MainController() {
 
@@ -66,9 +67,18 @@ public class MainController {
 
 	}
 
-	public static void main(String[] args) {
-		List<Item> list = new ArrayList<Item>();
-		// System.out.println(addItemToList(list).size() + "abc");
+	public void showItemSelected(int selectedRow) {
+		main  = new Main();
+		System.out.println(selectedRow);
+		Item item = ItemDAO.getItemes().get(selectedRow);
+		ItemDetail itemDetail = ItemDetailDAO.getItemDetail(item.getItemId());
+		main.getTxtMaSP().setText(item.getItemId() + "");
+		main.getTxtTenSP().setText(item.getName());
+		main.getTxtChungLoai().setText(item.getType());
+		main.getTxtSoLng().setText(item.getQuantity() + "");
+		main.getTxtGia().setText(item.getPrice());
+		main.getTxtMauSac().setText(itemDetail.getColor());
+		main.getTxtKhac().setText(itemDetail.getImei());
 	}
 
 }
