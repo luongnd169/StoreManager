@@ -66,6 +66,8 @@ public class Main {
 	private JTextField txtGia;
 	private JTextField txtGhiChu;
 	private JTextField txtKhac;
+	private JRadioButton rdbtnTenSP;
+	private JRadioButton rdbtnSoImei;
 
 	public JTextField getTxtMaSP() {
 		return txtMaSP;
@@ -267,22 +269,50 @@ public class Main {
 		comboBoxSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
+				boolean mode = true;
 				String name = comboBoxSearch.getEditor().getItem().toString();
+				if (rdbtnTenSP.isSelected()) {
+					mode = true;
+				} else if (rdbtnSoImei.isSelected()) {
+					mode = false;
+				}
+
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (name.equals("")) {
 						table.setModel(new TableModel(ItemDAO.getItemes()));
-					}
-					String query = "FROM Item where name LIKE '" + name + "%'";
-					if (!ItemDAO.getItem(query).isEmpty()) {
-						table.setModel(new TableModel(ItemDAO.getItem(query)));
+						System.out.println("Check");
 					} else {
-						table.setModel(new TableModel(ItemDAO.getItemes()));
+						if (mode) {
+							String query = "FROM Item where name LIKE '" + name + "%'";
+							if (!ItemDAO.getItem(query).isEmpty()) {
+								table.setModel(new TableModel(ItemDAO.getItem(query)));
+							} else {
+								table.setModel(new TableModel(ItemDAO.getItemes()));
+							}
+						} else {
+							String query = "FROM ItemDetail where imei LIKE '" + name + "%'";
+							if (!ItemDetailDAO.getItemDetail(query).isEmpty()) {
+								List<ItemDetail> listDetail = ItemDetailDAO.getItemDetail(query);
+								List<Item> listIt = new ArrayList<Item>();
+								for (int i = 0; i < listDetail.size(); i++) {
+									listIt.add(ItemDAO.getItem(listDetail.get(i).getItemId()));
+								}
+								table.setModel(new TableModel(listIt));
+							} else {
+								table.setModel(new TableModel(ItemDAO.getItemes()));
+							}
+						}
 					}
-
 				}
+
 				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
 						|| e.getKeyCode() == 8) {
-					comboBoxSearch.setModel(model.getList(name));
+					if (mode) {
+						comboBoxSearch.setModel(model.getList(name));
+					} else {
+						System.out.println("Mode: " + mode);
+						comboBoxSearch.setModel(model.getListByImei(name));
+					}
 					if (comboBoxSearch.getItemCount() > 0) {
 						comboBoxSearch.showPopup();
 						if (e.getKeyCode() != 8) {
@@ -305,13 +335,13 @@ public class Main {
 		});
 		panelTonKho.add(comboBoxSearch);
 
-		JRadioButton rdbtnTenSP = new JRadioButton("Tên sản phẩm");
+		rdbtnTenSP = new JRadioButton("Tên sản phẩm");
 		rdbtnTenSP.setBounds(120, 7, 109, 23);
 		panelTonKho.add(rdbtnTenSP);
 		rdbtnTenSP.setSelected(true);
 		ButtonModel btnModel = rdbtnTenSP.getModel();
 
-		JRadioButton rdbtnSoImei = new JRadioButton("Số imei");
+		rdbtnSoImei = new JRadioButton("Số imei");
 		rdbtnSoImei.setBounds(231, 7, 109, 23);
 		panelTonKho.add(rdbtnSoImei);
 
@@ -428,10 +458,9 @@ public class Main {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getItem().equals("Tất cả")){
+				if (e.getItem().equals("Tất cả")) {
 					table.setModel(new TableModel(ItemDAO.getItemes()));
-				}
-				else if (e.getItem().equals("Điện thoại")) {
+				} else if (e.getItem().equals("Điện thoại")) {
 					System.out.println("Kho 1");
 					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Smartphone'")));
 				} else if (e.getItem().equals("Máy tính bảng")) {
