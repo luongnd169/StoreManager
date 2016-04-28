@@ -55,83 +55,13 @@ public class Main {
 	private JTextField txtGiaXuat;
 	private JTextField txtLoiNhuan;
 	JComboBox comboBoxSoLuong;
-	JComboBox comboBoxSearch;
 	int index = 0;
 	private JTextField txtTongTien;
-	private JTextField txtMaSP;
-	private JTextField txtChungLoai;
-	private JTextField txtSoLng;
-	private JTextField txtTenSP;
-	private JTextField txtMauSac;
-	private JTextField txtGia;
-	private JTextField txtGhiChu;
-	private JTextField txtKhac;
 	private JRadioButton rdbtnTenSP;
 	private JRadioButton rdbtnSoImei;
-
-	public JTextField getTxtMaSP() {
-		return txtMaSP;
-	}
-
-	public void setTxtMaSP(JTextField txtMaSP) {
-		this.txtMaSP = txtMaSP;
-	}
-
-	public JTextField getTxtChungLoai() {
-		return txtChungLoai;
-	}
-
-	public void setTxtChungLoai(JTextField txtChungLoai) {
-		this.txtChungLoai = txtChungLoai;
-	}
-
-	public JTextField getTxtSoLng() {
-		return txtSoLng;
-	}
-
-	public void setTxtSoLng(JTextField txtSoLng) {
-		this.txtSoLng = txtSoLng;
-	}
-
-	public JTextField getTxtTenSP() {
-		return txtTenSP;
-	}
-
-	public void setTxtTenSP(JTextField txtTenSP) {
-		this.txtTenSP = txtTenSP;
-	}
-
-	public JTextField getTxtMauSac() {
-		return txtMauSac;
-	}
-
-	public void setTxtMauSac(JTextField txtMauSac) {
-		this.txtMauSac = txtMauSac;
-	}
-
-	public JTextField getTxtGia() {
-		return txtGia;
-	}
-
-	public void setTxtGia(JTextField txtGia) {
-		this.txtGia = txtGia;
-	}
-
-	public JTextField getTxtGhiChu() {
-		return txtGhiChu;
-	}
-
-	public void setTxtGhiChu(JTextField txtGhiChu) {
-		this.txtGhiChu = txtGhiChu;
-	}
-
-	public JTextField getTxtKhac() {
-		return txtKhac;
-	}
-
-	public void setTxtKhac(JTextField txtKhac) {
-		this.txtKhac = txtKhac;
-	}
+	int warehouse;
+	private JTextField txtSearch;
+	private JTextField textField_1;
 
 	public JComboBox getComboBox_1() {
 		return comboBoxTimSP;
@@ -211,14 +141,14 @@ public class Main {
 		JLabel lblSearch = new JLabel("Tìm kiếm");
 		lblSearch.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearch.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSearch.setBounds(10, 27, 100, 40);
+		lblSearch.setBounds(10, 35, 100, 30);
 		panelTonKho.add(lblSearch);
 
 		table = new JTable();
-		table.setBounds(10, 100, 750, 215);
+		table.setBounds(10, 100, 750, 400);
 		table.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scrollPaneTonKho = new JScrollPane(table);
-		scrollPaneTonKho.setBounds(10, 306, 750, 215);
+		scrollPaneTonKho.setBounds(10, 119, 750, 375);
 		try {
 			table.setModel(new TableModel(ItemDAO.getItemes()) {
 
@@ -234,27 +164,20 @@ public class Main {
 		}
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		if (true) { // true by default
+		if (true) {
 			ListSelectionModel rowSM = table.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent e) {
-					// Ignore extra messages.
-					if (e.getValueIsAdjusting())
+					if (e.getValueIsAdjusting()) {
 						return;
-
+					}
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (lsm.isSelectionEmpty()) {
 						System.out.println("No rows are selected.");
 					} else {
 						Item item = ItemDAO.getItemes().get(lsm.getMinSelectionIndex());
 						ItemDetail itemDetail = ItemDetailDAO.getItemDetail(item.getItemId());
-						txtMaSP.setText(item.getModel());
-						txtTenSP.setText(item.getName());
-						txtChungLoai.setText(item.getType());
-						txtSoLng.setText(item.getQuantity() + "");
-						txtGia.setText(item.getPrice());
-						txtMauSac.setText(itemDetail.getColor());
-						txtKhac.setText(itemDetail.getImei());
+
 					}
 				}
 			});
@@ -262,78 +185,6 @@ public class Main {
 			table.setRowSelectionAllowed(false);
 		}
 		panelTonKho.add(scrollPaneTonKho);
-
-		comboBoxSearch = new JComboBox();
-		comboBoxSearch.setEditable(true);
-		comboBoxSearch.setBounds(120, 33, 200, 32);
-		comboBoxSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				boolean mode = true;
-				String name = comboBoxSearch.getEditor().getItem().toString();
-				if (rdbtnTenSP.isSelected()) {
-					mode = true;
-				} else if (rdbtnSoImei.isSelected()) {
-					mode = false;
-				}
-
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (name.equals("")) {
-						table.setModel(new TableModel(ItemDAO.getItemes()));
-						System.out.println("Check");
-					} else {
-						if (mode) {
-							String query = "FROM Item where name LIKE '" + name + "%'";
-							if (!ItemDAO.getItem(query).isEmpty()) {
-								table.setModel(new TableModel(ItemDAO.getItem(query)));
-							} else {
-								table.setModel(new TableModel(ItemDAO.getItemes()));
-							}
-						} else {
-							String query = "FROM ItemDetail where imei LIKE '" + name + "%'";
-							if (!ItemDetailDAO.getItemDetail(query).isEmpty()) {
-								List<ItemDetail> listDetail = ItemDetailDAO.getItemDetail(query);
-								List<Item> listIt = new ArrayList<Item>();
-								for (int i = 0; i < listDetail.size(); i++) {
-									listIt.add(ItemDAO.getItem(listDetail.get(i).getItemId()));
-								}
-								table.setModel(new TableModel(listIt));
-							} else {
-								table.setModel(new TableModel(ItemDAO.getItemes()));
-							}
-						}
-					}
-				}
-
-				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
-						|| e.getKeyCode() == 8) {
-					if (mode) {
-						comboBoxSearch.setModel(model.getList(name));
-					} else {
-						System.out.println("Mode: " + mode);
-						comboBoxSearch.setModel(model.getListByImei(name));
-					}
-					if (comboBoxSearch.getItemCount() > 0) {
-						comboBoxSearch.showPopup();
-						if (e.getKeyCode() != 8) {
-							((JTextComponent) comboBoxSearch.getEditor().getEditorComponent()).select(name.length(),
-									comboBoxSearch.getEditor().getItem().toString().length());
-
-						} else {
-							comboBoxSearch.getEditor().setItem(name);
-
-						}
-					} else {
-						comboBoxSearch.addItem(name);
-					}
-
-				}
-
-				super.keyReleased(e);
-			}
-
-		});
-		panelTonKho.add(comboBoxSearch);
 
 		rdbtnTenSP = new JRadioButton("Tên sản phẩm");
 		rdbtnTenSP.setBounds(120, 7, 109, 23);
@@ -348,99 +199,6 @@ public class Main {
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtnSoImei);
 		group.add(rdbtnTenSP);
-
-		JPanel panelThongtin = new JPanel();
-		panelThongtin.setBounds(10, 78, 750, 217);
-		panelTonKho.add(panelThongtin);
-		panelThongtin.setLayout(null);
-
-		JLabel lblMaSP = new JLabel("Mã sản phẩm");
-		lblMaSP.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMaSP.setBounds(10, 12, 90, 25);
-		panelThongtin.add(lblMaSP);
-
-		txtMaSP = new JTextField();
-		txtMaSP.setEditable(false);
-		txtMaSP.setBounds(110, 14, 190, 22);
-		panelThongtin.add(txtMaSP);
-		txtMaSP.setColumns(10);
-
-		JLabel lblTenSP = new JLabel("Tên sản phẩm");
-		lblTenSP.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblTenSP.setBounds(372, 12, 90, 25);
-		panelThongtin.add(lblTenSP);
-
-		txtChungLoai = new JTextField();
-		txtChungLoai.setEditable(false);
-		txtChungLoai.setColumns(10);
-		txtChungLoai.setBounds(110, 67, 190, 22);
-		panelThongtin.add(txtChungLoai);
-
-		JLabel lblGia = new JLabel("Giá");
-		lblGia.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGia.setBounds(372, 119, 90, 25);
-		panelThongtin.add(lblGia);
-
-		txtSoLng = new JTextField();
-		txtSoLng.setEditable(false);
-		txtSoLng.setColumns(10);
-		txtSoLng.setBounds(110, 119, 190, 22);
-		panelThongtin.add(txtSoLng);
-
-		JLabel lblChungLoai = new JLabel("Chủng loại");
-		lblChungLoai.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblChungLoai.setBounds(10, 65, 90, 25);
-		panelThongtin.add(lblChungLoai);
-
-		txtTenSP = new JTextField();
-		txtTenSP.setEditable(false);
-		txtTenSP.setColumns(10);
-		txtTenSP.setBounds(472, 15, 190, 22);
-		panelThongtin.add(txtTenSP);
-
-		JLabel lblSoLng = new JLabel("Số lượng");
-		lblSoLng.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblSoLng.setBounds(10, 119, 90, 25);
-		panelThongtin.add(lblSoLng);
-
-		txtMauSac = new JTextField();
-		txtMauSac.setEditable(false);
-		txtMauSac.setColumns(10);
-		txtMauSac.setBounds(472, 68, 190, 22);
-		panelThongtin.add(txtMauSac);
-
-		JLabel lblMauSac = new JLabel("Màu sắc");
-		lblMauSac.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMauSac.setBounds(372, 65, 90, 25);
-		panelThongtin.add(lblMauSac);
-
-		txtGia = new JTextField();
-		txtGia.setEditable(false);
-		txtGia.setColumns(10);
-		txtGia.setBounds(472, 120, 190, 22);
-		panelThongtin.add(txtGia);
-
-		JLabel lblGhiChu = new JLabel("Ghi chú");
-		lblGhiChu.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGhiChu.setBounds(10, 169, 90, 25);
-		panelThongtin.add(lblGhiChu);
-
-		txtGhiChu = new JTextField();
-		txtGhiChu.setEditable(false);
-		txtGhiChu.setColumns(10);
-		txtGhiChu.setBounds(110, 169, 190, 22);
-		panelThongtin.add(txtGhiChu);
-
-		JLabel lblKhac = new JLabel("Khác");
-		lblKhac.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblKhac.setBounds(372, 169, 90, 25);
-		panelThongtin.add(lblKhac);
-
-		txtKhac = new JTextField();
-		txtKhac.setEditable(false);
-		txtKhac.setColumns(10);
-		txtKhac.setBounds(472, 170, 190, 22);
-		panelThongtin.add(txtKhac);
 
 		JLabel lblKho = new JLabel("Kho");
 		lblKho.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -460,22 +218,46 @@ public class Main {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getItem().equals("Tất cả")) {
 					table.setModel(new TableModel(ItemDAO.getItemes()));
+					warehouse = 0;
 				} else if (e.getItem().equals("Điện thoại")) {
-					System.out.println("Kho 1");
-					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Smartphone'")));
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Điện thoại'")));
+					warehouse = 1;
 				} else if (e.getItem().equals("Máy tính bảng")) {
-					System.out.println("Kho 2");
-					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Tablet'")));
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Máy tính bảng'")));
+					warehouse = 2;
 				} else if (e.getItem().equals("Linh kiện")) {
-					System.out.println("Kho 3");
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Linh kiện'")));
+					warehouse = 3;
 				} else if (e.getItem().equals("Phụ kiện")) {
-					System.out.println("Kho 4");
+					table.setModel(new TableModel(ItemDAO.getItem("From Item where type = 'Phụ kiện'")));
+					warehouse = 4;
 				}
 
 			}
 		};
 		comboKho.addItemListener(itemListener);
 		panelTonKho.add(comboKho);
+
+		txtSearch = new JTextField();
+		txtSearch.setBounds(120, 35, 200, 30);
+		panelTonKho.add(txtSearch);
+		txtSearch.setColumns(10);
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				table.setModel(new TableModel(controller.searchItem(txtSearch.getText())));
+			}
+		});
+		
+		JLabel lblNewLabel = new JLabel("Tổng tiền");
+		lblNewLabel.setBounds(561, 507, 50, 20);
+		panelTonKho.add(lblNewLabel);
+		
+		textField_1 = new JTextField();
+		textField_1.setEditable(false);
+		textField_1.setBounds(628, 507, 132, 20);
+		panelTonKho.add(textField_1);
+		textField_1.setColumns(10);
 
 		JPanel panelNhapXuat = new JPanel();
 		tabbedPane.addTab("Nhập/Xuất", null, panelNhapXuat, null);

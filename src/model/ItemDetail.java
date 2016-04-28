@@ -7,7 +7,6 @@ import javax.persistence.Id;
 public class ItemDetail {
 	private Integer itemId;
 	private String imei;
-	private String color;
 
 	public ItemDetail() {
 	}
@@ -29,17 +28,9 @@ public class ItemDetail {
 		this.imei = imei;
 	}
 
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
 	@Override
 	public String toString() {
-		return "ItemDetail [itemId=" + itemId + ", imei=" + imei + ", color=" + color + "]";
+		return "ItemDetail [itemId=" + itemId + ", imei=" + imei + "]";
 	}
-
+	
 }

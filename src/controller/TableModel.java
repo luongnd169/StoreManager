@@ -11,7 +11,7 @@ public class TableModel extends AbstractTableModel {
 
 	private Vector colHeaders;
 	private Vector tbData;
-	String[] colsName = {"Tên sản phẩm", "Loại", "Số lượng", "Giá" };
+	String[] colsName = {"Tên sản phẩm" };
 
 	public TableModel(List<Item> list) {
 		int count = colsName.length;
@@ -25,9 +25,9 @@ public class TableModel extends AbstractTableModel {
 			Vector dataRow = new Vector(count);
 //			dataRow.addElement(list.get(i).getModel());
 			dataRow.addElement(list.get(i).getName());
-			dataRow.addElement(list.get(i).getType());
-			dataRow.addElement(list.get(i).getQuantity());
-			dataRow.addElement(list.get(i).getPrice());
+//			dataRow.addElement(list.get(i).getType());
+//			dataRow.addElement(list.get(i).getQuantity());
+//			dataRow.addElement(list.get(i).getPrice());
 			tbData.addElement(dataRow);
 
 		}

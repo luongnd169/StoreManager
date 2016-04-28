@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,19 +67,16 @@ public class MainController {
 		}
 
 	}
-
-	public void showItemSelected(int selectedRow) {
-		main  = new Main();
-		System.out.println(selectedRow);
-		Item item = ItemDAO.getItemes().get(selectedRow);
-		ItemDetail itemDetail = ItemDetailDAO.getItemDetail(item.getItemId());
-		main.getTxtMaSP().setText(item.getItemId() + "");
-		main.getTxtTenSP().setText(item.getName());
-		main.getTxtChungLoai().setText(item.getType());
-		main.getTxtSoLng().setText(item.getQuantity() + "");
-		main.getTxtGia().setText(item.getPrice());
-		main.getTxtMauSac().setText(itemDetail.getColor());
-		main.getTxtKhac().setText(itemDetail.getImei());
+	
+	public List<Item> searchItem(String name){
+		List<Item> listItem = ItemDAO.getItemes();
+		List<Item> temp = new ArrayList<>();
+		for(Item i : listItem){
+			if(i.getName().toLowerCase().trim().contains(name.toLowerCase().trim())){
+				temp.add(i);
+			}
+		}
+		return temp;
 	}
 
 }

@@ -8,7 +8,6 @@ import javax.persistence.Id;
 @Entity
 public class Item {
 	private Integer itemId;
-	private String model;
 	private String name;
 	private String type;
 	private String price;
@@ -27,14 +26,6 @@ public class Item {
 
 	public void setItemId(Integer itemId) {
 		this.itemId = itemId;
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
 	}
 
 	public String getName() {
