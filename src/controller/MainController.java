@@ -3,12 +3,14 @@ package controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import dao.BillDAO;
 import dao.BillDetailDAO;
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
 import gui.Main;
+import lib.Convert;
 import model.Bill;
 import model.BillDetail;
 import model.Item;
@@ -67,16 +69,51 @@ public class MainController {
 		}
 
 	}
-	
-	public List<Item> searchItem(String name){
-		List<Item> listItem = ItemDAO.getItemes();
+
+	public List<Item> searchItem(List<Item> listItem, String name) {
 		List<Item> temp = new ArrayList<>();
-		for(Item i : listItem){
-			if(i.getName().toLowerCase().trim().contains(name.toLowerCase().trim())){
+		for (Item i : listItem) {
+			if (containsOf(i.getName().toLowerCase().trim(), name.toLowerCase().trim())) {
 				temp.add(i);
 			}
 		}
 		return temp;
+	}
+
+	public boolean containsOf(String s1, String s2) {
+		boolean isContain = false;
+		StringTokenizer st = new StringTokenizer(s2, " ");
+		while (st.hasMoreElements()) {
+			String nextToken = st.nextToken();
+			if (s1.contains(nextToken)) {
+				s1 = s1.replaceFirst(nextToken, "");
+				isContain = true;
+
+			} else {
+				isContain = false;
+				return false;
+			}
+		}
+
+		return isContain;
+	}
+
+	public void replace(String s, String s1, String s2) {
+		s.replace(s1, s2);
+	}
+
+	public static void main(String[] args) {
+		MainController controller = new MainController();
+		// String s2 = "6sp 64";
+		// for(Item i : controller.searchItem(s2)){
+		// System.out.println(i.getName());
+		// }
+		String s1 = "iPhone 6 16GB White";
+		String s2 = "6 16";
+		System.out.println(controller.containsOf(s1, s2));
+		// controller.replace(s1, nextToken, "");
+		// System.out.println(s1);
+
 	}
 
 }

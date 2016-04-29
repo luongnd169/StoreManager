@@ -36,6 +36,9 @@ public class Test {
 				}
 			}
 		});
+		
+		System.out.println(ItemDAO.getItemes().size());
+		
 	}
 
 	/**
@@ -88,7 +91,6 @@ public class Test {
 //				}
 				for(int i = 0; i < list.size(); i++){
 					String name = list.get(i).getName().toLowerCase();
-					System.out.println(name);
 					if(name.contains(text)){
 						temp.add(list.get(i));
 					}

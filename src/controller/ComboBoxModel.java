@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -10,11 +11,14 @@ import model.Item;
 import model.ItemDetail;
 
 public class ComboBoxModel {
+	
+	MainController main = new MainController();
 
 	public DefaultComboBoxModel getList(String name) {
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
-		List<Item> listItem = ItemDAO.getItem("FROM Item WHERE name LIKE '" + name + "%'");
-		for (Item i : listItem) {
+		List<Item> listItem = ItemDAO.getItemes();
+		List<Item> searchItem = main.searchItem(listItem, name);
+		for (Item i : searchItem) {
 			model.addElement(i.getName());
 		}
 		return model;
@@ -26,6 +30,12 @@ public class ComboBoxModel {
 		for (ItemDetail i : listItemDetail) {
 			model.addElement(i.getImei());
 		}
+		return model;
+	}
+	
+	public DefaultComboBoxModel emptyList(){
+		DefaultComboBoxModel model = new DefaultComboBoxModel();
+//		List<Item> listItem = new ArrayList<>();
 		return model;
 	}
 
