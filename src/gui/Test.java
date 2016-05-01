@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import controller.TableModel;
+import controller.ItemTableModel;
 import dao.ItemDAO;
 import model.Item;
 
@@ -95,7 +95,7 @@ public class Test {
 						temp.add(list.get(i));
 					}
 				}
-				table.setModel(new TableModel(temp));
+				table.setModel(new ItemTableModel(temp));
 			}
 		});
 
@@ -104,7 +104,7 @@ public class Test {
 		frame.getContentPane().add(scrollPane);
 
 		table = new JTable();
-		table.setModel(new TableModel(list));
+		table.setModel(new ItemTableModel(list));
 		scrollPane.setViewportView(table);
 	}
 }

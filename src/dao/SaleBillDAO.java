@@ -4,30 +4,30 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import model.Bill;
+import model.SaleBill;
 
-public class BillDAO {
+public class SaleBillDAO {
 	private static HibernateUtils utils = new HibernateUtils();
 
-	public static Bill getBill(int id) {
+	public static SaleBill getSaleBill(int id) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
-			Bill bill = (Bill) session.get(Bill.class, id);
+			SaleBill saleBill = (SaleBill) session.get(SaleBill.class, id);
 			session.beginTransaction().commit();
-			return bill;
+			return saleBill;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public static List<Bill> getBills() {
+	public static List<SaleBill> getSaleBills() {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<Bill> list = session.createQuery("FROM Bill").list();
+			List<SaleBill> list = session.createQuery("FROM SaleBill").list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -36,13 +36,13 @@ public class BillDAO {
 		}
 	}
 
-	public static List<Bill> getBill(String query) {
+	public static List<SaleBill> getSaleBill(String query) {
 		System.out.println(query);
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<Bill> list = session.createQuery(query).list();
+			List<SaleBill> list = session.createQuery(query).list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -51,32 +51,32 @@ public class BillDAO {
 		}
 	}
 
-	public static void insert(Bill Bill) {
-		process(Bill, "insert");
+	public static void insert(SaleBill SaleBill) {
+		process(SaleBill, "insert");
 	}
 
-	public static void update(Bill Bill) {
-		process(Bill, "update");
+	public static void update(SaleBill SaleBill) {
+		process(SaleBill, "update");
 	}
 
-	public static void delete(Bill Bill) {
-		process(Bill, "delete");
+	public static void delete(SaleBill SaleBill) {
+		process(SaleBill, "delete");
 	}
 
-	private static void process(Bill Bill, String mode) {
+	private static void process(SaleBill SaleBill, String mode) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 
 			switch (mode) {
 			case "insert":
-				session.save(Bill);
+				session.save(SaleBill);
 				break;
 			case "update":
-				session.update(Bill);
+				session.update(SaleBill);
 				break;
 			case "delete":
-				session.delete(Bill);
+				session.delete(SaleBill);
 				break;
 			}
 

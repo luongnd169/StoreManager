@@ -4,30 +4,31 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import model.BillDetail;
+import model.Fee;
 
-public class BillDetailDAO {
+public class FeeDAO {
+
 	private static HibernateUtils utils = new HibernateUtils();
 
-	public static BillDetail getBillDetail(int id) {
+	public static Fee getFee(int id) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
-			BillDetail billDetail = (BillDetail) session.get(BillDetail.class, id);
+			Fee fee = (Fee) session.get(Fee.class, id);
 			session.beginTransaction().commit();
-			return billDetail;
+			return fee;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public static List<BillDetail> getBillDetails() {
+	public static List<Fee> getFees() {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<BillDetail> list = session.createQuery("FROM BillDetail").list();
+			List<Fee> list = session.createQuery("FROM Fee").list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -36,13 +37,12 @@ public class BillDetailDAO {
 		}
 	}
 
-	public static List<BillDetail> getBillDetail(String query) {
-		System.out.println(query);
+	public static List<Fee> getFee(String query) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<BillDetail> list = session.createQuery(query).list();
+			List<Fee> list = session.createQuery(query).list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -51,32 +51,45 @@ public class BillDetailDAO {
 		}
 	}
 
-	public static void insert(BillDetail BillDetail) {
-		process(BillDetail, "insert");
+	public static List<Fee> getByDate(String from, String to) {
+		try {
+			Session session = utils.getSession();
+			session.beginTransaction();
+			@SuppressWarnings("unchecked")
+			List<Fee> list = session.createQuery("From Fee Where date Between '" + from + "' and '" + to + "'").list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public static void update(BillDetail BillDetail) {
-		process(BillDetail, "update");
+	public static void insert(Fee fee) {
+		process(fee, "insert");
 	}
 
-	public static void delete(BillDetail BillDetail) {
-		process(BillDetail, "delete");
+	public static void update(Fee fee) {
+		process(fee, "update");
 	}
 
-	private static void process(BillDetail BillDetail, String mode) {
+	public static void delete(Fee fee) {
+		process(fee, "delete");
+	}
+
+	private static void process(Fee fee, String mode) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 
 			switch (mode) {
 			case "insert":
-				session.save(BillDetail);
+				session.save(fee);
 				break;
 			case "update":
-				session.update(BillDetail);
+				session.update(fee);
 				break;
 			case "delete":
-				session.delete(BillDetail);
+				session.delete(fee);
 				break;
 			}
 

@@ -7,16 +7,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class BillDetail {
+public class SaleBillDetail {
 	private Integer bdId;
 	private String name;
 	private Integer billNo;
-	private String billType;
 	private String price;
 	private Integer quantity;
 	private Date date;
 
-	public BillDetail() {
+	public SaleBillDetail() {
 
 	}
 
@@ -44,14 +43,6 @@ public class BillDetail {
 
 	public void setBillNo(Integer billNo) {
 		this.billNo = billNo;
-	}
-
-	public String getBillType() {
-		return billType;
-	}
-
-	public void setBillType(String billType) {
-		this.billType = billType;
 	}
 
 	public String getPrice() {

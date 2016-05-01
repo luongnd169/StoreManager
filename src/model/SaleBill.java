@@ -9,14 +9,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Bill {
+public class SaleBill {
 	private Integer billId;
 	private Integer billNo;
-	private String type;
 	private String totalPrice;
 	private Date date;
 
-	public Bill() {
+	public SaleBill() {
 
 	}
 
@@ -38,14 +37,6 @@ public class Bill {
 		this.billNo = billNo;
 	}
 
-	public String isType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getTotalPrice() {
 		return totalPrice;
 	}
@@ -61,12 +52,6 @@ public class Bill {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	@Override
-	public String toString() {
-		return "Bill [billId=" + billId + ", billNo=" + billNo + ", type=" + type + ", totalPrice=" + totalPrice
-				+ ", date=" + date + "]";
 	}
 
 }

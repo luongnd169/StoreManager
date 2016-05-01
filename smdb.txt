@@ -11,6 +11,12 @@ CREATE TABLE itemdetail (
 	imei VARCHAR (20)
 );
 
+create table salebill(billId int primary key auto_increment, billNo int not NULL, totalPrice varchar(20), date DATE);
+create table salebilldetail(bdId int primary key auto_increment, billNo int not NULL, name nvarchar(50), price varchar(20), quantity int, date DATE);
+
+create table fee(feeId int primary key auto_increment, name nvarchar(100), value varchar(20), type boolean, date date);
+
+
 /*Chèn iPhone*/
 
 INSERT INTO item (NAME, type, price, quantity)

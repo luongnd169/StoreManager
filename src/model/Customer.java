@@ -1,5 +1,10 @@
 package model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Customer {
 	private Integer id;
 	private String name;
@@ -8,6 +13,8 @@ public class Customer {
 	public Customer() {
 	}
 
+	@Id
+	@GeneratedValue
 	public Integer getId() {
 		return id;
 	}

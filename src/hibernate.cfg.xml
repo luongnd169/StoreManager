@@ -14,6 +14,9 @@
 		<property name="show_sql">true</property>
 		<mapping class="model.Item"></mapping>
 		<mapping class="model.ItemDetail"></mapping>
-		<!-- <mapping class="model.Bill"></mapping> <mapping class="model.BillDetail"></mapping> -->
+		<mapping class="model.SaleBill"></mapping>
+		<mapping class="model.SaleBillDetail"></mapping>
+		<!-- <mapping class="model.Cutstomer"></mapping> <mapping class="model.Provider"></mapping> -->
+		<mapping class="model.Fee"></mapping>
 	</session-factory>
 </hibernate-configuration>

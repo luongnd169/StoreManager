@@ -1,49 +1,32 @@
 package dao;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 public class Runable {
 
 	public static void main(String[] args) {
-//		HibernateUtils utils = new HibernateUtils();
-//		Session session = utils.getSession();
-//		session.beginTransaction();
-//
-//		Item i = new Item();
-//		i.setModel("ipa");
-//		i.setName("iPad Air");
-//		i.setType("Tablet");
-//		i.setPrice("10000000");
-//		i.setQuantity(5);
-//
-//		session.save(i);
-//
-//		System.out.println("Done");
-//
-//		Bill bill = new Bill();
-//		bill.setBillNo(00001);
-//		bill.setType(true);
-//		bill.setDate(new Date());
-//		bill.setTotalPrice("71000000");
-//		bill.setItem(i);
-//		i.getBill().add(bill);
-//
-//		Bill bill1 = new Bill();
-//		bill1.setBillNo(00001);
-//		bill1.setType(true);
-//		bill1.setDate(new Date());
-//		bill1.setTotalPrice("71000000");
-//		bill1.setItem(i);
-//		i.getBill().add(bill1);
-//
-//		session.save(bill);
-//		session.save(bill1);
-//
-//		session.getTransaction().commit();
-//		System.out.println("done");
-		System.out.println(Integer.parseInt(NumberFormat.getNumberInstance(Locale.US).format(35634646)));
-
+		System.out.println(FeeDAO.getByDate("20-3-2016", "20-4-2016") == null);
+	}
+	
+	private String getDate(String date){
+		StringTokenizer st = new StringTokenizer(date, " ");
+		int index = st.countTokens();
+		
+		String day = "";
+		String month = "";
+		String year = "";
+		if(index == 2){
+			day = st.nextToken();
+			month = st.nextToken();
+			year = new Date().getYear() + 1900 + "";
+		} else if (index == 3){
+			day = st.nextToken();
+			month = st.nextToken();
+			year = st.nextToken();
+		}
+		String formatedDate = day + "-" + month + "-" + year;
+		return formatedDate;
 	}
 
 }

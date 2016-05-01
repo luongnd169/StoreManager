@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import dao.BillDAO;
-import dao.BillDetailDAO;
+import dao.SaleBillDAO;
+import dao.SaleBillDetailDAO;
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
 import gui.Main;
 import lib.Convert;
-import model.Bill;
-import model.BillDetail;
+import model.SaleBill;
+import model.SaleBillDetail;
 import model.Item;
 import model.ItemDetail;
 
@@ -31,41 +31,51 @@ public class MainController {
 
 	public void saveSaleBill(List<Item> listItem) {
 		Integer nextBillNo = 1;
-		if (BillDAO.getBills().size() != 0) {
-			nextBillNo = BillDAO.getBills().get(BillDAO.getBills().size() - 1).getBillNo() + 1;
+		if (SaleBillDAO.getSaleBills().size() != 0) {
+			nextBillNo = SaleBillDAO.getSaleBills().get(SaleBillDAO.getSaleBills().size() - 1).getBillNo() + 1;
 		}
 		List<Item> list = ItemDAO.getItemes();
-		for (int i = 0; i < list.size(); i++) {
-			for (int j = 0; j < listItem.size(); j++) {
-				if (list.get(i).getItemId().equals(listItem.get(j).getItemId())) {
-					list.get(i).setQuantity(list.get(i).getQuantity() - listItem.get(j).getQuantity());
-				}
-			}
+		List<Item> temp = new ArrayList<>();
+		for (Item i : listItem) {
+			temp.add(i);
 		}
-		for (Item i : list) {
-			ItemDAO.update(i);
-		}
-
-		Bill bill = new Bill();
+		SaleBill bill = new SaleBill();
 		bill.setBillNo(nextBillNo);
-		bill.setType("Xuất");
 		int totalPrice = 0;
 		for (Item i : listItem) {
 			totalPrice += Integer.parseInt(i.getPrice()) * i.getQuantity();
 		}
 		bill.setDate(new Date());
 		bill.setTotalPrice(totalPrice + "");
-		System.out.println(bill.toString());
-		BillDAO.insert(bill);
-		BillDetail detail = new BillDetail();
+		SaleBillDAO.insert(bill);
+		SaleBillDetail detail = new SaleBillDetail();
 		detail.setBillNo(nextBillNo);
-		detail.setBillType("Xuất");
-		detail.setDate(new Date());
+		detail.setDate(bill.getDate());
 		for (Item i : listItem) {
 			detail.setName(i.getName());
 			detail.setPrice(i.getPrice());
 			detail.setQuantity(i.getQuantity());
-			BillDetailDAO.insert(detail);
+			SaleBillDetailDAO.insert(detail);
+		}
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < listItem.size(); j++) {
+				if (list.get(i).getItemId().equals(listItem.get(j).getItemId())) {
+					list.get(i).setQuantity(list.get(i).getQuantity() - listItem.get(j).getQuantity());
+
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < temp.size(); j++) {
+				if (list.get(i).getItemId().equals(temp.get(j).getItemId())) {
+					temp.get(j).setQuantity(list.get(i).getQuantity());
+					temp.get(j).setPrice(list.get(i).getPrice());
+				}
+			}
+		}
+
+		for (Item i : temp) {
+			ItemDAO.update(i);
 		}
 
 	}

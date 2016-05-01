@@ -9,12 +9,16 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,23 +38,26 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 
 import controller.ComboBoxModel;
+import controller.FeeTableModel;
+import controller.ItemTableModel;
 import controller.MainController;
-import controller.TableModel;
+import dao.FeeDAO;
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
 import lib.Convert;
+import model.Fee;
 import model.Item;
 import model.ItemDetail;
 
 public class Main {
 
 	private JFrame frame;
-	private JTable table;
+	private JTable tableTonKho;
 	private JComboBox comboBoxTimSP;
 	ComboBoxModel model = new ComboBoxModel();
 	MainController controller;
 	private List<Item> listItem = new ArrayList<Item>();
-	private JTable table_1;
+	private JTable tableXuat;
 	private JTextField txtGiaNhap;
 	private JTextField txtGiaXuat;
 	private JTextField txtLoiNhuan;
@@ -61,8 +68,24 @@ public class Main {
 	private JRadioButton rdbtnSoImei;
 	int warehouse;
 	private JTextField txtSearch;
+	private JTextField txtTongTienKho;
+	private List<Item> listStorage;
+	private List<Fee> listFee;
+	private int tongTienKho;
+	private JTextField textField;
 	private JTextField textField_1;
-	private List<Item> listStorage = new ArrayList<>();
+	private JTextField txtMuc;
+	private JTextField txtSoTien;
+	private JTextField txtFrom;
+	private JTextField txtTo;
+	private JTable tableLichSu;
+	private JTextField txtTongThu;
+	private JTextField txtTongChi;
+	private JTextField txtLoiNhuanThuChi;
+	private JRadioButton rdbtnThu;
+	private JRadioButton rdbtnChi;
+	private String from;
+	private String to;
 
 	public JComboBox getComboBox_1() {
 		return comboBoxTimSP;
@@ -73,19 +96,19 @@ public class Main {
 	}
 
 	public JTable getTable() {
-		return table;
+		return tableTonKho;
 	}
 
 	public void setTable(JTable table) {
-		this.table = table;
+		this.tableTonKho = table;
 	}
 
 	public JTable getTable_1() {
-		return table_1;
+		return tableXuat;
 	}
 
 	public void setTable_1(JTable table_1) {
-		this.table_1 = table_1;
+		this.tableXuat = table_1;
 	}
 
 	/**
@@ -146,14 +169,14 @@ public class Main {
 		lblSearch.setBounds(10, 35, 100, 30);
 		panelTonKho.add(lblSearch);
 
-		table = new JTable();
-		table.setBounds(10, 100, 750, 375);
-		table.getTableHeader().setReorderingAllowed(false);
-		JScrollPane scrollPaneTonKho = new JScrollPane(table);
+		tableTonKho = new JTable();
+		tableTonKho.setBounds(10, 100, 750, 375);
+		tableTonKho.getTableHeader().setReorderingAllowed(false);
+		JScrollPane scrollPaneTonKho = new JScrollPane(tableTonKho);
 		scrollPaneTonKho.setBounds(10, 119, 750, 375);
 		try {
 
-			table.setModel(new TableModel(listStorage) {
+			tableTonKho.setModel(new ItemTableModel(listStorage) {
 				private static final long serialVersionUID = 1L;
 				boolean[] columnEditables = new boolean[] { false, false, false, true, true };
 
@@ -165,10 +188,11 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableTonKho.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		if (true) {
-			ListSelectionModel rowSM = table.getSelectionModel();
+			ListSelectionModel rowSM = tableTonKho.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
+
 				public void valueChanged(ListSelectionEvent e) {
 					if (e.getValueIsAdjusting()) {
 						return;
@@ -184,7 +208,7 @@ public class Main {
 				}
 			});
 		} else {
-			table.setRowSelectionAllowed(false);
+			tableTonKho.setRowSelectionAllowed(false);
 		}
 		panelTonKho.add(scrollPaneTonKho);
 
@@ -192,6 +216,7 @@ public class Main {
 		rdbtnTenSP.setBounds(120, 7, 109, 23);
 		panelTonKho.add(rdbtnTenSP);
 		rdbtnTenSP.setSelected(true);
+
 		ButtonModel btnModel = rdbtnTenSP.getModel();
 
 		rdbtnSoImei = new JRadioButton("Số imei");
@@ -220,23 +245,48 @@ public class Main {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getItem().equals("Tất cả")) {
 					listStorage = ItemDAO.getItemes();
-					table.setModel(new TableModel(convertListItem(listStorage)));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+					tongTienKho = 0;
+					for (Item i : Convert.returnListItem(listStorage)) {
+						tongTienKho += Integer.parseInt(i.getPrice());
+					}
+					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 0;
 				} else if (e.getItem().equals("Điện thoại")) {
 					listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
-					table.setModel(new TableModel(convertListItem(listStorage)));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+					tongTienKho = 0;
+					for (Item i : Convert.returnListItem(listStorage)) {
+						tongTienKho += Integer.parseInt(i.getPrice());
+					}
+					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 1;
 				} else if (e.getItem().equals("Máy tính bảng")) {
 					listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
-					table.setModel(new TableModel(convertListItem(listStorage)));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+					tongTienKho = 0;
+					for (Item i : Convert.returnListItem(listStorage)) {
+						tongTienKho += Integer.parseInt(i.getPrice());
+					}
+					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 2;
 				} else if (e.getItem().equals("Linh kiện")) {
 					listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
-					table.setModel(new TableModel(convertListItem(listStorage)));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+					tongTienKho = 0;
+					for (Item i : Convert.returnListItem(listStorage)) {
+						tongTienKho += Integer.parseInt(i.getPrice());
+					}
+					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 3;
 				} else if (e.getItem().equals("Phụ kiện")) {
 					listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
-					table.setModel(new TableModel(convertListItem(listStorage)));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+					tongTienKho = 0;
+					for (Item i : Convert.returnListItem(listStorage)) {
+						tongTienKho += Integer.parseInt(i.getPrice());
+					}
+					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 4;
 				}
 
@@ -253,9 +303,9 @@ public class Main {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtSearch.getText().trim().equals("")) {
-					table.setModel(new TableModel(listStorage));
+					tableTonKho.setModel(new ItemTableModel(listStorage));
 				} else {
-					table.setModel(new TableModel(controller.searchItem(listStorage, txtSearch.getText())));
+					tableTonKho.setModel(new ItemTableModel(controller.searchItem(listStorage, txtSearch.getText())));
 				}
 			}
 		});
@@ -264,23 +314,29 @@ public class Main {
 		lblNewLabel.setBounds(561, 507, 50, 20);
 		panelTonKho.add(lblNewLabel);
 
-		textField_1 = new JTextField();
-		textField_1.setEditable(false);
-		textField_1.setBounds(628, 507, 132, 20);
-		panelTonKho.add(textField_1);
-		textField_1.setColumns(10);
+		txtTongTienKho = new JTextField();
+		txtTongTienKho.setEditable(false);
+		txtTongTienKho.setBounds(628, 507, 132, 20);
+		for (Item i :
+
+			Convert.returnListItem(listStorage)) {
+			tongTienKho += Integer.parseInt(i.getPrice());
+		}
+		txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+		panelTonKho.add(txtTongTienKho);
+		txtTongTienKho.setColumns(10);
 
 		JPanel panelNhapXuat = new JPanel();
 		tabbedPane.addTab("Nhập/Xuất", null, panelNhapXuat, null);
 		panelNhapXuat.setLayout(null);
 
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBounds(0, 0, 769, 532);
-		panelNhapXuat.add(tabbedPane_1);
+		JTabbedPane tabbedPaneNhapXuat = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPaneNhapXuat.setBounds(0, 0, 769, 532);
+		panelNhapXuat.add(tabbedPaneNhapXuat);
 
 		JPanel panelXuat = new JPanel();
 
-		tabbedPane_1.addTab("Xuất", null, panelXuat, null);
+		tabbedPaneNhapXuat.addTab("Xuất", null, panelXuat, null);
 		panelXuat.setLayout(null);
 
 		JLabel lblName = new JLabel("Sản phẩm");
@@ -292,12 +348,43 @@ public class Main {
 		comboBoxTimSP.setBounds(169, 11, 240, 34);
 		panelXuat.add(comboBoxTimSP);
 		comboBoxTimSP.setEditable(true);
+		comboBoxTimSP.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String price = "";
+				int quantity = 0;
+				String name = comboBoxTimSP.getEditor().getItem().toString();
+				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
+						|| e.getKeyCode() == 8) {
+					comboBoxTimSP.setModel(model.getList(name));
+					comboBoxTimSP.showPopup();
+					comboBoxTimSP.getEditor().setItem(name);
+					((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(),
+							name.length());
+				}
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					index = comboBoxSoLuong.getItemCount();
+					for (int i = 0; i < index; i++) {
+						comboBoxSoLuong.removeItemAt(0);
+					}
+					List<Item> list = ItemDAO.getItem("FROM Item where name = '" + name + "'");
+					if (list.size() > 0) {
+						quantity = list.get(0).getQuantity();
+						for (int i = 1; i <= quantity; i++) {
+							comboBoxSoLuong.addItem(i);
+						}
+						price = list.get(0).getPrice();
+						txtGiaNhap.setText(Convert.numberToString(price));
+					}
+				}
+			}
+		});
 
-		table_1 = new JTable();
-		table_1.setBounds(10, 150, 745, 262);
-		JScrollPane scrollPaneXuat = new JScrollPane(table_1);
+		tableXuat = new JTable();
+		tableXuat.setBounds(10, 150, 745, 262);
+		JScrollPane scrollPaneXuat = new JScrollPane(tableXuat);
 		scrollPaneXuat.setBounds(10, 157, 750, 262);
-		table_1.setEditingColumn(3);
+		tableXuat.setEditingColumn(3);
 		panelXuat.add(scrollPaneXuat);
 
 		JButton btnThem = new JButton("Thêm");
@@ -311,45 +398,41 @@ public class Main {
 						.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
 						.get(0);
 				i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
-				i.setPrice(txtGiaXuat.getText().trim());
-				listItem.add(i);
-				i.setPrice(Convert.stringToNumber(txtGiaXuat.getText().trim()));
-				try {
-					table_1.setModel(new TableModel(convertListItem(listItem)) {
-					});
+				if (!txtGiaXuat.getText().trim().equals("")) {
+					i.setPrice(txtGiaXuat.getText().trim());
+					listItem.add(i);
+					i.setPrice(Convert.numberToString(txtGiaXuat.getText().trim()));
+					try {
+						tableXuat.setModel(new ItemTableModel(listItem) {
+						});
 
-				} catch (Exception e) {
-					e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					index++;
+					int total = 0;
+					for (Item item : listItem) {
+						total += Integer.parseInt(Convert.stringToNumber(item.getPrice())) * item.getQuantity();
+					}
+					txtTongTien.setText(Convert.numberToString(String.valueOf(total)));
+				} else {
+					JOptionPane.showMessageDialog(null, "Chưa nhập giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
-				index++;
-				int total = 0;
-				for (Item item : listItem) {
-					total += Integer.parseInt(Convert.numberToString(item.getPrice())) * item.getQuantity();
-				}
-				txtTongTien.setText(Convert.stringToNumber(String.valueOf(total)));
 			}
 		});
 		panelXuat.add(btnThem);
-
-		// JRadioButton rdbtnThanhTonNgay = new JRadioButton("Thanh toán");
-		// rdbtnThanhTonNgay.setBounds(582, 7, 109, 23);
-		// panel_3.add(rdbtnThanhTonNgay);
-		//
-		// JRadioButton rdbtnCngN = new JRadioButton("Công nợ");
-		// rdbtnCngN.setBounds(582, 29, 109, 23);
-		// panel_3.add(rdbtnCngN);
 
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller = new MainController();
 				for (Item i : listItem) {
-					i.setPrice(Convert.numberToString(i.getPrice()));
+					i.setPrice(Convert.stringToNumber(i.getPrice()));
 				}
 				controller.saveSaleBill(listItem);
 				JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
 				listItem.removeAll(listItem);
-				table_1.setModel(new TableModel(convertListItem(listItem)));
+				tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listItem)));
 				clearAll();
 			}
 		});
@@ -375,7 +458,7 @@ public class Main {
 		JLabel lblGiXuat = new JLabel("Giá xuất");
 		lblGiXuat.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGiXuat.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblGiXuat.setBounds(297, 115, 62, 17);
+		lblGiXuat.setBounds(297, 61, 62, 17);
 		panelXuat.add(lblGiXuat);
 
 		txtGiaNhap = new JTextField();
@@ -385,14 +468,14 @@ public class Main {
 		txtGiaNhap.setColumns(10);
 
 		txtGiaXuat = new JTextField();
-		txtGiaXuat.setBounds(405, 115, 86, 20);
+		txtGiaXuat.setBounds(405, 61, 86, 20);
 		txtGiaXuat.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				String name = comboBoxTimSP.getEditor().getItem().toString();
 				List<Item> listItem = ItemDAO.getItem("FROM Item where name = '" + name + "'");
 				if (listItem.size() > 0 && !txtGiaXuat.getText().equals("")) {
-					txtLoiNhuan.setText(Convert.stringToNumber(String.valueOf(
+					txtLoiNhuan.setText(Convert.numberToString(String.valueOf(
 							Integer.parseInt(txtGiaXuat.getText()) - Integer.parseInt(listItem.get(0).getPrice()))));
 				}
 			}
@@ -403,12 +486,12 @@ public class Main {
 		JLabel lblLoiNhuan = new JLabel("Lợi nhuận");
 		lblLoiNhuan.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLoiNhuan.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLoiNhuan.setBounds(549, 115, 62, 17);
+		lblLoiNhuan.setBounds(297, 115, 62, 17);
 		panelXuat.add(lblLoiNhuan);
 
 		txtLoiNhuan = new JTextField();
 		txtLoiNhuan.setEditable(false);
-		txtLoiNhuan.setBounds(655, 115, 86, 20);
+		txtLoiNhuan.setBounds(405, 115, 86, 20);
 
 		panelXuat.add(txtLoiNhuan);
 		txtLoiNhuan.setColumns(10);
@@ -423,94 +506,230 @@ public class Main {
 		panelXuat.add(txtTongTien);
 		txtTongTien.setColumns(10);
 
-		JPanel panelNhap = new JPanel();
-		tabbedPane_1.addTab("Nhập", null, panelNhap, null);
+		JLabel lblKhchHng = new JLabel("Khách hàng");
+		lblKhchHng.setHorizontalAlignment(SwingConstants.CENTER);
+		lblKhchHng.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblKhchHng.setBounds(547, 61, 80, 17);
+		panelXuat.add(lblKhchHng);
 
-		JPanel panelLichSu = new JPanel();
-		tabbedPane_1.addTab("Lịch sử", null, panelLichSu, null);
-		comboBoxTimSP.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String name = comboBoxTimSP.getEditor().getItem().toString();
-				comboBoxTimSP.setModel(model.getList(name));
-				comboBoxTimSP.showPopup();
-				comboBoxTimSP.getEditor().setItem(name);
-				((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(), name.length());
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(655, 61, 86, 20);
+		panelXuat.add(textField);
+
+		JLabel lblinThoi = new JLabel("Điện thoại");
+		lblinThoi.setHorizontalAlignment(SwingConstants.CENTER);
+		lblinThoi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblinThoi.setBounds(547, 112, 62, 17);
+		panelXuat.add(lblinThoi);
+
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(655, 112, 86, 20);
+		panelXuat.add(textField_1);
+
+		// JPanel panelNhap = new JPanel();
+		// tabbedPane_1.addTab("Nhập", null, panelNhap, null);
+
+		// JPanel panelLichSu = new JPanel();
+		// tabbedPane_1.addTab("Lịch sử", null, panelLichSu, null);
+
+		JPanel panelThuChi = new JPanel();
+		tabbedPane.addTab("Thu/Chi", null, panelThuChi, null);
+		panelThuChi.setLayout(null);
+
+		JPanel panelGhi = new JPanel();
+		panelGhi.setBounds(0, 0, 765, 182);
+		panelThuChi.add(panelGhi);
+		panelGhi.setLayout(null);
+
+		JLabel lblMuc = new JLabel("Mục");
+		lblMuc.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblMuc.setBounds(20, 20, 50, 25);
+		panelGhi.add(lblMuc);
+
+		JLabel lblSoTien = new JLabel("Số tiền");
+		lblSoTien.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSoTien.setBounds(20, 78, 50, 25);
+		panelGhi.add(lblSoTien);
+
+		txtMuc = new JTextField();
+		txtMuc.setColumns(10);
+		txtMuc.setBounds(95, 20, 200, 25);
+		panelGhi.add(txtMuc);
+
+		txtSoTien = new JTextField();
+		txtSoTien.setColumns(10);
+		txtSoTien.setBounds(95, 78, 200, 25);
+		panelGhi.add(txtSoTien);
+
+		JButton btnLu = new JButton("Lưu");
+		btnLu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Fee fee = new Fee();
+				fee.setName(txtMuc.getText().toString().trim());
+				fee.setValue(txtSoTien.getText().toString().trim());
+				if (rdbtnThu.isSelected()) {
+					fee.setType(true);
+				} else {
+					fee.setType(false);
+				}
+				fee.setDate(new Date());
+				FeeDAO.insert(fee);
+				JOptionPane.showMessageDialog(null, "Lưu thành công");
+				txtMuc.setText("");
+				txtSoTien.setText("");
+				listFee = FeeDAO.getFees();
+				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+				setValues();
 			}
 		});
-//		comboBoxTimSP.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				String price = "";
-//				int quantity = 0;
-//				int index = 0;
-//				String name = comboBoxTimSP.getEditor().getItem().toString();
-//				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//					index = 0;
-//					index = comboBoxSoLuong.getItemCount();
-//					for (int i = 0; i < index; i++) {
-//						comboBoxSoLuong.removeItemAt(0);
-//					}
-//					List<Item> list = ItemDAO.getItem("FROM Item where name = '" + name + "'");
-//					if (list.size() > 0) {
-//						quantity = list.get(0).getQuantity();
-//						for (int i = 1; i <= quantity; i++) {
-//							comboBoxSoLuong.addItem(i);
-//						}
-//						price = list.get(0).getPrice();
-//						txtGiaNhap.setText(Convert.stringToNumber(price));
-//					}
-//				}
-//				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
-//						|| e.getKeyCode() == 8) {
-//					if (name.trim().equals("") || name == null) {
-//						try {
-//							comboBoxTimSP.setModel(model.emptyList());
-//						} catch (NullPointerException exception) {
-//							exception.printStackTrace();
-//						}
-//					} else {
-//						comboBoxTimSP.setModel(model.getList(name));
-//					}
-//					if (comboBoxTimSP.getItemCount() > 0) {
-//						comboBoxTimSP.showPopup();
-//						if (e.getKeyCode() != 8) {
-//							((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(),
-//									comboBoxTimSP.getEditor().getItem().toString().length());
-//
-//						} else {
-//							comboBoxTimSP.getEditor().setItem(name);
-//
-//						}
-//					} else {
-//						comboBoxTimSP.addItem(name);
-//					}
-//
-//				}
-//
-//				super.keyReleased(e);
-//			}
-//
-//		});
+		btnLu.setBounds(705, 148, 50, 23);
+		panelGhi.add(btnLu);
 
-		JPanel panelThongKe = new JPanel();
-		tabbedPane.addTab("Thống kê", null, panelThongKe, null);
-	}
+		rdbtnThu = new JRadioButton("Thu");
+		rdbtnThu.setSelected(true);
+		rdbtnThu.setBounds(632, 7, 50, 23);
+		panelGhi.add(rdbtnThu);
 
-	private boolean compare(String s) {
-		Object[] list = comboBoxTimSP.getComponents();
-		boolean flag = false;
-		for (Object object : list) {
-			if (s.equals(object)) {
-				flag = true;
-				break;
+		rdbtnChi = new JRadioButton("Chi");
+		rdbtnChi.setBounds(705, 7, 50, 23);
+		panelGhi.add(rdbtnChi);
+
+		ButtonGroup groupThuChi = new ButtonGroup();
+		groupThuChi.add(rdbtnThu);
+		groupThuChi.add(rdbtnChi);
+
+		JPanel panelLichSu = new JPanel();
+		panelLichSu.setBounds(0, 185, 765, 345);
+		panelThuChi.add(panelLichSu);
+		panelLichSu.setLayout(null);
+
+		JLabel lblLichSu = new JLabel("Lịch sử");
+		lblLichSu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblLichSu.setBounds(10, 11, 50, 25);
+		panelLichSu.add(lblLichSu);
+
+		JLabel lblFrom = new JLabel("Từ");
+		lblFrom.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblFrom.setBounds(70, 24, 50, 25);
+		panelLichSu.add(lblFrom);
+
+		txtFrom = new JTextField();
+		txtFrom.setColumns(10);
+		txtFrom.setBounds(130, 23, 170, 25);
+		txtFrom.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					for (int i = 0; i < listFee.size(); i++) {
+						listFee.remove(i);
+					}
+					from = Convert.getDate(txtFrom.getText().toString().trim());
+					if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
+						to = Convert.getDate(Convert.formatDate(new Date()));
+					} else {
+						to = Convert.getDate(txtTo.getText().toString().trim());
+					}
+					System.out.println(from + "   " + to);
+					if (from.equals("")) {
+						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
+					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
+						listFee = FeeDAO.getByDate(from, to);
+						tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+					}
+				}
 			}
+		});
+		panelLichSu.add(txtFrom);
 
-		}
-		return flag;
-	}
+		JLabel lblTo = new JLabel("Đến");
+		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTo.setBounds(346, 24, 50, 25);
+		panelLichSu.add(lblTo);
 
-	public void search(String name) {
+		txtTo = new JTextField();
+		txtTo.setColumns(10);
+		txtTo.setBounds(406, 23, 170, 25);
+		txtTo.setText(Convert.formatDate(new Date()));
+		txtTo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					for (int i = 0; i < listFee.size(); i++) {
+						listFee.remove(i);
+					}
+					from = Convert.getDate(txtFrom.getText().toString().trim());
+					if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
+						to = Convert.getDate(Convert.formatDate(new Date()));
+					} else {
+						to = Convert.getDate(txtTo.getText().toString().trim());
+					}
+					System.out.println(from + "   " + to);
+					if (from.equals("")) {
+						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
+					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
+						listFee = FeeDAO.getByDate(from, to);
+						tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+					}
+				}
+			}
+		});
+		panelLichSu.add(txtTo);
+
+		tableLichSu = new JTable();
+		tableLichSu.setBounds(10, 344, 745, 262);
+		tableLichSu.setModel(new FeeTableModel(listFee));
+		
+
+		JScrollPane scrollPaneLichSu = new JScrollPane(tableLichSu);
+		scrollPaneLichSu.setBounds(10, 72, 745, 215);
+		panelLichSu.add(scrollPaneLichSu);
+
+		JLabel lblTongThu = new JLabel("Tổng thu");
+		lblTongThu.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblTongThu.setBounds(46, 309, 60, 14);
+		panelLichSu.add(lblTongThu);
+
+		txtTongThu = new JTextField();
+		txtTongThu.setEditable(false);
+		txtTongThu.setBounds(130, 306, 90, 22);
+		panelLichSu.add(txtTongThu);
+		txtTongThu.setColumns(10);
+
+		JLabel lblTongChi = new JLabel("Tổng chi");
+		lblTongChi.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblTongChi.setBounds(278, 309, 60, 14);
+		panelLichSu.add(lblTongChi);
+
+		txtTongChi = new JTextField();
+		txtTongChi.setEditable(false);
+		txtTongChi.setColumns(10);
+		txtTongChi.setBounds(362, 306, 90, 22);
+		panelLichSu.add(txtTongChi);
+
+		JLabel lblLoiNhuanThuChi = new JLabel("Lợi nhuận");
+		lblLoiNhuanThuChi.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblLoiNhuanThuChi.setBounds(516, 309, 60, 14);
+		panelLichSu.add(lblLoiNhuanThuChi);
+
+		txtLoiNhuanThuChi = new JTextField();
+		txtLoiNhuanThuChi.setEditable(false);
+		txtLoiNhuanThuChi.setColumns(10);
+		txtLoiNhuanThuChi.setBounds(600, 306, 90, 22);
+		panelLichSu.add(txtLoiNhuanThuChi);
+		setValues();
+
+		JButton btnTtC = new JButton("Tất cả");
+		btnTtC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				listFee = FeeDAO.getFees();
+				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+				setValues();
+			}
+		});
+		btnTtC.setBounds(692, 27, 63, 23);
+		panelLichSu.add(btnTtC);
 
 	}
 
@@ -526,14 +745,29 @@ public class Main {
 	public void initData() {
 		listStorage = new ArrayList<Item>();
 		listStorage = ItemDAO.getItemes();
-		convertListItem(listStorage);
+		Convert.convertListItem(listStorage);
+
+		listFee = new ArrayList<>();
+		listFee = FeeDAO.getFees();
+		Convert.convertListFee(listFee);
 
 	}
 
-	public List<Item> convertListItem(List<Item> list) {
-		for (Item i : list) {
-			i.setPrice(Convert.stringToNumber(i.getPrice()));
+	private void setValues(){
+		List<Fee> list = FeeDAO.getFees();
+		int tongThu = 0;
+		int tongChi = 0;
+		for(Fee e : list){
+			if(e.isType()){
+				tongThu += Integer.parseInt(e.getValue());
+			} else {
+				tongChi += Integer.parseInt(e.getValue());
+			}
 		}
-		return list;
+		int loiNhuan = tongThu - tongChi;
+		txtTongThu.setText(Convert.numberToString(tongThu + ""));
+		txtTongChi.setText(Convert.numberToString(tongChi + ""));
+		txtLoiNhuanThuChi.setText(Convert.numberToString(loiNhuan + ""));
 	}
+	
 }
