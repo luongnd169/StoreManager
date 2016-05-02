@@ -5,16 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import dao.ItemDAO;
 import dao.SaleBillDAO;
 import dao.SaleBillDetailDAO;
-import dao.ItemDAO;
-import dao.ItemDetailDAO;
 import gui.Main;
-import lib.Convert;
+import model.Item;
 import model.SaleBill;
 import model.SaleBillDetail;
-import model.Item;
-import model.ItemDetail;
 
 public class MainController {
 

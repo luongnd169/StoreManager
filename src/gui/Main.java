@@ -9,16 +9,12 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,16 +39,15 @@ import controller.ItemTableModel;
 import controller.MainController;
 import dao.FeeDAO;
 import dao.ItemDAO;
-import dao.ItemDetailDAO;
 import lib.Convert;
 import model.Fee;
 import model.Item;
-import model.ItemDetail;
 
 public class Main {
 
 	private JFrame frame;
 	private JTable tableTonKho;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxTimSP;
 	ComboBoxModel model = new ComboBoxModel();
 	MainController controller;
@@ -61,6 +56,7 @@ public class Main {
 	private JTextField txtGiaNhap;
 	private JTextField txtGiaXuat;
 	private JTextField txtLoiNhuan;
+	@SuppressWarnings("rawtypes")
 	JComboBox comboBoxSoLuong;
 	int index = 0;
 	private JTextField txtTongTien;
@@ -72,8 +68,8 @@ public class Main {
 	private List<Item> listStorage;
 	private List<Fee> listFee;
 	private int tongTienKho;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtKhachHang;
+	private JTextField txtDienThoai;
 	private JTextField txtMuc;
 	private JTextField txtSoTien;
 	private JTextField txtFrom;
@@ -87,28 +83,29 @@ public class Main {
 	private String from;
 	private String to;
 
-	public JComboBox getComboBox_1() {
+	@SuppressWarnings("rawtypes")
+	public JComboBox getComboBoxTimSP() {
 		return comboBoxTimSP;
 	}
 
-	public void setComboBox_1(JComboBox comboBox_1) {
-		this.comboBoxTimSP = comboBox_1;
+	public void setComboBoxTimSP(@SuppressWarnings("rawtypes") JComboBox comboBoxTimSP) {
+		this.comboBoxTimSP = comboBoxTimSP;
 	}
 
-	public JTable getTable() {
+	public JTable getTableTonKho() {
 		return tableTonKho;
 	}
 
-	public void setTable(JTable table) {
-		this.tableTonKho = table;
+	public void setTableTonKho(JTable tableTonKho) {
+		this.tableTonKho = tableTonKho;
 	}
 
-	public JTable getTable_1() {
+	public JTable getTableXuat() {
 		return tableXuat;
 	}
 
-	public void setTable_1(JTable table_1) {
-		this.tableXuat = table_1;
+	public void setTableXuat(JTable tableXuat) {
+		this.tableXuat = tableXuat;
 	}
 
 	/**
@@ -201,14 +198,14 @@ public class Main {
 					if (lsm.isSelectionEmpty()) {
 						System.out.println("No rows are selected.");
 					} else {
-						Item item = ItemDAO.getItemes().get(lsm.getMinSelectionIndex());
-						ItemDetail itemDetail = ItemDetailDAO.getItemDetail(item.getItemId());
+						// Item item =
+						// ItemDAO.getItemes().get(lsm.getMinSelectionIndex());
+						// ItemDetail itemDetail =
+						// ItemDetailDAO.getItemDetail(item.getItemId());
 
 					}
 				}
 			});
-		} else {
-			tableTonKho.setRowSelectionAllowed(false);
 		}
 		panelTonKho.add(scrollPaneTonKho);
 
@@ -216,8 +213,6 @@ public class Main {
 		rdbtnTenSP.setBounds(120, 7, 109, 23);
 		panelTonKho.add(rdbtnTenSP);
 		rdbtnTenSP.setSelected(true);
-
-		ButtonModel btnModel = rdbtnTenSP.getModel();
 
 		rdbtnSoImei = new JRadioButton("Số imei");
 		rdbtnSoImei.setBounds(231, 7, 109, 23);
@@ -248,7 +243,7 @@ public class Main {
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					tongTienKho = 0;
 					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice());
+						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 					}
 					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 0;
@@ -257,7 +252,7 @@ public class Main {
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					tongTienKho = 0;
 					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice());
+						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 					}
 					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 1;
@@ -266,7 +261,7 @@ public class Main {
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					tongTienKho = 0;
 					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice());
+						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 					}
 					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 2;
@@ -275,7 +270,7 @@ public class Main {
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					tongTienKho = 0;
 					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice());
+						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 					}
 					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 3;
@@ -284,7 +279,7 @@ public class Main {
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					tongTienKho = 0;
 					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice());
+						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 					}
 					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 					warehouse = 4;
@@ -317,10 +312,8 @@ public class Main {
 		txtTongTienKho = new JTextField();
 		txtTongTienKho.setEditable(false);
 		txtTongTienKho.setBounds(628, 507, 132, 20);
-		for (Item i :
-
-			Convert.returnListItem(listStorage)) {
-			tongTienKho += Integer.parseInt(i.getPrice());
+		for (Item i : Convert.returnListItem(listStorage)) {
+			tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 		}
 		txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 		panelTonKho.add(txtTongTienKho);
@@ -404,6 +397,11 @@ public class Main {
 					i.setPrice(Convert.numberToString(txtGiaXuat.getText().trim()));
 					try {
 						tableXuat.setModel(new ItemTableModel(listItem) {
+
+							/**
+							 * 
+							 */
+							private static final long serialVersionUID = 2928691229876020678L;
 						});
 
 					} catch (Exception e) {
@@ -506,27 +504,27 @@ public class Main {
 		panelXuat.add(txtTongTien);
 		txtTongTien.setColumns(10);
 
-		JLabel lblKhchHng = new JLabel("Khách hàng");
-		lblKhchHng.setHorizontalAlignment(SwingConstants.CENTER);
-		lblKhchHng.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblKhchHng.setBounds(547, 61, 80, 17);
-		panelXuat.add(lblKhchHng);
+		JLabel lblKhachHang = new JLabel("Khách hàng");
+		lblKhachHang.setHorizontalAlignment(SwingConstants.CENTER);
+		lblKhachHang.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblKhachHang.setBounds(547, 61, 80, 17);
+		panelXuat.add(lblKhachHang);
 
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(655, 61, 86, 20);
-		panelXuat.add(textField);
+		txtKhachHang = new JTextField();
+		txtKhachHang.setColumns(10);
+		txtKhachHang.setBounds(655, 61, 86, 20);
+		panelXuat.add(txtKhachHang);
 
-		JLabel lblinThoi = new JLabel("Điện thoại");
-		lblinThoi.setHorizontalAlignment(SwingConstants.CENTER);
-		lblinThoi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblinThoi.setBounds(547, 112, 62, 17);
-		panelXuat.add(lblinThoi);
+		JLabel lblDienThoai = new JLabel("Điện thoại");
+		lblDienThoai.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDienThoai.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDienThoai.setBounds(547, 112, 62, 17);
+		panelXuat.add(lblDienThoai);
 
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(655, 112, 86, 20);
-		panelXuat.add(textField_1);
+		txtDienThoai = new JTextField();
+		txtDienThoai.setColumns(10);
+		txtDienThoai.setBounds(655, 112, 86, 20);
+		panelXuat.add(txtDienThoai);
 
 		// JPanel panelNhap = new JPanel();
 		// tabbedPane_1.addTab("Nhập", null, panelNhap, null);
@@ -680,7 +678,6 @@ public class Main {
 		tableLichSu = new JTable();
 		tableLichSu.setBounds(10, 344, 745, 262);
 		tableLichSu.setModel(new FeeTableModel(listFee));
-		
 
 		JScrollPane scrollPaneLichSu = new JScrollPane(tableLichSu);
 		scrollPaneLichSu.setBounds(10, 72, 745, 215);
@@ -753,12 +750,12 @@ public class Main {
 
 	}
 
-	private void setValues(){
+	private void setValues() {
 		List<Fee> list = FeeDAO.getFees();
 		int tongThu = 0;
 		int tongChi = 0;
-		for(Fee e : list){
-			if(e.isType()){
+		for (Fee e : list) {
+			if (e.isType()) {
 				tongThu += Integer.parseInt(e.getValue());
 			} else {
 				tongChi += Integer.parseInt(e.getValue());
@@ -769,5 +766,5 @@ public class Main {
 		txtTongChi.setText(Convert.numberToString(tongChi + ""));
 		txtLoiNhuanThuChi.setText(Convert.numberToString(loiNhuan + ""));
 	}
-	
+
 }

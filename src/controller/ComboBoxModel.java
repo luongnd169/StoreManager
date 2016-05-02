@@ -1,6 +1,5 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -14,6 +13,7 @@ public class ComboBoxModel {
 	
 	MainController main = new MainController();
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DefaultComboBoxModel getList(String name) {
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
 		List<Item> listItem = ItemDAO.getItemes();
@@ -24,6 +24,7 @@ public class ComboBoxModel {
 		return model;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DefaultComboBoxModel getListByImei(String imei){
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
 		List<ItemDetail> listItemDetail = ItemDetailDAO.getItemDetail("FROM ItemDetail WHERE imei LIKE '" + imei + "%'");
@@ -33,9 +34,9 @@ public class ComboBoxModel {
 		return model;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public DefaultComboBoxModel emptyList(){
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
-//		List<Item> listItem = new ArrayList<>();
 		return model;
 	}
 

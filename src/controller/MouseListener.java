@@ -9,12 +9,11 @@ import gui.Main;
 public class MouseListener extends MouseAdapter {
 	Main main = new Main();
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Point point = e.getPoint();
-		int col = main.getTable().columnAtPoint(point);
-		
-		
+		int col = main.getTableTonKho().columnAtPoint(point);
 	}
 
 }
