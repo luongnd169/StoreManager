@@ -14,6 +14,7 @@ public class SaleBill {
 	private Integer billNo;
 	private String totalPrice;
 	private Date date;
+	private String customerPhone;
 
 	public SaleBill() {
 
@@ -52,6 +53,14 @@ public class SaleBill {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getCustomerPhone() {
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(String customerPhone) {
+		this.customerPhone = customerPhone;
 	}
 
 }

@@ -1,18 +1,16 @@
 package dao;
 
-import java.util.List;
-
-import model.Item;
+import com.mchange.v1.util.ArrayUtils;
 
 public class Runable {
 
 	public static void main(String[] args) {
-		List<Item> list = ItemDAO.getItemes();
-		int price = 0;
-		for (Item i : list) {
-			price += Integer.parseInt(i.getPrice()) * i.getQuantity();
-		}
-		System.out.println(price);
+		String s1 = "a45asd";
+		String s2 = "a";
+		// for(int i = 0; i < s2.length(); i++){
+		// if(s2.)
+		// }
+
 	}
 
 }

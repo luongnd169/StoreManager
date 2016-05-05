@@ -66,9 +66,7 @@ public class ItemTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		@SuppressWarnings("unused")
-		boolean[] columnEditables = new boolean[] { false, false, false, true, true };
-		return true;
+		return false;
 	}
 
 }

@@ -17,7 +17,7 @@ public class ComboBoxModel {
 	public DefaultComboBoxModel getList(String name) {
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
 		List<Item> listItem = ItemDAO.getItemes();
-		List<Item> searchItem = main.searchItem(listItem, name);
+		List<Item> searchItem = main.searchItemByName(listItem, name);
 		for (Item i : searchItem) {
 			model.addElement(i.getName());
 		}

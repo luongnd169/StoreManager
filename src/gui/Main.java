@@ -8,6 +8,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,11 +40,14 @@ import controller.ComboBoxModel;
 import controller.FeeTableModel;
 import controller.ItemTableModel;
 import controller.MainController;
+import dao.CustomerDAO;
 import dao.FeeDAO;
 import dao.ItemDAO;
 import lib.Convert;
+import model.Customer;
 import model.Fee;
 import model.Item;
+import javax.swing.JCheckBox;
 
 public class Main {
 
@@ -68,7 +74,6 @@ public class Main {
 	private List<Item> listStorage;
 	private List<Fee> listFee;
 	private int tongTienKho;
-	private JTextField txtKhachHang;
 	private JTextField txtDienThoai;
 	private JTextField txtMuc;
 	private JTextField txtSoTien;
@@ -82,6 +87,7 @@ public class Main {
 	private JRadioButton rdbtnChi;
 	private String from;
 	private String to;
+	private JTextField txtDiaChi;
 
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxTimSP() {
@@ -184,29 +190,12 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		tableTonKho.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		if (true) {
-			ListSelectionModel rowSM = tableTonKho.getSelectionModel();
-			rowSM.addListSelectionListener(new ListSelectionListener() {
-
-				public void valueChanged(ListSelectionEvent e) {
-					if (e.getValueIsAdjusting()) {
-						return;
-					}
-					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-					if (lsm.isSelectionEmpty()) {
-						System.out.println("No rows are selected.");
-					} else {
-						// Item item =
-						// ItemDAO.getItemes().get(lsm.getMinSelectionIndex());
-						// ItemDetail itemDetail =
-						// ItemDetailDAO.getItemDetail(item.getItemId());
-
-					}
-				}
-			});
-		}
+		tableTonKho.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		panelTonKho.add(scrollPaneTonKho);
 
 		rdbtnTenSP = new JRadioButton("Tên sản phẩm");
@@ -294,13 +283,22 @@ public class Main {
 		txtSearch.setBounds(120, 35, 200, 30);
 		panelTonKho.add(txtSearch);
 		txtSearch.setColumns(10);
+
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
+
 				if (txtSearch.getText().trim().equals("")) {
-					tableTonKho.setModel(new ItemTableModel(listStorage));
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 				} else {
-					tableTonKho.setModel(new ItemTableModel(controller.searchItem(listStorage, txtSearch.getText())));
+					if (rdbtnTenSP.isSelected()) {
+						tableTonKho.setModel(
+								new ItemTableModel(controller.searchItemByName(listStorage, txtSearch.getText())));
+					} else {
+						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+							tableTonKho.setModel(new ItemTableModel(controller.searchItemByImei(txtSearch.getText())));
+						}
+					}
 				}
 			}
 		});
@@ -318,6 +316,15 @@ public class Main {
 		txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 		panelTonKho.add(txtTongTienKho);
 		txtTongTienKho.setColumns(10);
+
+		// JButton btnThmSnPhm = new JButton("Thêm sản phẩm");
+		// btnThmSnPhm.addActionListener(new ActionListener() {
+		// public void actionPerformed(ActionEvent arg0) {
+		//
+		// }
+		// });
+		// btnThmSnPhm.setBounds(638, 7, 109, 23);
+		// panelTonKho.add(btnThmSnPhm);
 
 		JPanel panelNhapXuat = new JPanel();
 		tabbedPane.addTab("Nhập/Xuất", null, panelNhapXuat, null);
@@ -423,14 +430,19 @@ public class Main {
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Customer c = new Customer();
+				// c.setName(txtKhachHang.getText());
+				c.setPhone(txtDienThoai.getText());
+				c.setAddress(txtDiaChi.getText());
 				controller = new MainController();
 				for (Item i : listItem) {
 					i.setPrice(Convert.stringToNumber(i.getPrice()));
 				}
-				controller.saveSaleBill(listItem);
+				controller.saveSaleBill(listItem, c);
 				JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
 				listItem.removeAll(listItem);
 				tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listItem)));
+				CustomerDAO.insert(c);
 				clearAll();
 			}
 		});
@@ -456,7 +468,7 @@ public class Main {
 		JLabel lblGiXuat = new JLabel("Giá xuất");
 		lblGiXuat.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGiXuat.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblGiXuat.setBounds(297, 61, 62, 17);
+		lblGiXuat.setBounds(282, 61, 62, 17);
 		panelXuat.add(lblGiXuat);
 
 		txtGiaNhap = new JTextField();
@@ -466,7 +478,7 @@ public class Main {
 		txtGiaNhap.setColumns(10);
 
 		txtGiaXuat = new JTextField();
-		txtGiaXuat.setBounds(405, 61, 86, 20);
+		txtGiaXuat.setBounds(380, 56, 86, 20);
 		txtGiaXuat.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -484,12 +496,12 @@ public class Main {
 		JLabel lblLoiNhuan = new JLabel("Lợi nhuận");
 		lblLoiNhuan.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLoiNhuan.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLoiNhuan.setBounds(297, 115, 62, 17);
+		lblLoiNhuan.setBounds(282, 115, 62, 17);
 		panelXuat.add(lblLoiNhuan);
 
 		txtLoiNhuan = new JTextField();
 		txtLoiNhuan.setEditable(false);
-		txtLoiNhuan.setBounds(405, 115, 86, 20);
+		txtLoiNhuan.setBounds(380, 115, 86, 20);
 
 		panelXuat.add(txtLoiNhuan);
 		txtLoiNhuan.setColumns(10);
@@ -505,26 +517,41 @@ public class Main {
 		txtTongTien.setColumns(10);
 
 		JLabel lblKhachHang = new JLabel("Khách hàng");
-		lblKhachHang.setHorizontalAlignment(SwingConstants.CENTER);
+		lblKhachHang.setHorizontalAlignment(SwingConstants.LEFT);
 		lblKhachHang.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblKhachHang.setBounds(547, 61, 80, 17);
+		lblKhachHang.setBounds(525, 11, 80, 17);
 		panelXuat.add(lblKhachHang);
 
-		txtKhachHang = new JTextField();
-		txtKhachHang.setColumns(10);
-		txtKhachHang.setBounds(655, 61, 86, 20);
-		panelXuat.add(txtKhachHang);
-
 		JLabel lblDienThoai = new JLabel("Điện thoại");
-		lblDienThoai.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDienThoai.setHorizontalAlignment(SwingConstants.LEFT);
 		lblDienThoai.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblDienThoai.setBounds(547, 112, 62, 17);
+		lblDienThoai.setBounds(525, 61, 62, 17);
 		panelXuat.add(lblDienThoai);
 
 		txtDienThoai = new JTextField();
 		txtDienThoai.setColumns(10);
-		txtDienThoai.setBounds(655, 112, 86, 20);
+		txtDienThoai.setBounds(615, 61, 90, 20);
 		panelXuat.add(txtDienThoai);
+
+		JLabel lblDiaChi = new JLabel("Địa chỉ");
+		lblDiaChi.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDiaChi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDiaChi.setBounds(525, 115, 50, 17);
+		panelXuat.add(lblDiaChi);
+
+		txtDiaChi = new JTextField();
+		txtDiaChi.setColumns(10);
+		txtDiaChi.setBounds(615, 115, 90, 20);
+		panelXuat.add(txtDiaChi);
+
+		JComboBox comboBoxKhachHang = new JComboBox();
+		comboBoxKhachHang.setEditable(true);
+		comboBoxKhachHang.setBounds(615, 11, 90, 20);
+		panelXuat.add(comboBoxKhachHang);
+
+		JCheckBox chckbxM = new JCheckBox("Mới");
+		chckbxM.setBounds(710, 9, 50, 23);
+		panelXuat.add(chckbxM);
 
 		// JPanel panelNhap = new JPanel();
 		// tabbedPane_1.addTab("Nhập", null, panelNhap, null);
@@ -766,5 +793,4 @@ public class Main {
 		txtTongChi.setText(Convert.numberToString(tongChi + ""));
 		txtLoiNhuanThuChi.setText(Convert.numberToString(loiNhuan + ""));
 	}
-
 }
