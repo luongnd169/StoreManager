@@ -7,8 +7,15 @@
 );
 
 CREATE TABLE itemdetail (
-	itemId INT PRIMARY KEY,
-	imei VARCHAR (20)
+	id INT PRIMARY KEY auto_increment,
+	itemId int not null,
+	importPrice varchar(20),
+	imei VARCHAR (20),
+	provider int,
+	importDate date,
+	status boolean,
+	exportDate date,
+	customer int
 );
 
 create table salebill(billId int primary key auto_increment, billNo int not NULL, totalPrice varchar(20), customerPhone varchar(11), date DATE);

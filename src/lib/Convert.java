@@ -41,10 +41,14 @@ public class Convert {
 	}
 
 	public static List<Item> convertListItem(List<Item> list) {
+		List<Item> temp = new ArrayList<>();
 		for (Item i : list) {
+			temp.add(i);
+		}
+		for(Item i : temp){
 			i.setPrice(numberToString(i.getPrice()));
 		}
-		return list;
+		return temp;
 	}
 
 	public static List<Item> returnListItem(List<Item> list) {

@@ -10,7 +10,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +17,7 @@ import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,12 +28,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 
 import controller.ComboBoxModel;
@@ -43,11 +40,12 @@ import controller.MainController;
 import dao.CustomerDAO;
 import dao.FeeDAO;
 import dao.ItemDAO;
+import dao.ItemDetailDAO;
 import lib.Convert;
 import model.Customer;
 import model.Fee;
 import model.Item;
-import javax.swing.JCheckBox;
+import model.ItemDetail;
 
 public class Main {
 
@@ -88,6 +86,7 @@ public class Main {
 	private String from;
 	private String to;
 	private JTextField txtDiaChi;
+	List<Item> test = new ArrayList<>();
 
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxTimSP() {
@@ -179,12 +178,11 @@ public class Main {
 		scrollPaneTonKho.setBounds(10, 119, 750, 375);
 		try {
 
-			tableTonKho.setModel(new ItemTableModel(listStorage) {
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)) {
 				private static final long serialVersionUID = 1L;
-				boolean[] columnEditables = new boolean[] { false, false, false, true, true };
 
 				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
+					return false;
 				}
 			});
 		} catch (Exception e) {
@@ -193,7 +191,18 @@ public class Main {
 		tableTonKho.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				if (e.getClickCount() == 2) {
+					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
+					List<ItemDetail> listDetail = ItemDetailDAO
+							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
+					ItemDetailFrame detailFrame = new ItemDetailFrame();
+					detailFrame.getFrame().setVisible(true);
+					detailFrame.getTxtMaSP().setText(selectedItem.getItemId() + "");
+					detailFrame.getTxtTenSP().setText(selectedItem.getName());
+					detailFrame.getTxtSoLuongTon().setText(selectedItem.getQuantity()+"");
+					detailFrame.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
+					
+				}
 			}
 		});
 		panelTonKho.add(scrollPaneTonKho);
@@ -289,14 +298,16 @@ public class Main {
 			public void keyReleased(KeyEvent e) {
 
 				if (txtSearch.getText().trim().equals("")) {
+					listStorage = ItemDAO.getItemes();
 					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 				} else {
 					if (rdbtnTenSP.isSelected()) {
-						tableTonKho.setModel(
-								new ItemTableModel(controller.searchItemByName(listStorage, txtSearch.getText())));
+						listStorage = controller.searchItemByName(ItemDAO.getItemes(), txtSearch.getText());
+						tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 					} else {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							tableTonKho.setModel(new ItemTableModel(controller.searchItemByImei(txtSearch.getText())));
+							listStorage = controller.searchItemByImei(txtSearch.getText());
+							tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 						}
 					}
 				}
@@ -656,7 +667,6 @@ public class Main {
 					} else {
 						to = Convert.getDate(txtTo.getText().toString().trim());
 					}
-					System.out.println(from + "   " + to);
 					if (from.equals("")) {
 						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
 					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
@@ -690,7 +700,6 @@ public class Main {
 					} else {
 						to = Convert.getDate(txtTo.getText().toString().trim());
 					}
-					System.out.println(from + "   " + to);
 					if (from.equals("")) {
 						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
 					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
@@ -769,7 +778,7 @@ public class Main {
 	public void initData() {
 		listStorage = new ArrayList<Item>();
 		listStorage = ItemDAO.getItemes();
-		Convert.convertListItem(listStorage);
+		// Convert.convertListItem(listStorage);
 
 		listFee = new ArrayList<>();
 		listFee = FeeDAO.getFees();
