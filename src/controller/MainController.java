@@ -29,7 +29,7 @@ public class MainController {
 		listItem.add(ItemDAO.getItem("FROM Item where name = '" + name + "'").get(0));
 	}
 
-	public void saveSaleBill(List<Item> listItem, Customer c) {
+	public void saveSaleBill(List<Item> listItem, Customer c, String imei) {
 		Integer nextBillNo = 1;
 		if (SaleBillDAO.getSaleBills().size() != 0) {
 			nextBillNo = SaleBillDAO.getSaleBills().get(SaleBillDAO.getSaleBills().size() - 1).getBillNo() + 1;
@@ -78,6 +78,9 @@ public class MainController {
 		for (Item i : temp) {
 			ItemDAO.update(i);
 		}
+		ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'").get(0);
+		id.setStatus(false);
+		ItemDetailDAO.update(id);
 
 	}
 

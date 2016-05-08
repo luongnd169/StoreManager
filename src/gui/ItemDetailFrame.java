@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,7 +22,9 @@ public class ItemDetailFrame {
 	private JTextField txtGiaNhap;
 	private JTextField txtGiaBinhQuan;
 	private JTextField txtNgayNhap;
-
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBoxImei;
+	
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -83,6 +87,14 @@ public class ItemDetailFrame {
 
 	public void setTxtNgayNhap(JTextField txtNgayNhap) {
 		this.txtNgayNhap = txtNgayNhap;
+	}
+
+	public JComboBox getComboBoxImei() {
+		return comboBoxImei;
+	}
+
+	public void setComboBoxImei(JComboBox comboBoxImei) {
+		this.comboBoxImei = comboBoxImei;
 	}
 
 	/**
@@ -200,7 +212,7 @@ public class ItemDetailFrame {
 		lblSoImei.setBounds(310, 262, 80, 17);
 		frame.getContentPane().add(lblSoImei);
 
-		JComboBox comboBoxImei = new JComboBox();
+		comboBoxImei = new JComboBox();
 		comboBoxImei.setEditable(true);
 		comboBoxImei.setBounds(400, 260, 150, 20);
 		frame.getContentPane().add(comboBoxImei);
@@ -211,6 +223,14 @@ public class ItemDetailFrame {
 
 		JButton btnDong = new JButton("Đóng");
 		btnDong.setBounds(365, 310, 89, 23);
+		btnDong.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();
+				
+			}
+		});
 		frame.getContentPane().add(btnDong);
 	}
 }

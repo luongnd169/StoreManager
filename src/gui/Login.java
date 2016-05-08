@@ -31,7 +31,7 @@ public class Login {
 			}
 		});
 	}
-
+ 
 	/**
 	 * Create the application.
 	 */
@@ -52,12 +52,12 @@ public class Login {
 		panel.setLayout(null);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		
-		JLabel lblLogin = new JLabel("ĐĂNG NHẬP");
+		JLabel lblLogin = new JLabel("Ä�Ä‚NG NHáº¬P");
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblLogin.setBounds(175, 38, 90, 30);
 		panel.add(lblLogin);
 		
-		JLabel lblUsername = new JLabel("Tên đăng nhập");
+		JLabel lblUsername = new JLabel("TÃªn Ä‘Äƒng nháº­p");
 		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblUsername.setBounds(36, 76, 100, 30);
 		panel.add(lblUsername);
@@ -67,7 +67,7 @@ public class Login {
 		panel.add(txtUsername);
 		txtUsername.setColumns(10);
 		
-		JLabel lblPwd = new JLabel("Mật khẩu");	
+		JLabel lblPwd = new JLabel("Máº­t kháº©u");	
 		lblPwd.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblPwd.setBounds(36, 136, 100, 30);
 		panel.add(lblPwd);
@@ -77,7 +77,7 @@ public class Login {
 		textField.setBounds(146, 136, 200, 30);
 		panel.add(textField);
 		
-		JButton btnLogin = new JButton("Đăng nhập");
+		JButton btnLogin = new JButton("Ä�Äƒng nháº­p");
 		btnLogin.setBounds(204, 200, 89, 23);
 		panel.add(btnLogin);
 	}
