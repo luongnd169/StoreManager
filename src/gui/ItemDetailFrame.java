@@ -174,6 +174,7 @@ public class ItemDetailFrame {
 		txtSoLuongTon = new JTextField();
 		txtSoLuongTon.setColumns(10);
 		txtSoLuongTon.setBounds(110, 260, 150, 20);
+		txtSoLuongTon.setEditable(false);
 		frame.getContentPane().add(txtSoLuongTon);
 
 		JLabel lblGiaNhap = new JLabel("Giá nhập");
@@ -216,6 +217,10 @@ public class ItemDetailFrame {
 		comboBoxImei.setEditable(true);
 		comboBoxImei.setBounds(400, 260, 150, 20);
 		frame.getContentPane().add(comboBoxImei);
+		
+//		JButton btnAdd = new JButton("...");
+//		btnAdd.setBounds(553, 262, 25, 18);
+//		frame.getContentPane().add(btnAdd);
 
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.setBounds(134, 310, 89, 23);

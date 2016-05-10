@@ -17,7 +17,7 @@
 		<mapping class="model.SaleBill"></mapping>
 		<mapping class="model.SaleBillDetail"></mapping>
 		<mapping class="model.Customer"></mapping>
-		<!-- <mapping class="model.Provider"></mapping> -->
+		<mapping class="model.Provider"></mapping>
 		<mapping class="model.Fee"></mapping>
 	</session-factory>
 </hibernate-configuration>

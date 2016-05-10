@@ -91,6 +91,7 @@ public class Main {
 	private String from;
 	private String to;
 	private JTextField txtDiaChi;
+	private ItemDetailFrame detailFrame;
 
 	List<Item> test = new ArrayList<>();
 
@@ -208,17 +209,32 @@ public class Main {
 					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
 					List<ItemDetail> listDetail = ItemDetailDAO
 							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
-					ItemDetailFrame detailFrame = new ItemDetailFrame();
+					detailFrame = new ItemDetailFrame();
 					detailFrame.getFrame().setVisible(true);
 					detailFrame.getTxtMaSP().setText(selectedItem.getItemId() + "");
 					detailFrame.getTxtTenSP().setText(selectedItem.getName());
 					detailFrame.getTxtSoLuongTon().setText(selectedItem.getQuantity() + "");
 					detailFrame.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
+					detailFrame.getTxtNhaCungCap().setText("");
+					detailFrame.getTxtGiaNhap().setText(listDetail.get(0).getImportPrice());
+					detailFrame.getTxtNgayNhap().setText(listDetail.get(0).getImportDate() + "");
 					for (ItemDetail id : listDetail) {
 						if (id.isStatus()) {
 							detailFrame.getComboBoxImei().addItem(id.getImei());
 						}
 					}
+					detailFrame.getComboBoxImei().addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String imei = detailFrame.getComboBoxImei().getEditor().getItem().toString();
+							ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'")
+									.get(0);
+							detailFrame.getTxtNhaCungCap().setText("");
+							detailFrame.getTxtGiaNhap().setText(id.getImportPrice());
+							detailFrame.getTxtNgayNhap().setText(id.getImportDate() + "");
+						}
+					});
 
 				}
 			}
