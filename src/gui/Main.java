@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -40,14 +39,17 @@ import controller.ComboBoxModel;
 import controller.FeeTableModel;
 import controller.ItemTableModel;
 import controller.MainController;
+import dao.CustomerDAO;
 import dao.FeeDAO;
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
+import dao.ProviderDAO;
 import lib.Convert;
 import model.Customer;
 import model.Fee;
 import model.Item;
 import model.ItemDetail;
+import model.Provider;
 
 public class Main {
 
@@ -90,8 +92,12 @@ public class Main {
 	private String from;
 	private String to;
 	private JTextField txtDiaChi;
-	private ItemDetailFrame detailFrame;
+	private EditItem editItem;
 	private JPopupMenu popup;
+	private AddItem addItem;
+	private JCheckBox chckbxM;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBoxKhachHang;
 
 	List<Item> test = new ArrayList<>();
 
@@ -174,6 +180,10 @@ public class Main {
 			public void mouseClicked(MouseEvent e) {
 				listStorage = ItemDAO.getItemes();
 				tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+				for (Item i : Convert.returnListItem(listStorage)) {
+					tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+				}
+				txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 			}
 		});
 		panelTonKho.setBounds(10, 0, 774, 560);
@@ -203,44 +213,6 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		tableTonKho.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getButton());
-				if (e.getClickCount() == 2) {
-					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
-					List<ItemDetail> listDetail = ItemDetailDAO
-							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
-					detailFrame = new ItemDetailFrame();
-					detailFrame.getFrame().setVisible(true);
-					detailFrame.getTxtMaSP().setText(selectedItem.getItemId() + "");
-					detailFrame.getTxtTenSP().setText(selectedItem.getName());
-					detailFrame.getTxtSoLuongTon().setText(selectedItem.getQuantity() + "");
-					detailFrame.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
-					detailFrame.getTxtNhaCungCap().setText("");
-					detailFrame.getTxtGiaNhap().setText(listDetail.get(0).getImportPrice());
-					detailFrame.getTxtNgayNhap().setText(listDetail.get(0).getImportDate() + "");
-					for (ItemDetail id : listDetail) {
-						if (id.isStatus()) {
-							detailFrame.getComboBoxImei().addItem(id.getImei());
-						}
-					}
-					detailFrame.getComboBoxImei().addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							String imei = detailFrame.getComboBoxImei().getEditor().getItem().toString();
-							ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'")
-									.get(0);
-							detailFrame.getTxtNhaCungCap().setText("");
-							detailFrame.getTxtGiaNhap().setText(id.getImportPrice());
-							detailFrame.getTxtNgayNhap().setText(id.getImportDate() + "");
-						}
-					});
-
-				}
-			}
-		});
 		panelTonKho.add(scrollPaneTonKho);
 
 		popup = new JPopupMenu();
@@ -621,17 +593,60 @@ public class Main {
 		panelXuat.add(lblDiaChi);
 
 		txtDiaChi = new JTextField();
+		txtDiaChi.setEditable(false);
 		txtDiaChi.setColumns(10);
 		txtDiaChi.setBounds(615, 115, 90, 20);
 		panelXuat.add(txtDiaChi);
 
-		JComboBox comboBoxKhachHang = new JComboBox();
-		comboBoxKhachHang.setEditable(true);
+		comboBoxKhachHang = new JComboBox();
 		comboBoxKhachHang.setBounds(615, 11, 90, 20);
+		List<Customer> listCustomer = CustomerDAO.getCustomers();
+		for (Customer c : listCustomer) {
+			comboBoxKhachHang.addItem(c.getName());
+		}
+		txtDienThoai.setText(listCustomer.get(0).getPhone());
+		txtDiaChi.setText(listCustomer.get(0).getAddress());
+		comboBoxKhachHang.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (!chckbxM.isSelected()) {
+					Customer customer = CustomerDAO.getCustomer(
+							"From Customer where name ='" + comboBoxKhachHang.getSelectedItem().toString() + "'")
+							.get(0);
+					txtDienThoai.setText(customer.getPhone());
+					txtDiaChi.setText(customer.getAddress());
+				}
+
+			}
+		});
 		panelXuat.add(comboBoxKhachHang);
 
-		JCheckBox chckbxM = new JCheckBox("Mới");
+		chckbxM = new JCheckBox("Mới");
 		chckbxM.setBounds(710, 9, 50, 23);
+		chckbxM.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (chckbxM.isSelected()) {
+					comboBoxKhachHang.setEditable(true);
+					comboBoxKhachHang.removeAllItems();
+					txtDienThoai.setText("");
+					txtDiaChi.setText("");
+					txtDiaChi.setEditable(true);
+				} else {
+					comboBoxKhachHang.setEditable(false);
+					List<Customer> listCustomer = CustomerDAO.getCustomers();
+					for (Customer c : listCustomer) {
+						comboBoxKhachHang.addItem(c.getName());
+					}
+					txtDienThoai.setText(listCustomer.get(0).getPhone());
+					txtDiaChi.setText(listCustomer.get(0).getAddress());
+					txtDiaChi.setEditable(false);
+				}
+
+			}
+		});
 		panelXuat.add(chckbxM);
 
 		JLabel lblImei = new JLabel("Imei");
@@ -897,11 +912,104 @@ public class Main {
 	private void initPopup(JPopupMenu popup) {
 		ActionListener menuListener = new ActionListener() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Thêm")) {
+					addItem = new AddItem();
+					addItem.setBounds(100, 100, 400, 300);
+					addItem.getContentPane().setLayout(null);
+					addItem.setVisible(true);
+					addItem.getTxtTenSanPham().setText(listStorage.get(tableTonKho.getSelectedRow()).getName());
+					List<Provider> listProvider = ProviderDAO.getProviders();
+					for (Provider provider : listProvider) {
+						addItem.getComboBoxNhaCungCap().addItem(provider.getName());
+					}
+					addItem.getBtnLuu().addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Integer itemId = -1;
+							String name = addItem.getTxtTenSanPham().getText();
+							String type = addItem.getComboBoxLoai().getSelectedItem().toString();
+							String quantity = addItem.getTxtSoLuong().getText();
+							String price = addItem.getTxtGiaNhap().getText();
+							String purchasePrice = addItem.getTxtGiaNhap().getText();
+							String provider = addItem.getComboBoxNhaCungCap().getSelectedItem().toString();
+							String imei = addItem.getTxtImei().getText();
+
+							if (!ItemDAO.getItem("From Item where name ='" + name + "'").isEmpty()) {
+								Item i = ItemDAO.getItem("From Item where name ='" + name + "'").get(0);
+								itemId = i.getItemId();
+								if (!i.getPrice().equals("0")) {
+									price = (Double.parseDouble(purchasePrice) + Double.parseDouble(i.getPrice())) / 2
+											+ "";
+								}
+							} else {
+								itemId = ItemDAO.getItemes().get(ItemDAO.getItemes().size()).getItemId() + 1;
+							}
+
+							Item item = new Item();
+							item.setName(name);
+							item.setType(type);
+							item.setPrice(price);
+							item.setQuantity(Integer.parseInt(quantity));
+							item.setItemId(itemId);
+
+							ItemDetail detail = new ItemDetail();
+							detail.setItemId(item.getItemId());
+							detail.setImei(imei);
+							detail.setImportDate(Convert.formatDateSQL(new Date()));
+							detail.setImportPrice(purchasePrice);
+							detail.setProvider(ProviderDAO.getProvider("From Provider where name ='" + provider + "'")
+									.get(0).getProviderId());
+							detail.setStatus(true);
+
+							if (!ItemDAO.getItem("From Item where name ='" + name + "'").isEmpty()) {
+								ItemDAO.update(item);
+							} else {
+								ItemDAO.insert(item);
+							}
+
+							ItemDetailDAO.insert(detail);
+							JOptionPane.showMessageDialog(null, "Lưu thành công");
+						}
+					});
 
 				} else if (e.getActionCommand().equals("Sửa")) {
+					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
+					List<ItemDetail> listDetail = ItemDetailDAO
+							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
+					editItem = new EditItem();
+					editItem.setBounds(500, 250, 600, 400);
+					editItem.getContentPane().setLayout(null);
+					editItem.setVisible(true);
+					editItem.getTxtMaSP().setText(selectedItem.getItemId() + "");
+					editItem.getTxtTenSP().setText(selectedItem.getName());
+					editItem.getTxtSoLuongTon().setText(selectedItem.getQuantity() + "");
+					editItem.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
+					editItem.getTxtNhaCungCap().setText("");
+					if (!listDetail.isEmpty()) {
+						editItem.getTxtNgayNhap().setText(listDetail.get(0).getImportDate() + "");
+						editItem.getTxtGiaNhap().setText(listDetail.get(0).getImportPrice());
+						for (ItemDetail id : listDetail) {
+							if (id.isStatus()) {
+								editItem.getComboBoxImei().addItem(id.getImei());
+							}
+						}
+					}
+					editItem.getComboBoxImei().addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String imei = editItem.getComboBoxImei().getEditor().getItem().toString();
+							ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'")
+									.get(0);
+							editItem.getTxtNhaCungCap().setText("");
+							editItem.getTxtGiaNhap().setText(id.getImportPrice());
+							editItem.getTxtNgayNhap().setText(id.getImportDate() + "");
+						}
+					});
 
 				} else if (e.getActionCommand().equals("Xóa")) {
 

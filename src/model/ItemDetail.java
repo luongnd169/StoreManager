@@ -13,9 +13,9 @@ public class ItemDetail {
 	private String importPrice;
 	private String imei;
 	private Integer provider;
-	private Date importDate;
+	private String importDate;
 	private boolean status;
-	private Date exportDate;
+	private String exportDate;
 	private Integer customer;
 
 	public ItemDetail() {
@@ -63,11 +63,11 @@ public class ItemDetail {
 		this.provider = provider;
 	}
 
-	public Date getImportDate() {
+	public String getImportDate() {
 		return importDate;
 	}
 
-	public void setImportDate(Date importDate) {
+	public void setImportDate(String importDate) {
 		this.importDate = importDate;
 	}
 
@@ -79,11 +79,11 @@ public class ItemDetail {
 		this.status = status;
 	}
 
-	public Date getExportDate() {
+	public String getExportDate() {
 		return exportDate;
 	}
 
-	public void setExportDate(Date exportDate) {
+	public void setExportDate(String exportDate) {
 		this.exportDate = exportDate;
 	}
 
