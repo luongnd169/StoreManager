@@ -10,20 +10,22 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -32,15 +34,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.text.JTextComponent;
 
 import controller.ComboBoxModel;
 import controller.FeeTableModel;
 import controller.ItemTableModel;
 import controller.MainController;
-import dao.CustomerDAO;
 import dao.FeeDAO;
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
@@ -92,6 +91,7 @@ public class Main {
 	private String to;
 	private JTextField txtDiaChi;
 	private ItemDetailFrame detailFrame;
+	private JPopupMenu popup;
 
 	List<Item> test = new ArrayList<>();
 
@@ -202,9 +202,11 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		tableTonKho.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				System.out.println(e.getButton());
 				if (e.getClickCount() == 2) {
 					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
 					List<ItemDetail> listDetail = ItemDetailDAO
@@ -240,6 +242,31 @@ public class Main {
 			}
 		});
 		panelTonKho.add(scrollPaneTonKho);
+
+		popup = new JPopupMenu();
+
+		tableTonKho.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				checkPopup(e);
+			}
+
+			public void mouseClicked(MouseEvent e) {
+				checkPopup(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				checkPopup(e);
+			}
+
+			private void checkPopup(MouseEvent e) {
+				if (tableTonKho.getSelectedRow() != -1) {
+					if (e.isPopupTrigger()) {
+						popup.show(tableTonKho, e.getX(), e.getY());
+					}
+				}
+			}
+		});
+		initPopup(popup);
 
 		rdbtnTenSP = new JRadioButton("Tên sản phẩm");
 		rdbtnTenSP.setBounds(120, 7, 109, 23);
@@ -865,5 +892,36 @@ public class Main {
 		txtTongThu.setText(Convert.numberToString(tongThu + ""));
 		txtTongChi.setText(Convert.numberToString(tongChi + ""));
 		txtLoiNhuanThuChi.setText(Convert.numberToString(loiNhuan + ""));
+	}
+
+	private void initPopup(JPopupMenu popup) {
+		ActionListener menuListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("Thêm")) {
+
+				} else if (e.getActionCommand().equals("Sửa")) {
+
+				} else if (e.getActionCommand().equals("Xóa")) {
+
+				}
+
+			}
+		};
+
+		JMenuItem item;
+		popup.add(item = new JMenuItem("Thêm"));
+		item.setHorizontalTextPosition(JMenuItem.RIGHT);
+		item.addActionListener(menuListener);
+
+		popup.add(item = new JMenuItem("Sửa"));
+		item.setHorizontalTextPosition(JMenuItem.RIGHT);
+		item.addActionListener(menuListener);
+
+		popup.add(item = new JMenuItem("Xóa"));
+		item.setHorizontalTextPosition(JMenuItem.RIGHT);
+		item.addActionListener(menuListener);
+
 	}
 }
