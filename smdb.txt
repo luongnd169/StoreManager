@@ -1,5 +1,5 @@
 ﻿CREATE TABLE item (
-	id INT PRIMARY KEY auto_increment,
+	itemId INT PRIMARY KEY auto_increment,
 	NAME nvarchar (50),
 	type VARCHAR (20),
 	price DOUBLE,
@@ -30,8 +30,8 @@ VALUES
 	(
 		'iPhone 4s 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -39,8 +39,8 @@ VALUES
 	(
 		'iPhone 4s 16GB Black',
 		'Điện thoại',
-		10000,
-		5
+	0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -48,8 +48,8 @@ VALUES
 	(
 		'iPhone 4s 32GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -57,8 +57,8 @@ VALUES
 	(
 		'iPhone 4s 32GB Black',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -66,8 +66,8 @@ VALUES
 	(
 		'iPhone 4s 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -75,8 +75,8 @@ VALUES
 	(
 		'iPhone 4s 64GB Black',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -84,8 +84,8 @@ VALUES
 	(
 		'iPhone 5 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -93,8 +93,8 @@ VALUES
 	(
 		'iPhone 5 16GB Black',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -102,8 +102,8 @@ VALUES
 	(
 		'iPhone 5 32GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -111,8 +111,8 @@ VALUES
 	(
 		'iPhone 5 32GB Black',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -120,8 +120,8 @@ VALUES
 	(
 		'iPhone 5 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -129,8 +129,8 @@ VALUES
 	(
 		'iPhone 5 64GB Black',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -138,8 +138,8 @@ VALUES
 	(
 		'iPhone 5s 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -147,8 +147,8 @@ VALUES
 	(
 		'iPhone 5s 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -156,8 +156,8 @@ VALUES
 	(
 		'iPhone 5s 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -165,8 +165,8 @@ VALUES
 	(
 		'iPhone 5s 32GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -174,8 +174,8 @@ VALUES
 	(
 		'iPhone 5s 32GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -183,8 +183,8 @@ VALUES
 	(
 		'iPhone 5s 32GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -192,8 +192,8 @@ VALUES
 	(
 		'iPhone 5s 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -201,8 +201,8 @@ VALUES
 	(
 		'iPhone 5s 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -210,8 +210,8 @@ VALUES
 	(
 		'iPhone 5s 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -219,8 +219,8 @@ VALUES
 	(
 		'iPhone 6 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -228,8 +228,8 @@ VALUES
 	(
 		'iPhone 6 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -237,8 +237,8 @@ VALUES
 	(
 		'iPhone 6 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -246,8 +246,8 @@ VALUES
 	(
 		'iPhone 6 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -255,8 +255,8 @@ VALUES
 	(
 		'iPhone 6 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -264,8 +264,8 @@ VALUES
 	(
 		'iPhone 6 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -273,8 +273,8 @@ VALUES
 	(
 		'iPhone 6 128GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -282,8 +282,8 @@ VALUES
 	(
 		'iPhone 6 128GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -291,8 +291,8 @@ VALUES
 	(
 		'iPhone 6 128GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -300,8 +300,8 @@ VALUES
 	(
 		'iPhone 6Plus 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -309,8 +309,8 @@ VALUES
 	(
 		'iPhone 6Plus 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -318,8 +318,8 @@ VALUES
 	(
 		'iPhone 6Plus 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -327,8 +327,8 @@ VALUES
 	(
 		'iPhone 6Plus 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -336,8 +336,8 @@ VALUES
 	(
 		'iPhone 6Plus 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -345,8 +345,8 @@ VALUES
 	(
 		'iPhone 6Plus 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -354,8 +354,8 @@ VALUES
 	(
 		'iPhone 6Plus 128GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -363,8 +363,8 @@ VALUES
 	(
 		'iPhone 6Plus 128GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -372,8 +372,8 @@ VALUES
 	(
 		'iPhone 6Plus 128GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -381,8 +381,8 @@ VALUES
 	(
 		'iPhone 6s 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -390,8 +390,8 @@ VALUES
 	(
 		'iPhone 6s 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -399,8 +399,8 @@ VALUES
 	(
 		'iPhone 6s 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -408,8 +408,8 @@ VALUES
 	(
 		'iPhone 6s 16GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -417,8 +417,8 @@ VALUES
 	(
 		'iPhone 6s 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -426,8 +426,8 @@ VALUES
 	(
 		'iPhone 6s 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -435,8 +435,8 @@ VALUES
 	(
 		'iPhone 6s 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -444,8 +444,8 @@ VALUES
 	(
 		'iPhone 6s 64GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -453,8 +453,8 @@ VALUES
 	(
 		'iPhone 6s 128GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -462,8 +462,8 @@ VALUES
 	(
 		'iPhone 6s 128GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -471,8 +471,8 @@ VALUES
 	(
 		'iPhone 6s 128GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -480,8 +480,8 @@ VALUES
 	(
 		'iPhone 6s 128GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -489,8 +489,8 @@ VALUES
 	(
 		'iPhone 6sPlus 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -498,8 +498,8 @@ VALUES
 	(
 		'iPhone 6sPlus 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -507,8 +507,8 @@ VALUES
 	(
 		'iPhone 6sPlus 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -516,8 +516,8 @@ VALUES
 	(
 		'iPhone 6sPlus 16GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -525,8 +525,8 @@ VALUES
 	(
 		'iPhone 6sPlus 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -534,8 +534,8 @@ VALUES
 	(
 		'iPhone 6sPlus 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -543,8 +543,8 @@ VALUES
 	(
 		'iPhone 6sPlus 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -552,8 +552,8 @@ VALUES
 	(
 		'iPhone 6sPlus 64GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -561,8 +561,8 @@ VALUES
 	(
 		'iPhone 6sPlus 128GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -570,8 +570,8 @@ VALUES
 	(
 		'iPhone 6sPlus 128GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -579,8 +579,8 @@ VALUES
 	(
 		'iPhone 6sPlus 128GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -588,8 +588,8 @@ VALUES
 	(
 		'iPhone 6sPlus 128GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -597,8 +597,8 @@ VALUES
 	(
 		'iPhone SE 16GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -606,8 +606,8 @@ VALUES
 	(
 		'iPhone SE 16GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -615,8 +615,8 @@ VALUES
 	(
 		'iPhone SE 16GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -624,8 +624,8 @@ VALUES
 	(
 		'iPhone SE 16GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -633,8 +633,8 @@ VALUES
 	(
 		'iPhone SE 64GB White',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -642,8 +642,8 @@ VALUES
 	(
 		'iPhone SE 64GB Gold',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -651,8 +651,8 @@ VALUES
 	(
 		'iPhone SE 64GB Gray',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 INSERT INTO item (NAME, type, price, quantity)
@@ -660,129 +660,129 @@ VALUES
 	(
 		'iPhone SE 64GB Pink',
 		'Điện thoại',
-		10000,
-		5
+		0,
+		0
 	);
 
 /*Chèn iPad bản 3G*/
 
-insert into item (name, type, price, quantity) values ('iPad 2 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 32GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 32GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 32GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 32GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 32GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 32GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Gold', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB White', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Black', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Gold', 'Máy tính bảng', 200000, 10);
+insert into item (name, type, price, quantity) values ('iPad 2 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 32GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 32GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 32GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 32GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 32GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 32GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Gold', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB White', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Black', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Gold', 'Máy tính bảng', 0, 0);
 
 /*Chèn iPad bản wifi*/
 
-insert into item (name, type, price, quantity) values ('iPad 2 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 32GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 32GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 2 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 32GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 32GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad 3 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 32GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 32GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 1 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Gold Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB White Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Black Wifi', 'Máy tính bảng', 200000, 10);
-insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Gold Wifi', 'Máy tính bảng', 200000, 10);
+insert into item (name, type, price, quantity) values ('iPad 2 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 32GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 32GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 2 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 32GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 32GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad 3 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 32GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 32GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 1 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 16GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 64GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Air 2 128GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 32GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 1 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 32GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 2 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 16GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 64GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 3 128GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 16GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 64GB Gold Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB White Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Black Wifi', 'Máy tính bảng', 0, 0);
+insert into item (name, type, price, quantity) values ('iPad Mini 4 128GB Gold Wifi', 'Máy tính bảng', 0, 0);
 
 /*Chèn linh kiện*/
 
