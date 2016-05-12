@@ -52,6 +52,14 @@ public class ItemDAO {
 		}
 	}
 
+	public static int getNextId() {
+		int id = -1;
+		if (getItemes() != null) {
+			id = getItemes().get(getItemes().size() - 1).getItemId() + 1;
+		}
+		return id;
+	}
+
 	public static void insert(Item Item) {
 		process(Item, "insert");
 	}
@@ -86,8 +94,8 @@ public class ItemDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	public static List<String> getItemName(){
+
+	public static List<String> getItemName() {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
@@ -95,8 +103,8 @@ public class ItemDAO {
 			List<Item> list = session.createQuery("FROM Item").list();
 			session.beginTransaction().commit();
 			List<String> listName = new ArrayList<String>();
-			if(!list.isEmpty()){
-				for(Item i : list){
+			if (!list.isEmpty()) {
+				for (Item i : list) {
 					listName.add(i.getName());
 				}
 			}

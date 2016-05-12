@@ -10,6 +10,7 @@ public class Customer {
 	private String name;
 	private String phone;
 	private String address;
+	private boolean provider;
 
 	public Customer() {
 	}
@@ -46,6 +47,14 @@ public class Customer {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public boolean isProvider() {
+		return provider;
+	}
+
+	public void setProvider(boolean provider) {
+		this.provider = provider;
 	}
 
 }

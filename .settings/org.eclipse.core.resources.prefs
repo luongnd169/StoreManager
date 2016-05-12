@@ -1,7 +1,9 @@
 eclipse.preferences.version=1
+encoding//src/controller/CustomerTableModel.java=UTF-8
 encoding//src/controller/FeeTableModel.java=UTF-8
 encoding//src/controller/ItemTableModel.java=UTF-8
 encoding//src/controller/MainController.java=UTF-8
+encoding//src/gui/AddCustomer.java=UTF-8
 encoding//src/gui/AddItem.java=UTF-8
 encoding//src/gui/EditItem.java=UTF-8
 encoding//src/gui/Login.java=UTF-8
