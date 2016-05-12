@@ -9,11 +9,13 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class EditItem extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtMaSP;
 	private JTextField txtTenSP;
 	private JTextField txtNhaCungCap;
@@ -80,10 +82,12 @@ public class EditItem extends JFrame {
 		this.txtNgayNhap = txtNgayNhap;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxImei() {
 		return comboBoxImei;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setComboBoxImei(JComboBox comboBoxImei) {
 		this.comboBoxImei = comboBoxImei;
 	}

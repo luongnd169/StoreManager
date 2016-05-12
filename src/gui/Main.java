@@ -601,11 +601,13 @@ public class Main {
 		comboBoxKhachHang = new JComboBox();
 		comboBoxKhachHang.setBounds(615, 11, 90, 20);
 		List<Customer> listCustomer = CustomerDAO.getCustomers();
-		for (Customer c : listCustomer) {
-			comboBoxKhachHang.addItem(c.getName());
+		if (!listCustomer.isEmpty()) {
+			for (Customer c : listCustomer) {
+				comboBoxKhachHang.addItem(c.getName());
+			}
+			txtDienThoai.setText(listCustomer.get(0).getPhone());
+			txtDiaChi.setText(listCustomer.get(0).getAddress());
 		}
-		txtDienThoai.setText(listCustomer.get(0).getPhone());
-		txtDiaChi.setText(listCustomer.get(0).getAddress());
 		comboBoxKhachHang.addItemListener(new ItemListener() {
 
 			@Override
@@ -614,8 +616,10 @@ public class Main {
 					Customer customer = CustomerDAO.getCustomer(
 							"From Customer where name ='" + comboBoxKhachHang.getSelectedItem().toString() + "'")
 							.get(0);
-					txtDienThoai.setText(customer.getPhone());
-					txtDiaChi.setText(customer.getAddress());
+					if (customer != null) {
+						txtDienThoai.setText(customer.getPhone());
+						txtDiaChi.setText(customer.getAddress());
+					}
 				}
 
 			}
@@ -637,12 +641,14 @@ public class Main {
 				} else {
 					comboBoxKhachHang.setEditable(false);
 					List<Customer> listCustomer = CustomerDAO.getCustomers();
-					for (Customer c : listCustomer) {
-						comboBoxKhachHang.addItem(c.getName());
+					if (!listCustomer.isEmpty()) {
+						for (Customer c : listCustomer) {
+							comboBoxKhachHang.addItem(c.getName());
+						}
+						txtDienThoai.setText(listCustomer.get(0).getPhone());
+						txtDiaChi.setText(listCustomer.get(0).getAddress());
+						txtDiaChi.setEditable(false);
 					}
-					txtDienThoai.setText(listCustomer.get(0).getPhone());
-					txtDiaChi.setText(listCustomer.get(0).getAddress());
-					txtDiaChi.setEditable(false);
 				}
 
 			}

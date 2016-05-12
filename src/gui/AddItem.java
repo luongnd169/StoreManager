@@ -50,10 +50,12 @@ public class AddItem extends JFrame {
 		this.txtSoLuong = txtSoLuong;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxNhaCungCap() {
 		return comboBoxNhaCungCap;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setComboBoxNhaCungCap(JComboBox comboBoxNhaCungCap) {
 		this.comboBoxNhaCungCap = comboBoxNhaCungCap;
 	}
