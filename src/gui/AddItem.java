@@ -274,73 +274,92 @@ public class AddItem extends JFrame {
 	private void saveItem() {
 		Integer itemId = -1;
 		String name = txtTenSanPham.getText();
-		if (name.equals("")) {
-			JOptionPane.showMessageDialog(null, "Chưa nhập tên");
-			return;
-		}
 		String type = comboBoxLoai.getSelectedItem().toString();
 		int quantity = Integer.parseInt(txtSoLuong.getText());
 		String price = txtGiaNhap.getText();
-		if (price.equals("")) {
-			JOptionPane.showMessageDialog(null, "Chưa nhập giá");
-			return;
-		}
 		String provider = "";
 		if (comboBoxNhaCungCap.getSelectedItem() != null) {
 			provider = comboBoxNhaCungCap.getSelectedItem().toString();
 		}
-		if (provider.equals("")) {
-			JOptionPane.showMessageDialog(null, "Chưa chọn Nhà cung cấp");
-			return;
-		}
-		String imeis = "";
-		imeis = txtImei.getText();
-		if (imeis.equals("")) {
-			JOptionPane.showMessageDialog(null, "Chưa nhập imei");
-			return;
-		}
-		StringTokenizer st = new StringTokenizer(imeis, " ");
-		String[] imei = new String[quantity];
-		if (st.countTokens() != quantity) {
-			JOptionPane.showMessageDialog(null, "Dữ liệu sai");
-		} else {
-			for (int i = 0; i < imei.length; i++) {
-				imei[i] = st.nextToken();
-			}
-
-			Item item = new Item();
-			item.setName(name);
-			item.setType(type);
-			if (txtTenSanPham.isEditable()) {
-				itemId = ItemDAO.getNextId();
-				item.setItemId(itemId);
-				item.setQuantity(quantity);
-				item.setPrice(price);
-				ItemDAO.insert(item);
+		String imei = "";
+		imei = txtImei.getText().trim();
+		StringTokenizer st = new StringTokenizer(imei, " ");
+		String[] imeis = new String[quantity];
+		if (checkData(name, type, quantity + "", price, provider, imei)) {
+			if (st.countTokens() != quantity) {
+				JOptionPane.showMessageDialog(null, "Dữ liệu sai");
 			} else {
-				Item i = ItemDAO.getItem("From Item where name ='" + name + "'").get(0);
-				itemId = i.getItemId();
-				item.setItemId(itemId);
-				item.setQuantity(i.getQuantity() + quantity);
-				int averagePrice = (Integer.parseInt(i.getPrice()) + Integer.parseInt(price)) / 2;
-				item.setPrice(String.valueOf(averagePrice));
-				ItemDAO.update(item);
-			}
+				for (int i = 0; i < imeis.length; i++) {
+					System.out.println("length "+imeis.length);
+					System.out.println("i = " + i);
+					String nextToken = st.nextToken();
+					System.out.println(nextToken);
+					imeis[i] = nextToken;
+				}
 
-			ItemDetail itemDetail;
-			for (int i = 0; i < quantity; i++) {
-				itemDetail = new ItemDetail();
-				itemDetail.setItemId(itemId);
-				itemDetail.setImei(imei[i]);
-				itemDetail.setImportDate(Convert.formatDateSQL(new Date()));
-				itemDetail.setImportPrice(price);
-				itemDetail.setProvider(
-						CustomerDAO.getCustomer("From Customer where name ='" + provider + "' and provider = 1").get(0)
-								.getCustomerId());
-				itemDetail.setStatus(true);
-				ItemDetailDAO.insert(itemDetail);
+				Item item = new Item();
+				item.setName(name);
+				item.setType(type);
+				if (txtTenSanPham.isEditable()) {
+					itemId = ItemDAO.getNextId();
+					item.setItemId(itemId);
+					item.setQuantity(quantity);
+					item.setPrice(price);
+					ItemDAO.insert(item);
+				} else {
+					Item i = ItemDAO.getItem("From Item where name ='" + name + "'").get(0);
+					itemId = i.getItemId();
+					item.setItemId(itemId);
+					item.setQuantity(i.getQuantity() + quantity);
+					int averagePrice = 0;
+					if(Integer.parseInt(i.getPrice()) == 0){
+						averagePrice = Integer.parseInt(price);
+					} else {
+						averagePrice = (Integer.parseInt(i.getPrice()) + Integer.parseInt(price)) / 2;
+					}
+					item.setPrice(String.valueOf(averagePrice));
+					ItemDAO.update(item);
+				}
+
+				ItemDetail itemDetail;
+				for (int i = 0; i < quantity; i++) {
+					itemDetail = new ItemDetail();
+					itemDetail.setItemId(itemId);
+					itemDetail.setImei(imeis[i]);
+					itemDetail.setImportDate(Convert.formatDateSQL(new Date()));
+					itemDetail.setImportPrice(price);
+					itemDetail.setProvider(
+							CustomerDAO.getCustomer("From Customer where name ='" + provider + "' and provider = 1")
+									.get(0).getCustomerId());
+					itemDetail.setStatus(true);
+					ItemDetailDAO.insert(itemDetail);
+				}
 			}
 		}
+	}
+
+	private boolean checkData(String name, String type, String quantity, String price, String provider, String imei) {
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập tên sản phẩm");
+			return false;
+		} else if (type.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa chọn chủng loại");
+			return false;
+		} else if (price.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập giá");
+			return false;
+		} else if (provider.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa chọn Nhà cung cấp");
+			return false;
+		} else if (quantity.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập số lượng");
+			return false;
+		} else if (imei.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập imei");
+			return false;
+		}
+
+		return true;
 	}
 
 	private void disposeFrame() {

@@ -100,9 +100,12 @@ public class Main {
 	List<Item> test = new ArrayList<>();
 	private JTextField txtTimThongTin;
 	private JTable tableThongTin;
+	@SuppressWarnings("unused")
 	private AddCustomer addCustomer;
 	private List<Customer> listProvider;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboKho;
+	private JButton btnTaoMoiKho;
 
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxTimSP() {
@@ -153,6 +156,7 @@ public class Main {
 	 * Create the application.
 	 */
 	public Main() {
+
 		initData();
 		controller = new MainController();
 		initialize();
@@ -298,7 +302,7 @@ public class Main {
 		panelTonKho.add(txtTongTienKho);
 		txtTongTienKho.setColumns(10);
 
-		JButton btnTaoMoiKho = new JButton("Tạo mới");
+		btnTaoMoiKho = new JButton("Tạo mới");
 		btnTaoMoiKho.setBounds(690, 13, 70, 23);
 		panelTonKho.add(btnTaoMoiKho);
 
@@ -363,7 +367,7 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			addItemSell();
+				addItemSell();
 			}
 		});
 		panelXuat.add(btnThem);
@@ -371,7 +375,7 @@ public class Main {
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			saveSaveBill();
+				saveSaveBill();
 			}
 		});
 		btnLuu.setBounds(602, 470, 89, 23);
@@ -482,15 +486,7 @@ public class Main {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (!chckbxM.isSelected()) {
-					Customer customer = CustomerDAO.getCustomer(
-							"From Customer where name ='" + comboBoxKhachHang.getSelectedItem().toString() + "'")
-							.get(0);
-					if (customer != null) {
-						txtDienThoai.setText(customer.getPhone());
-						txtDiaChi.setText(customer.getAddress());
-					}
-				}
+				showCustomer();
 
 			}
 		});
@@ -502,24 +498,7 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (chckbxM.isSelected()) {
-					comboBoxKhachHang.setEditable(true);
-					comboBoxKhachHang.removeAllItems();
-					txtDienThoai.setText("");
-					txtDiaChi.setText("");
-					txtDiaChi.setEditable(true);
-				} else {
-					comboBoxKhachHang.setEditable(false);
-					List<Customer> listCustomer = CustomerDAO.getCustomers();
-					if (!listCustomer.isEmpty()) {
-						for (Customer c : listCustomer) {
-							comboBoxKhachHang.addItem(c.getName());
-						}
-						txtDienThoai.setText(listCustomer.get(0).getPhone());
-						txtDiaChi.setText(listCustomer.get(0).getAddress());
-						txtDiaChi.setEditable(false);
-					}
-				}
+				checkboxCustomerEvent();
 
 			}
 		});
@@ -538,9 +517,7 @@ public class Main {
 		JButton btnHuy = new JButton("Hủy");
 		btnHuy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				clearAll();
-				listItem = new ArrayList<>();
-				tableXuat.setModel(new ItemTableModel(listItem));
+				cancelSell();
 			}
 		});
 		btnHuy.setBounds(101, 470, 89, 23);
@@ -580,26 +557,17 @@ public class Main {
 		txtSoTien.setColumns(10);
 		txtSoTien.setBounds(95, 78, 200, 25);
 		panelGhi.add(txtSoTien);
+		txtSoTien.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				confirmSaveFee(e);
+			}
+		});
 
 		JButton btnLu = new JButton("Lưu");
 		btnLu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Fee fee = new Fee();
-				fee.setName(txtMuc.getText().toString().trim());
-				fee.setValue(txtSoTien.getText().toString().trim());
-				if (rdbtnThu.isSelected()) {
-					fee.setType(true);
-				} else {
-					fee.setType(false);
-				}
-				fee.setDate(new Date());
-				FeeDAO.insert(fee);
-				JOptionPane.showMessageDialog(null, "Lưu thành công");
-				txtMuc.setText("");
-				txtSoTien.setText("");
-				listFee = FeeDAO.getFees();
-				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
-				setValues();
+				saveFee();
 			}
 		});
 		btnLu.setBounds(705, 148, 50, 23);
@@ -639,23 +607,7 @@ public class Main {
 		txtFrom.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					for (int i = 0; i < listFee.size(); i++) {
-						listFee.remove(i);
-					}
-					from = Convert.getDate(txtFrom.getText().toString().trim());
-					if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
-						to = Convert.getDate(Convert.formatDate(new Date()));
-					} else {
-						to = Convert.getDate(txtTo.getText().toString().trim());
-					}
-					if (from.equals("")) {
-						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
-					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
-						listFee = FeeDAO.getByDate(from, to);
-						tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
-					}
-				}
+				searchFeeFrom(e);
 			}
 		});
 		panelLichSu.add(txtFrom);
@@ -672,23 +624,7 @@ public class Main {
 		txtTo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					for (int i = 0; i < listFee.size(); i++) {
-						listFee.remove(i);
-					}
-					from = Convert.getDate(txtFrom.getText().toString().trim());
-					if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
-						to = Convert.getDate(Convert.formatDate(new Date()));
-					} else {
-						to = Convert.getDate(txtTo.getText().toString().trim());
-					}
-					if (from.equals("")) {
-						listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
-					} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
-						listFee = FeeDAO.getByDate(from, to);
-						tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
-					}
-				}
+				searchFeeTo(e);
 			}
 		});
 		panelLichSu.add(txtTo);
@@ -738,9 +674,7 @@ public class Main {
 		JButton btnTtC = new JButton("Tất cả");
 		btnTtC.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				listFee = FeeDAO.getFees();
-				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
-				setValues();
+				showAllFees();
 			}
 		});
 		btnTtC.setBounds(692, 27, 63, 23);
@@ -810,7 +744,7 @@ public class Main {
 		listFee = FeeDAO.getFees();
 		Convert.convertListFee(listFee);
 
-		listProvider = CustomerDAO.getCustomer("From Customer where provider = 1");
+		setListProvider(CustomerDAO.getCustomer("From Customer where provider = 1"));
 
 		for (Item i : Convert.returnListItem(listStorage)) {
 			tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
@@ -843,90 +777,24 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Thêm")) {
 					addItem = new AddItem();
+					addItem.getComboBoxLoai().transferFocus();
+					addItem.getComboBoxLoai().setEnabled(false);
 					addItem.getTxtTenSanPham().setText(listStorage.get(tableTonKho.getSelectedRow()).getName());
 					addItem.getTxtTenSanPham().setEditable(false);
-
-					// for (Customer provider : listProvider) {
-					// addItem.getComboBoxNhaCungCap().addItem(provider.getName());
-					// }
-					// addItem.getBtnLuu().addActionListener(new
-					// ActionListener() {
-					//
-					// @Override
-					// public void actionPerformed(ActionEvent e) {
-					// Integer itemId = -1;
-					// String name = addItem.getTxtTenSanPham().getText();
-					// String type =
-					// addItem.getComboBoxLoai().getSelectedItem().toString();
-					// String quantity = addItem.getTxtSoLuong().getText();
-					// String price = addItem.getTxtGiaNhap().getText();
-					// String purchasePrice = addItem.getTxtGiaNhap().getText();
-					// String provider =
-					// addItem.getComboBoxNhaCungCap().getSelectedItem().toString();
-					// String imei = addItem.getTxtImei().getText();
-					//
-					// if (!ItemDAO.getItem("From Item where name ='" + name +
-					// "'").isEmpty()) {
-					// Item i = ItemDAO.getItem("From Item where name ='" + name
-					// + "'").get(0);
-					// itemId = i.getItemId();
-					// if (!i.getPrice().equals("0")) {
-					// price = (Double.parseDouble(purchasePrice) +
-					// Double.parseDouble(i.getPrice())) / 2
-					// + "";
-					// }
-					// } else {
-					// itemId =
-					// ItemDAO.getItemes().get(ItemDAO.getItemes().size()).getItemId()
-					// + 1;
-					// }
-					//
-					// Item item = new Item();
-					// item.setName(name);
-					// item.setType(type);
-					// item.setPrice(price);
-					// item.setQuantity(Integer.parseInt(quantity));
-					// item.setItemId(itemId);
-					//
-					// ItemDetail detail = new ItemDetail();
-					// detail.setItemId(item.getItemId());
-					// detail.setImei(imei);
-					// detail.setImportDate(Convert.formatDateSQL(new Date()));
-					// detail.setImportPrice(purchasePrice);
-					// detail.setProvider(
-					// CustomerDAO
-					// .getCustomer(
-					// "From Provider where name ='" + provider + "' and
-					// provider = 1")
-					// .get(0).getCustomerId());
-					// detail.setStatus(true);
-					//
-					// if (!ItemDAO.getItem("From Item where name ='" + name +
-					// "'").isEmpty()) {
-					// ItemDAO.update(item);
-					// } else {
-					// ItemDAO.insert(item);
-					// }
-					//
-					// ItemDetailDAO.insert(detail);
-					// JOptionPane.showMessageDialog(null, "Lưu thành công");
-					// }
-					// });
-
 				} else if (e.getActionCommand().equals("Sửa")) {
 					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
 					List<ItemDetail> listDetail = ItemDetailDAO
 							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
 					editItem = new EditItem();
-					editItem.setBounds(500, 250, 600, 400);
-					editItem.getContentPane().setLayout(null);
-					editItem.setVisible(true);
+					editItem.getTxtMaSP().transferFocus();
+					editItem.getTxtMaSP().setEditable(false);
 					editItem.getTxtMaSP().setText(selectedItem.getItemId() + "");
 					editItem.getTxtTenSP().setText(selectedItem.getName());
 					editItem.getTxtSoLuongTon().setText(selectedItem.getQuantity() + "");
 					editItem.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
-					editItem.getTxtNhaCungCap().setText("");
+					
 					if (!listDetail.isEmpty()) {
+						editItem.getTxtNhaCungCap().setText(CustomerDAO.getCustomer(listDetail.get(0).getProvider()).getName());
 						editItem.getTxtNgayNhap().setText(listDetail.get(0).getImportDate() + "");
 						editItem.getTxtGiaNhap().setText(listDetail.get(0).getImportPrice());
 						for (ItemDetail id : listDetail) {
@@ -945,6 +813,7 @@ public class Main {
 							editItem.getTxtNhaCungCap().setText("");
 							editItem.getTxtGiaNhap().setText(id.getImportPrice());
 							editItem.getTxtNgayNhap().setText(id.getImportDate() + "");
+							editItem.getTxtNhaCungCap().setText(CustomerDAO.getCustomer(id.getProvider()).getName());
 						}
 					});
 
@@ -1086,8 +955,9 @@ public class Main {
 			}
 		}
 	}
-	
-	private void searchItemSell(KeyEvent e){
+
+	@SuppressWarnings("unchecked")
+	private void searchItemSell(KeyEvent e) {
 		String price = "";
 		int quantity = 0;
 		String name = comboBoxTimSP.getEditor().getItem().toString();
@@ -1096,8 +966,7 @@ public class Main {
 			comboBoxTimSP.setModel(model.getList(name));
 			comboBoxTimSP.showPopup();
 			comboBoxTimSP.getEditor().setItem(name);
-			((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(),
-					name.length());
+			((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(), name.length());
 		}
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			index = comboBoxSoLuong.getItemCount();
@@ -1124,10 +993,9 @@ public class Main {
 
 		}
 	}
-	
-	private void addItemSell(){
-		Item i = ItemDAO
-				.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
+
+	private void addItemSell() {
+		Item i = ItemDAO.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
 				.get(0);
 		i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
 		if (!txtGiaXuat.getText().trim().equals("")) {
@@ -1156,8 +1024,8 @@ public class Main {
 			JOptionPane.showMessageDialog(null, "Chưa nhập giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	private void saveSaveBill(){
+
+	private void saveSaveBill() {
 		Customer c = new Customer();
 		// c.setName(txtKhachHang.getText());
 		c.setPhone(txtDienThoai.getText());
@@ -1173,12 +1041,167 @@ public class Main {
 		// CustomerDAO.insert(c);
 		clearAll();
 	}
-	private void countProfits(){
+
+	private void countProfits() {
 		String name = comboBoxTimSP.getEditor().getItem().toString();
 		List<Item> listItem = ItemDAO.getItem("FROM Item where name = '" + name + "'");
 		if (listItem.size() > 0 && !txtGiaXuat.getText().equals("")) {
-			txtLoiNhuan.setText(Convert.numberToString(String.valueOf(
-					Integer.parseInt(txtGiaXuat.getText()) - Integer.parseInt(listItem.get(0).getPrice()))));
+			txtLoiNhuan.setText(Convert.numberToString(String
+					.valueOf(Integer.parseInt(txtGiaXuat.getText()) - Integer.parseInt(listItem.get(0).getPrice()))));
 		}
 	}
+
+	private void showCustomer() {
+		if (!chckbxM.isSelected()) {
+			Customer customer = CustomerDAO
+					.getCustomer("From Customer where name ='" + comboBoxKhachHang.getSelectedItem().toString() + "'")
+					.get(0);
+			if (customer != null) {
+				txtDienThoai.setText(customer.getPhone());
+				txtDiaChi.setText(customer.getAddress());
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkboxCustomerEvent() {
+		if (chckbxM.isSelected()) {
+			comboBoxKhachHang.setEditable(true);
+			comboBoxKhachHang.removeAllItems();
+			txtDienThoai.setText("");
+			txtDiaChi.setText("");
+			txtDiaChi.setEditable(true);
+		} else {
+			comboBoxKhachHang.setEditable(false);
+			List<Customer> listCustomer = CustomerDAO.getCustomers();
+			if (!listCustomer.isEmpty()) {
+				for (Customer c : listCustomer) {
+					comboBoxKhachHang.addItem(c.getName());
+				}
+				txtDienThoai.setText(listCustomer.get(0).getPhone());
+				txtDiaChi.setText(listCustomer.get(0).getAddress());
+				txtDiaChi.setEditable(false);
+			}
+		}
+	}
+
+	private void cancelSell() {
+		clearAll();
+		listItem = new ArrayList<>();
+		tableXuat.setModel(new ItemTableModel(listItem));
+	}
+
+	private void saveFee() {
+		Fee fee = new Fee();
+		String name = txtMuc.getText().toString().trim();
+		String value = txtSoTien.getText().toString().trim();
+		if (!(name.equals("") && value.equals(""))) {
+			fee.setName(name);
+			try {
+				Integer.parseInt(value);
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Dữ liệu sai");
+				txtMuc.requestFocus();
+				return;
+			}
+			fee.setValue(value);
+			if (rdbtnThu.isSelected()) {
+				fee.setType(true);
+			} else {
+				fee.setType(false);
+			}
+			fee.setDate(new Date());
+			FeeDAO.insert(fee);
+			JOptionPane.showMessageDialog(null, "Lưu thành công");
+			txtMuc.setText("");
+			txtSoTien.setText("");
+			listFee = FeeDAO.getFees();
+			tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+			setValues();
+		} else {
+			txtMuc.requestFocus();
+			JOptionPane.showMessageDialog(null, "Dữ liệu sai");
+		}
+
+	}
+
+	private void searchFeeFrom(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			for (int i = 0; i < listFee.size(); i++) {
+				listFee.remove(i);
+			}
+			from = Convert.getDate(txtFrom.getText().toString().trim());
+			if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
+				to = Convert.getDate(Convert.formatDate(new Date()));
+			} else {
+				to = Convert.getDate(txtTo.getText().toString().trim());
+			}
+			if (from.equals("")) {
+				listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
+			} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
+				listFee = FeeDAO.getByDate(from, to);
+				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+			}
+		}
+	}
+
+	private void searchFeeTo(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			for (int i = 0; i < listFee.size(); i++) {
+				listFee.remove(i);
+			}
+			from = Convert.getDate(txtFrom.getText().toString().trim());
+			if (txtTo.getText().equals(Convert.formatDate(new Date()))) {
+				to = Convert.getDate(Convert.formatDate(new Date()));
+			} else {
+				to = Convert.getDate(txtTo.getText().toString().trim());
+			}
+			if (from.equals("")) {
+				listFee = FeeDAO.getFee("From Fee where day <= '" + to + "'");
+			} else if (!FeeDAO.getByDate(from, to).isEmpty()) {
+				listFee = FeeDAO.getByDate(from, to);
+				tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+			}
+		}
+	}
+
+	private void showAllFees() {
+		listFee = FeeDAO.getFees();
+		tableLichSu.setModel(new FeeTableModel(Convert.convertListFee(listFee)));
+		setValues();
+	}
+
+	public List<Customer> getListProvider() {
+		return listProvider;
+	}
+
+	public void setListProvider(List<Customer> listProvider) {
+		this.listProvider = listProvider;
+	}
+
+//	private void tranfer() {
+//		txtMuc.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+//					txtMuc.transferFocus();
+//				}
+//			}
+//			
+//		});
+//	}
+	
+	private void confirmSaveFee(KeyEvent e){
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			int rep = JOptionPane.showConfirmDialog(null, "Lưu phiếu?", null,
+					JOptionPane.YES_NO_OPTION);
+			if (rep == JOptionPane.YES_OPTION) {
+				saveFee();
+				return;
+			} else {
+				txtMuc.requestFocus();
+			}
+		}
+	}
+
 }

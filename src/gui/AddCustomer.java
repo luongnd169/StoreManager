@@ -42,7 +42,6 @@ public class AddCustomer extends JFrame {
 		setBounds(100, 100, 450, 300);
 		setVisible(true);
 		getContentPane().setLayout(null);
-		
 
 		JLabel lblTen = new JLabel("Tên khách hàng");
 		lblTen.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -94,7 +93,7 @@ public class AddCustomer extends JFrame {
 
 		chckbxKhach = new JCheckBox("Khách");
 		chckbxKhach.setBounds(366, 5, 70, 23);
-		chckbxKhach.setFocusable(true);
+//		chckbxKhach.setFocusable(true);
 		chckbxKhach.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -114,18 +113,24 @@ public class AddCustomer extends JFrame {
 		} else {
 			provider = true;
 		}
+		if (checkData(name, phone, address)) {
 
-		if (CustomerDAO.getCustomer("From Customer where phone ='" + phone + "'").isEmpty()) {
-			Customer c = new Customer();
-			c.setName(name);
-			c.setPhone(phone);
-			c.setAddress(address);
-			c.setProvider(provider);
-			CustomerDAO.insert(c);
-			JOptionPane.showMessageDialog(null, "Thêm thành công");
-			table.setModel(new CustomerTableModel(CustomerDAO.getCustomers()));
-		} else {
-			JOptionPane.showMessageDialog(null, "Khách hàng đã tồn tại");
+			if (CustomerDAO.getCustomer("From Customer where phone ='" + phone + "'").isEmpty()) {
+				Customer c = new Customer();
+				c.setName(name);
+				c.setPhone(phone);
+				c.setAddress(address);
+				c.setProvider(provider);
+				CustomerDAO.insert(c);
+				JOptionPane.showMessageDialog(null, "Thêm thành công");
+				table.setModel(new CustomerTableModel(CustomerDAO.getCustomers()));
+			} else {
+				if (provider) {
+					JOptionPane.showMessageDialog(null, "Nhà cung cấp đã tồn tại");
+				} else {
+					JOptionPane.showMessageDialog(null, "Khách hàng đã tồn tại");
+				}
+			}
 		}
 	}
 
@@ -178,8 +183,8 @@ public class AddCustomer extends JFrame {
 		});
 
 	}
-	
-	private void disposeFrame(){
+
+	private void disposeFrame() {
 		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
 		Action escapeAction = new AbstractAction() {
 			/**
@@ -193,6 +198,21 @@ public class AddCustomer extends JFrame {
 		};
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
 		getRootPane().getActionMap().put("ESCAPE", escapeAction);
+	}
+
+	private boolean checkData(String name, String phone, String address) {
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập tên");
+			return false;
+		} else if (phone.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập số điện thoại");
+			return false;
+		} else if (address.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập địa chỉ");
+			return false;
+		}
+
+		return true;
 	}
 
 }

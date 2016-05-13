@@ -3,6 +3,8 @@ package gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -105,6 +107,10 @@ public class EditItem extends JFrame {
 	@SuppressWarnings("rawtypes")
 	private void initialize() {
 
+		setBounds(500, 250, 600, 400);
+		getContentPane().setLayout(null);
+		setVisible(true);
+
 		JLabel lblThongTinSP = new JLabel("Thông tin sản phẩm");
 		lblThongTinSP.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblThongTinSP.setBounds(220, 22, 134, 18);
@@ -116,7 +122,7 @@ public class EditItem extends JFrame {
 		getContentPane().add(lblMaSP);
 
 		txtMaSP = new JTextField();
-		txtMaSP.setEditable(false);
+		// txtMaSP.setEditable(false);
 		txtMaSP.setBounds(110, 80, 150, 20);
 		getContentPane().add(txtMaSP);
 		txtMaSP.setColumns(10);
@@ -162,7 +168,6 @@ public class EditItem extends JFrame {
 		txtGiaNhap = new JTextField();
 		txtGiaNhap.setColumns(10);
 		txtGiaNhap.setBounds(400, 80, 150, 20);
-		txtGiaNhap.setEditable(false);
 		getContentPane().add(txtGiaNhap);
 
 		JLabel lblGiaBinhQuan = new JLabel("Gía bình quân");
@@ -193,9 +198,16 @@ public class EditItem extends JFrame {
 		getContentPane().add(lblSoImei);
 
 		comboBoxImei = new JComboBox();
-//		comboBoxImei.setEditable(true);
+		comboBoxImei.setEditable(true);
 		comboBoxImei.setBounds(400, 260, 150, 20);
 		getContentPane().add(comboBoxImei);
+		comboBoxImei.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				String imei = comboBoxImei.getEditor().getItem().toString();
+			}
+		});
 
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.setBounds(134, 310, 89, 23);
