@@ -9,12 +9,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import dao.CustomerDAO;
 import dao.ItemDAO;
@@ -108,6 +112,8 @@ public class AddItem extends JFrame {
 
 	public AddItem() {
 		initialize();
+		tranfer();
+		disposeFrame();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -125,15 +131,6 @@ public class AddItem extends JFrame {
 		txtTenSanPham = new JTextField();
 		txtTenSanPham.setBounds(120, 10, 210, 20);
 		getContentPane().add(txtTenSanPham);
-		txtTenSanPham.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					txtSoLuong.select(0, 1);
-
-				}
-			}
-		});
 		txtTenSanPham.setColumns(10);
 
 		JLabel lblLoai = new JLabel("Loại");
@@ -199,68 +196,7 @@ public class AddItem extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Integer itemId = -1;
-				String name = txtTenSanPham.getText();
-				if (name.equals("")) {
-					JOptionPane.showMessageDialog(null, "Chưa nhập tên");
-					return;
-				}
-				String type = comboBoxLoai.getSelectedItem().toString();
-				int quantity = Integer.parseInt(txtSoLuong.getText());
-				String price = txtGiaNhap.getText();
-				if (price.equals("")) {
-					JOptionPane.showMessageDialog(null, "Chưa nhập giá");
-					return;
-				}
-				String provider = comboBoxNhaCungCap.getSelectedItem().toString();
-				String imeis = "";
-				imeis = txtImei.getText();
-				if (imeis.equals("")) {
-					JOptionPane.showMessageDialog(null, "Chưa nhập imei");
-					return;
-				}
-				StringTokenizer st = new StringTokenizer(imeis, " ");
-				String[] imei = new String[quantity];
-				if (st.countTokens() != quantity) {
-					JOptionPane.showMessageDialog(null, "Dữ liệu sai");
-				} else {
-					for (int i = 0; i < imei.length; i++) {
-						imei[i] = st.nextToken();
-					}
-
-					Item item = new Item();
-					item.setName(name);
-					item.setType(type);
-					if (txtTenSanPham.isEditable()) {
-						itemId = ItemDAO.getNextId();
-						item.setItemId(itemId);
-						item.setQuantity(quantity);
-						item.setPrice(price);
-						ItemDAO.insert(item);
-					} else {
-						Item i = ItemDAO.getItem("From Item where name ='" + name + "'").get(0);
-						itemId = i.getItemId();
-						item.setItemId(itemId);
-						item.setQuantity(i.getQuantity() + quantity);
-						int averagePrice = (Integer.parseInt(i.getPrice()) + Integer.parseInt(price))/2;
-						item.setPrice(String.valueOf(averagePrice));
-						ItemDAO.update(item);
-					}
-
-					ItemDetail itemDetail;
-					for (int i = 0; i < quantity; i++) {
-						itemDetail = new ItemDetail();
-						itemDetail.setItemId(itemId);
-						itemDetail.setImei(imei[i]);
-						itemDetail.setImportDate(Convert.formatDateSQL(new Date()));
-						itemDetail.setImportPrice(price);
-						itemDetail.setProvider(
-								CustomerDAO.getCustomer("From Customer where name ='" + provider + "' and provider = 1")
-										.get(0).getCustomerId());
-						itemDetail.setStatus(true);
-						ItemDetailDAO.insert(itemDetail);
-					}
-				}
+				saveItem();
 
 			}
 		});
@@ -278,8 +214,149 @@ public class AddItem extends JFrame {
 		getContentPane().add(btnHuy);
 	}
 
-	public static void main(String[] args) {
-		new AddItem();
+	private void tranfer() {
+		txtTenSanPham.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtTenSanPham.transferFocus();
+				}
+			}
+		});
+
+		comboBoxLoai.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					comboBoxLoai.transferFocus();
+				}
+			}
+		});
+
+		txtSoLuong.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtSoLuong.transferFocus();
+				}
+			}
+		});
+
+		txtGiaNhap.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtGiaNhap.transferFocus();
+				}
+			}
+		});
+
+		comboBoxNhaCungCap.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					comboBoxNhaCungCap.transferFocus();
+				}
+			}
+		});
+
+		txtImei.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtImei.transferFocus();
+				}
+			}
+		});
+
+	}
+
+	private void saveItem() {
+		Integer itemId = -1;
+		String name = txtTenSanPham.getText();
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập tên");
+			return;
+		}
+		String type = comboBoxLoai.getSelectedItem().toString();
+		int quantity = Integer.parseInt(txtSoLuong.getText());
+		String price = txtGiaNhap.getText();
+		if (price.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập giá");
+			return;
+		}
+		String provider = "";
+		if (comboBoxNhaCungCap.getSelectedItem() != null) {
+			provider = comboBoxNhaCungCap.getSelectedItem().toString();
+		}
+		if (provider.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa chọn Nhà cung cấp");
+			return;
+		}
+		String imeis = "";
+		imeis = txtImei.getText();
+		if (imeis.equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa nhập imei");
+			return;
+		}
+		StringTokenizer st = new StringTokenizer(imeis, " ");
+		String[] imei = new String[quantity];
+		if (st.countTokens() != quantity) {
+			JOptionPane.showMessageDialog(null, "Dữ liệu sai");
+		} else {
+			for (int i = 0; i < imei.length; i++) {
+				imei[i] = st.nextToken();
+			}
+
+			Item item = new Item();
+			item.setName(name);
+			item.setType(type);
+			if (txtTenSanPham.isEditable()) {
+				itemId = ItemDAO.getNextId();
+				item.setItemId(itemId);
+				item.setQuantity(quantity);
+				item.setPrice(price);
+				ItemDAO.insert(item);
+			} else {
+				Item i = ItemDAO.getItem("From Item where name ='" + name + "'").get(0);
+				itemId = i.getItemId();
+				item.setItemId(itemId);
+				item.setQuantity(i.getQuantity() + quantity);
+				int averagePrice = (Integer.parseInt(i.getPrice()) + Integer.parseInt(price)) / 2;
+				item.setPrice(String.valueOf(averagePrice));
+				ItemDAO.update(item);
+			}
+
+			ItemDetail itemDetail;
+			for (int i = 0; i < quantity; i++) {
+				itemDetail = new ItemDetail();
+				itemDetail.setItemId(itemId);
+				itemDetail.setImei(imei[i]);
+				itemDetail.setImportDate(Convert.formatDateSQL(new Date()));
+				itemDetail.setImportPrice(price);
+				itemDetail.setProvider(
+						CustomerDAO.getCustomer("From Customer where name ='" + provider + "' and provider = 1").get(0)
+								.getCustomerId());
+				itemDetail.setStatus(true);
+				ItemDetailDAO.insert(itemDetail);
+			}
+		}
+	}
+
+	private void disposeFrame() {
+		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
+		Action escapeAction = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		};
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+		getRootPane().getActionMap().put("ESCAPE", escapeAction);
 	}
 
 }

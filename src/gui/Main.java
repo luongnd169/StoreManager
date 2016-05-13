@@ -181,54 +181,7 @@ public class Main {
 		panelTonKho.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				listStorage = ItemDAO.getItemes();
-				tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-				if (comboKho.getSelectedItem().toString().equals("Tất cả")) {
-					listStorage = ItemDAO.getItemes();
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 0;
-				} else if (comboKho.getSelectedItem().toString().equals("Điện thoại")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 1;
-				} else if (comboKho.getSelectedItem().toString().equals("Máy tính bảng")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 2;
-				} else if (comboKho.getSelectedItem().toString().equals("Linh kiện")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 3;
-				} else if (comboKho.getSelectedItem().toString().equals("Phụ kiện")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 4;
-				}
+				resetStorage(e);
 			}
 		});
 		panelTonKho.setBounds(10, 0, 774, 560);
@@ -314,52 +267,7 @@ public class Main {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getItem().equals("Tất cả")) {
-					listStorage = ItemDAO.getItemes();
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 0;
-				} else if (e.getItem().equals("Điện thoại")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 1;
-				} else if (e.getItem().equals("Máy tính bảng")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 2;
-				} else if (e.getItem().equals("Linh kiện")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 3;
-				} else if (e.getItem().equals("Phụ kiện")) {
-					listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					tongTienKho = 0;
-					for (Item i : Convert.returnListItem(listStorage)) {
-						tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-					}
-					txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-					warehouse = 4;
-				}
+				selectStorageEvent(e);
 
 			}
 		};
@@ -374,21 +282,7 @@ public class Main {
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-
-				if (txtSearch.getText().trim().equals("")) {
-					listStorage = ItemDAO.getItemes();
-					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-				} else {
-					if (rdbtnTenSP.isSelected()) {
-						listStorage = controller.searchItemByName(ItemDAO.getItemes(), txtSearch.getText());
-						tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-					} else {
-						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							listStorage = controller.searchItemByImei(txtSearch.getText());
-							tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-						}
-					}
-				}
+				searchItemStorageEvent(e);
 			}
 		});
 
@@ -399,9 +293,7 @@ public class Main {
 		txtTongTienKho = new JTextField();
 		txtTongTienKho.setEditable(false);
 		txtTongTienKho.setBounds(628, 507, 132, 20);
-		for (Item i : Convert.returnListItem(listStorage)) {
-			tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-		}
+
 		txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 		panelTonKho.add(txtTongTienKho);
 		txtTongTienKho.setColumns(10);
@@ -453,41 +345,7 @@ public class Main {
 		comboBoxTimSP.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				String price = "";
-				int quantity = 0;
-				String name = comboBoxTimSP.getEditor().getItem().toString();
-				if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
-						|| e.getKeyCode() == 8) {
-					comboBoxTimSP.setModel(model.getList(name));
-					comboBoxTimSP.showPopup();
-					comboBoxTimSP.getEditor().setItem(name);
-					((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(),
-							name.length());
-				}
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					index = comboBoxSoLuong.getItemCount();
-					for (int i = 0; i < index; i++) {
-						comboBoxSoLuong.removeItemAt(0);
-					}
-					List<Item> list = ItemDAO.getItem("FROM Item where name = '" + name + "'");
-
-					if (list.size() > 0) {
-						quantity = list.get(0).getQuantity();
-						for (int i = 1; i <= quantity; i++) {
-							comboBoxSoLuong.addItem(i);
-						}
-						price = list.get(0).getPrice();
-						txtGiaNhap.setText(Convert.numberToString(price));
-					}
-					List<ItemDetail> listDetail = ItemDetailDAO
-							.getItemDetail("From ItemDetail where itemId = " + list.get(0).getItemId());
-					for (ItemDetail id : listDetail) {
-						if (id.isStatus()) {
-							comboBoxImei.addItem(id.getImei());
-						}
-					}
-
-				}
+				searchItemSell(e);
 			}
 		});
 
@@ -505,35 +363,7 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Item i = ItemDAO
-						.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
-						.get(0);
-				i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
-				if (!txtGiaXuat.getText().trim().equals("")) {
-					i.setPrice(txtGiaXuat.getText().trim());
-					listItem.add(i);
-					i.setPrice(Convert.numberToString(txtGiaXuat.getText().trim()));
-					try {
-						tableXuat.setModel(new ItemTableModel(listItem) {
-
-							/**
-							 * 
-							 */
-							private static final long serialVersionUID = 2928691229876020678L;
-						});
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					index++;
-					int total = 0;
-					for (Item item : listItem) {
-						total += Integer.parseInt(Convert.stringToNumber(item.getPrice())) * item.getQuantity();
-					}
-					txtTongTien.setText(Convert.numberToString(String.valueOf(total)));
-				} else {
-					JOptionPane.showMessageDialog(null, "Chưa nhập giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				}
+			addItemSell();
 			}
 		});
 		panelXuat.add(btnThem);
@@ -541,20 +371,7 @@ public class Main {
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Customer c = new Customer();
-				// c.setName(txtKhachHang.getText());
-				c.setPhone(txtDienThoai.getText());
-				c.setAddress(txtDiaChi.getText());
-				controller = new MainController();
-				for (Item i : listItem) {
-					i.setPrice(Convert.stringToNumber(i.getPrice()));
-				}
-				controller.saveSaleBill(listItem, c, comboBoxImei.getSelectedItem().toString());
-				JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
-				listItem.removeAll(listItem);
-				tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listItem)));
-				// CustomerDAO.insert(c);
-				clearAll();
+			saveSaveBill();
 			}
 		});
 		btnLuu.setBounds(602, 470, 89, 23);
@@ -593,12 +410,7 @@ public class Main {
 		txtGiaXuat.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				String name = comboBoxTimSP.getEditor().getItem().toString();
-				List<Item> listItem = ItemDAO.getItem("FROM Item where name = '" + name + "'");
-				if (listItem.size() > 0 && !txtGiaXuat.getText().equals("")) {
-					txtLoiNhuan.setText(Convert.numberToString(String.valueOf(
-							Integer.parseInt(txtGiaXuat.getText()) - Integer.parseInt(listItem.get(0).getPrice()))));
-				}
+				countProfits();
 			}
 		});
 		panelXuat.add(txtGiaXuat);
@@ -1000,6 +812,10 @@ public class Main {
 
 		listProvider = CustomerDAO.getCustomer("From Customer where provider = 1");
 
+		for (Item i : Convert.returnListItem(listStorage)) {
+			tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+		}
+
 	}
 
 	private void setValues() {
@@ -1152,5 +968,217 @@ public class Main {
 		item.setHorizontalTextPosition(JMenuItem.RIGHT);
 		item.addActionListener(menuListener);
 
+	}
+
+	private void resetStorage(MouseEvent e) {
+		listStorage = ItemDAO.getItemes();
+		tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+		if (comboKho.getSelectedItem().toString().equals("Tất cả")) {
+			listStorage = ItemDAO.getItemes();
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 0;
+		} else if (comboKho.getSelectedItem().toString().equals("Điện thoại")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 1;
+		} else if (comboKho.getSelectedItem().toString().equals("Máy tính bảng")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 2;
+		} else if (comboKho.getSelectedItem().toString().equals("Linh kiện")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 3;
+		} else if (comboKho.getSelectedItem().toString().equals("Phụ kiện")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 4;
+		}
+	}
+
+	private void selectStorageEvent(ItemEvent e) {
+		if (e.getItem().equals("Tất cả")) {
+			listStorage = ItemDAO.getItemes();
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 0;
+		} else if (e.getItem().equals("Điện thoại")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 1;
+		} else if (e.getItem().equals("Máy tính bảng")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 2;
+		} else if (e.getItem().equals("Linh kiện")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 3;
+		} else if (e.getItem().equals("Phụ kiện")) {
+			listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			tongTienKho = 0;
+			for (Item i : Convert.returnListItem(listStorage)) {
+				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+			}
+			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+			warehouse = 4;
+		}
+	}
+
+	private void searchItemStorageEvent(KeyEvent e) {
+		if (txtSearch.getText().trim().equals("")) {
+			listStorage = ItemDAO.getItemes();
+			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+		} else {
+			if (rdbtnTenSP.isSelected()) {
+				listStorage = controller.searchItemByName(ItemDAO.getItemes(), txtSearch.getText());
+				tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+			} else {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					listStorage = controller.searchItemByImei(txtSearch.getText());
+					tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+				}
+			}
+		}
+	}
+	
+	private void searchItemSell(KeyEvent e){
+		String price = "";
+		int quantity = 0;
+		String name = comboBoxTimSP.getEditor().getItem().toString();
+		if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
+				|| e.getKeyCode() == 8) {
+			comboBoxTimSP.setModel(model.getList(name));
+			comboBoxTimSP.showPopup();
+			comboBoxTimSP.getEditor().setItem(name);
+			((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(),
+					name.length());
+		}
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			index = comboBoxSoLuong.getItemCount();
+			for (int i = 0; i < index; i++) {
+				comboBoxSoLuong.removeItemAt(0);
+			}
+			List<Item> list = ItemDAO.getItem("FROM Item where name = '" + name + "'");
+
+			if (list.size() > 0) {
+				quantity = list.get(0).getQuantity();
+				for (int i = 1; i <= quantity; i++) {
+					comboBoxSoLuong.addItem(i);
+				}
+				price = list.get(0).getPrice();
+				txtGiaNhap.setText(Convert.numberToString(price));
+			}
+			List<ItemDetail> listDetail = ItemDetailDAO
+					.getItemDetail("From ItemDetail where itemId = " + list.get(0).getItemId());
+			for (ItemDetail id : listDetail) {
+				if (id.isStatus()) {
+					comboBoxImei.addItem(id.getImei());
+				}
+			}
+
+		}
+	}
+	
+	private void addItemSell(){
+		Item i = ItemDAO
+				.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
+				.get(0);
+		i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
+		if (!txtGiaXuat.getText().trim().equals("")) {
+			i.setPrice(txtGiaXuat.getText().trim());
+			listItem.add(i);
+			i.setPrice(Convert.numberToString(txtGiaXuat.getText().trim()));
+			try {
+				tableXuat.setModel(new ItemTableModel(listItem) {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 2928691229876020678L;
+				});
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			index++;
+			int total = 0;
+			for (Item item : listItem) {
+				total += Integer.parseInt(Convert.stringToNumber(item.getPrice())) * item.getQuantity();
+			}
+			txtTongTien.setText(Convert.numberToString(String.valueOf(total)));
+		} else {
+			JOptionPane.showMessageDialog(null, "Chưa nhập giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void saveSaveBill(){
+		Customer c = new Customer();
+		// c.setName(txtKhachHang.getText());
+		c.setPhone(txtDienThoai.getText());
+		c.setAddress(txtDiaChi.getText());
+		controller = new MainController();
+		for (Item i : listItem) {
+			i.setPrice(Convert.stringToNumber(i.getPrice()));
+		}
+		controller.saveSaleBill(listItem, c, comboBoxImei.getSelectedItem().toString());
+		JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
+		listItem.removeAll(listItem);
+		tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listItem)));
+		// CustomerDAO.insert(c);
+		clearAll();
+	}
+	private void countProfits(){
+		String name = comboBoxTimSP.getEditor().getItem().toString();
+		List<Item> listItem = ItemDAO.getItem("FROM Item where name = '" + name + "'");
+		if (listItem.size() > 0 && !txtGiaXuat.getText().equals("")) {
+			txtLoiNhuan.setText(Convert.numberToString(String.valueOf(
+					Integer.parseInt(txtGiaXuat.getText()) - Integer.parseInt(listItem.get(0).getPrice()))));
+		}
 	}
 }
