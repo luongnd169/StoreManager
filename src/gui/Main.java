@@ -67,7 +67,8 @@ public class Main {
 	JComboBox comboBoxSoLuong;
 	@SuppressWarnings("rawtypes")
 	JComboBox comboBoxImei;
-	int index = 0;
+	int countQuantity = 0;
+	int countImei = 0;
 	private JTextField txtTongTien;
 	private JRadioButton rdbtnTenSP;
 	private JRadioButton rdbtnSoImei;
@@ -77,7 +78,7 @@ public class Main {
 	private List<Item> listStorage;
 	private List<Fee> listFee;
 	private int tongTienKho;
-	private JTextField txtDienThoai;
+	private static JTextField txtDienThoai;
 	private JTextField txtMuc;
 	private JTextField txtSoTien;
 	private JTextField txtFrom;
@@ -90,13 +91,13 @@ public class Main {
 	private JRadioButton rdbtnChi;
 	private String from;
 	private String to;
-	private JTextField txtDiaChi;
+	private static JTextField txtDiaChi;
 	private EditItem editItem;
 	private JPopupMenu popup;
 	private AddItem addItem;
 	private JCheckBox chckbxM;
 	@SuppressWarnings("rawtypes")
-	private JComboBox comboBoxKhachHang;
+	private static JComboBox comboBoxKhachHang;
 	List<Item> test = new ArrayList<>();
 	private JTextField txtTimThongTin;
 	private JTable tableThongTin;
@@ -474,7 +475,7 @@ public class Main {
 
 		comboBoxKhachHang = new JComboBox();
 		comboBoxKhachHang.setBounds(615, 11, 90, 20);
-		List<Customer> listCustomer = CustomerDAO.getCustomers();
+		List<Customer> listCustomer = CustomerDAO.getCustomer("From Customer where provider = 0");
 		if (!listCustomer.isEmpty()) {
 			for (Customer c : listCustomer) {
 				comboBoxKhachHang.addItem(c.getName());
@@ -486,7 +487,9 @@ public class Main {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				showCustomer();
+				if (comboBoxKhachHang.getSelectedIndex() != -1) {
+					showCustomer();
+				}
 
 			}
 		});
@@ -772,7 +775,6 @@ public class Main {
 	private void initPopup(JPopupMenu popup) {
 		ActionListener menuListener = new ActionListener() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Thêm")) {
@@ -785,37 +787,13 @@ public class Main {
 					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
 					List<ItemDetail> listDetail = ItemDetailDAO
 							.getItemDetail("From ItemDetail where itemId =" + selectedItem.getItemId());
-					editItem = new EditItem();
+					editItem = new EditItem(listDetail);
 					editItem.getTxtMaSP().transferFocus();
 					editItem.getTxtMaSP().setEditable(false);
 					editItem.getTxtMaSP().setText(selectedItem.getItemId() + "");
 					editItem.getTxtTenSP().setText(selectedItem.getName());
 					editItem.getTxtSoLuongTon().setText(selectedItem.getQuantity() + "");
 					editItem.getTxtGiaBinhQuan().setText(selectedItem.getPrice());
-					
-					if (!listDetail.isEmpty()) {
-						editItem.getTxtNhaCungCap().setText(CustomerDAO.getCustomer(listDetail.get(0).getProvider()).getName());
-						editItem.getTxtNgayNhap().setText(listDetail.get(0).getImportDate() + "");
-						editItem.getTxtGiaNhap().setText(listDetail.get(0).getImportPrice());
-						for (ItemDetail id : listDetail) {
-							if (id.isStatus()) {
-								editItem.getComboBoxImei().addItem(id.getImei());
-							}
-						}
-					}
-					editItem.getComboBoxImei().addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							String imei = editItem.getComboBoxImei().getEditor().getItem().toString();
-							ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'")
-									.get(0);
-							editItem.getTxtNhaCungCap().setText("");
-							editItem.getTxtGiaNhap().setText(id.getImportPrice());
-							editItem.getTxtNgayNhap().setText(id.getImportDate() + "");
-							editItem.getTxtNhaCungCap().setText(CustomerDAO.getCustomer(id.getProvider()).getName());
-						}
-					});
 
 				} else if (e.getActionCommand().equals("Xóa")) {
 
@@ -969,10 +947,11 @@ public class Main {
 			((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(), name.length());
 		}
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			index = comboBoxSoLuong.getItemCount();
-			for (int i = 0; i < index; i++) {
+			countQuantity = comboBoxSoLuong.getItemCount();
+			for (int i = 0; i < countQuantity; i++) {
 				comboBoxSoLuong.removeItemAt(0);
 			}
+			comboBoxImei.removeAllItems();
 			List<Item> list = ItemDAO.getItem("FROM Item where name = '" + name + "'");
 
 			if (list.size() > 0) {
@@ -1014,7 +993,6 @@ public class Main {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			index++;
 			int total = 0;
 			for (Item item : listItem) {
 				total += Integer.parseInt(Convert.stringToNumber(item.getPrice())) * item.getQuantity();
@@ -1179,28 +1157,40 @@ public class Main {
 		this.listProvider = listProvider;
 	}
 
-//	private void tranfer() {
-//		txtMuc.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//					txtMuc.transferFocus();
-//				}
-//			}
-//			
-//		});
-//	}
-	
-	private void confirmSaveFee(KeyEvent e){
+	// private void tranfer() {
+	// txtMuc.addKeyListener(new KeyAdapter() {
+	// @Override
+	// public void keyReleased(KeyEvent e) {
+	// if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+	// txtMuc.transferFocus();
+	// }
+	// }
+	//
+	// });
+	// }
+
+	private void confirmSaveFee(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			int rep = JOptionPane.showConfirmDialog(null, "Lưu phiếu?", null,
-					JOptionPane.YES_NO_OPTION);
+			int rep = JOptionPane.showConfirmDialog(null, "Lưu phiếu?", null, JOptionPane.YES_NO_OPTION);
 			if (rep == JOptionPane.YES_OPTION) {
 				saveFee();
 				return;
 			} else {
 				txtMuc.requestFocus();
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void reloadCustomer() {
+		List<Customer> listCustomer = CustomerDAO.getCustomer("From Customer where provider = 0");
+		if (!listCustomer.isEmpty()) {
+			comboBoxKhachHang.removeAllItems();
+			for (Customer c : listCustomer) {
+				comboBoxKhachHang.addItem(c.getName());
+			}
+			txtDienThoai.setText(listCustomer.get(0).getPhone());
+			txtDiaChi.setText(listCustomer.get(0).getAddress());
 		}
 	}
 

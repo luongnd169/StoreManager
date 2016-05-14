@@ -124,6 +124,7 @@ public class AddCustomer extends JFrame {
 				CustomerDAO.insert(c);
 				JOptionPane.showMessageDialog(null, "Thêm thành công");
 				table.setModel(new CustomerTableModel(CustomerDAO.getCustomers()));
+				Main.reloadCustomer();
 			} else {
 				if (provider) {
 					JOptionPane.showMessageDialog(null, "Nhà cung cấp đã tồn tại");

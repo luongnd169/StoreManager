@@ -288,9 +288,10 @@ public class AddItem extends JFrame {
 		if (checkData(name, type, quantity + "", price, provider, imei)) {
 			if (st.countTokens() != quantity) {
 				JOptionPane.showMessageDialog(null, "Dữ liệu sai");
+				return;
 			} else {
 				for (int i = 0; i < imeis.length; i++) {
-					System.out.println("length "+imeis.length);
+					System.out.println("length " + imeis.length);
 					System.out.println("i = " + i);
 					String nextToken = st.nextToken();
 					System.out.println(nextToken);
@@ -311,11 +312,18 @@ public class AddItem extends JFrame {
 					itemId = i.getItemId();
 					item.setItemId(itemId);
 					item.setQuantity(i.getQuantity() + quantity);
+					int totalPrice = 0;
+					List<ItemDetail> listDetail = ItemDetailDAO
+							.getItemDetail("From ItemDetail where itemId = " + itemId);
+					for (ItemDetail id : listDetail) {
+						totalPrice += Integer.parseInt(id.getImportPrice());
+					}
+
 					int averagePrice = 0;
-					if(Integer.parseInt(i.getPrice()) == 0){
+					if (Integer.parseInt(i.getPrice()) == 0) {
 						averagePrice = Integer.parseInt(price);
 					} else {
-						averagePrice = (Integer.parseInt(i.getPrice()) + Integer.parseInt(price)) / 2;
+						averagePrice = (totalPrice + Integer.parseInt(price)) / (listDetail.size() + 1);
 					}
 					item.setPrice(String.valueOf(averagePrice));
 					ItemDAO.update(item);
@@ -334,6 +342,8 @@ public class AddItem extends JFrame {
 					itemDetail.setStatus(true);
 					ItemDetailDAO.insert(itemDetail);
 				}
+				JOptionPane.showMessageDialog(null, "Lưu thành công");
+				return;
 			}
 		}
 	}

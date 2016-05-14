@@ -5,12 +5,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import dao.CustomerDAO;
+import dao.ItemDAO;
+import dao.ItemDetailDAO;
+import model.Item;
+import model.ItemDetail;
 
 public class EditItem extends JFrame {
 
@@ -27,6 +35,8 @@ public class EditItem extends JFrame {
 	private JTextField txtNgayNhap;
 	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxImei;
+	int count = 0;
+	int index = 0;
 
 	public JTextField getTxtMaSP() {
 		return txtMaSP;
@@ -97,15 +107,15 @@ public class EditItem extends JFrame {
 	/**
 	 * Create the application.
 	 */
-	public EditItem() {
-		initialize();
+	public EditItem(List<ItemDetail> listDetail) {
+		initialize(listDetail);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("rawtypes")
-	private void initialize() {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void initialize(final List<ItemDetail> listDetail) {
 
 		setBounds(500, 250, 600, 400);
 		getContentPane().setLayout(null);
@@ -201,17 +211,47 @@ public class EditItem extends JFrame {
 		comboBoxImei.setEditable(true);
 		comboBoxImei.setBounds(400, 260, 150, 20);
 		getContentPane().add(comboBoxImei);
+		
+		if (!listDetail.isEmpty()) {
+			txtNhaCungCap.setText(CustomerDAO.getCustomer(listDetail.get(0).getProvider()).getName());
+			txtNgayNhap.setText(listDetail.get(0).getImportDate() + "");
+			txtGiaNhap.setText(listDetail.get(0).getImportPrice());
+			for (ItemDetail id : listDetail) {
+				if (id.isStatus()) {
+					comboBoxImei.addItem(id.getImei());
+				}
+			}
+		}
 		comboBoxImei.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+				if(comboBoxImei.getSelectedIndex() != -1){
+					index = comboBoxImei.getSelectedIndex();
+				}
 				String imei = comboBoxImei.getEditor().getItem().toString();
+				if (ItemDetailDAO.getItemDetail("From ItemDetail where imei ='" + imei + "'").isEmpty()) {
+					return;
+				} else {
+					ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'").get(0);
+					txtNhaCungCap.setText("");
+					txtGiaNhap.setText(id.getImportPrice());
+					txtNgayNhap.setText(id.getImportDate() + "");
+					txtNhaCungCap.setText(CustomerDAO.getCustomer(id.getProvider()).getName());
+				}
 			}
 		});
 
 		JButton btnLuu = new JButton("Lưu");
 		btnLuu.setBounds(134, 310, 89, 23);
 		getContentPane().add(btnLuu);
+		btnLuu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 updateItem(listDetail, index);
+			}
+		});
 
 		JButton btnDong = new JButton("Đóng");
 		btnDong.setBounds(365, 310, 89, 23);
@@ -224,5 +264,40 @@ public class EditItem extends JFrame {
 			}
 		});
 		getContentPane().add(btnDong);
+	}
+
+	private boolean updateItem(List<ItemDetail> listDetail, int index) {
+		String imei = comboBoxImei.getEditor().getItem().toString();
+		String price = txtGiaNhap.getText().trim();
+		if (!imei.equals(listDetail.get(index).getImei()) || !price.equals(listDetail.get(index).getImportPrice())) {
+			ItemDetail itemDetail = listDetail.get(index);
+			itemDetail.setImei(imei);
+			itemDetail.setImportPrice(price);
+			ItemDetailDAO.update(itemDetail);
+			Item item = ItemDAO.getItem(listDetail.get(0).getItemId());
+			item.setPrice(String.valueOf(countAvgPrice(itemDetail, listDetail)));
+			ItemDAO.update(item);
+			JOptionPane.showMessageDialog(null, "Lưu thành công");
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "Lỗi! Kiểm tra lại dữ liệu");
+		}
+
+		return false;
+
+	}
+
+	private int countAvgPrice(ItemDetail itemDetail, List<ItemDetail> listDetail) {
+		int totalPrice = 0;
+		int avgPrice = 0;
+		for (ItemDetail id : listDetail) {
+			if (itemDetail.getId() != id.getId()) {
+				totalPrice += Integer.parseInt(id.getImportPrice());
+			}
+		}
+		avgPrice = (Integer.parseInt(itemDetail.getImportPrice()) + totalPrice) / listDetail.size();
+
+		return avgPrice;
+
 	}
 }
