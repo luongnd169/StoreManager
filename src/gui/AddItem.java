@@ -140,10 +140,10 @@ public class AddItem extends JFrame {
 
 		comboBoxLoai = new JComboBox();
 		comboBoxLoai.setBounds(120, 51, 90, 20);
-		comboBoxLoai.addItem("Điện thoại");
-		comboBoxLoai.addItem("Máy tính bảng");
-		comboBoxLoai.addItem("Linh kiện");
-		comboBoxLoai.addItem("Phụ kiện");
+		List<String> types = Main.getTypes();
+		for(String s : types){
+			comboBoxLoai.addItem(s);
+		}
 		getContentPane().add(comboBoxLoai);
 
 		JLabel lblSoLuong = new JLabel("Số lượng");

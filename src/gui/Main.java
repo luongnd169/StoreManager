@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicComboBoxUI.ComboBoxLayoutManager;
 import javax.swing.text.JTextComponent;
 
 import controller.ComboBoxModel;
@@ -49,24 +50,24 @@ import model.Customer;
 import model.Fee;
 import model.Item;
 import model.ItemDetail;
+import java.awt.Component;
 
 public class Main {
 
 	private JFrame frame;
 	private JTable tableTonKho;
 	@SuppressWarnings("rawtypes")
-	private JComboBox comboBoxTimSP;
-	ComboBoxModel model = new ComboBoxModel();
+	private JComboBox comboBoxTimSP, comboBoxSoLuong, comboBoxImei, comboKho, comboBoxSanPhamNhap, comboBoxNCC,
+			comboBoxLoaiNhap;
+	@SuppressWarnings("rawtypes")
+	private static JComboBox comboBoxKhachHang;
+	ComboBoxModel model;
 	MainController controller;
 	private List<Item> listItem = new ArrayList<Item>();
 	private JTable tableXuat;
 	private JTextField txtGiaNhap;
 	private JTextField txtGiaXuat;
 	private JTextField txtLoiNhuan;
-	@SuppressWarnings("rawtypes")
-	JComboBox comboBoxSoLuong;
-	@SuppressWarnings("rawtypes")
-	JComboBox comboBoxImei;
 	int countQuantity = 0;
 	int countImei = 0;
 	private JTextField txtTongTien;
@@ -96,17 +97,24 @@ public class Main {
 	private JPopupMenu popup;
 	private AddItem addItem;
 	private JCheckBox chckbxM;
-	@SuppressWarnings("rawtypes")
-	private static JComboBox comboBoxKhachHang;
 	List<Item> test = new ArrayList<>();
 	private JTextField txtTimThongTin;
 	private JTable tableThongTin;
 	@SuppressWarnings("unused")
 	private AddCustomer addCustomer;
 	private List<Customer> listProvider;
-	@SuppressWarnings("rawtypes")
-	private JComboBox comboKho;
 	private JButton btnTaoMoiKho;
+	private JTextField txtGiaNhapNhap;
+	private JTextField txtTongTienNhap;
+	private JTextField txtSDTNhap;
+	private JTextField txtDiaChiNhap;
+	private JTextField txtSoLuongNhap;
+	private JTextField txtImeiNhap;
+	private JButton btnThemNhap;
+	private JButton btnLuuNhap;
+	private JCheckBox checkBoxNhap;
+	private JButton btnHuyNhap;
+	private static List<String> types;
 
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxTimSP() {
@@ -133,6 +141,14 @@ public class Main {
 		this.tableXuat = tableXuat;
 	}
 
+	public static List<String> getTypes() {
+		return types;
+	}
+
+	public void setTypes(List<String> types) {
+		this.types = types;
+	}
+
 	/**
 	 * Launch the application.
 	 * 
@@ -157,10 +173,10 @@ public class Main {
 	 * Create the application.
 	 */
 	public Main() {
-
 		initData();
 		controller = new MainController();
 		initialize();
+		initKho();
 	}
 
 	/**
@@ -264,10 +280,6 @@ public class Main {
 		comboKho = new JComboBox();
 		comboKho.setBounds(580, 14, 100, 20);
 		comboKho.addItem("Tất cả");
-		comboKho.addItem("Điện thoại");
-		comboKho.addItem("Máy tính bảng");
-		comboKho.addItem("Linh kiện");
-		comboKho.addItem("Phụ kiện");
 		ItemListener itemListener = new ItemListener() {
 
 			@Override
@@ -304,6 +316,22 @@ public class Main {
 		txtTongTienKho.setColumns(10);
 
 		btnTaoMoiKho = new JButton("Tạo mới");
+		btnTaoMoiKho.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String storage = JOptionPane.showInputDialog(null, "Nhập tên kho muốn tạo");
+				int flag = 0;
+				for (int i = 0; i < getTypes().size(); i++) {
+					if (getTypes().get(i).equals(storage)) {
+					} else {
+						flag++;
+					}
+				}
+				if (flag == getTypes().size()) {
+					getTypes().add(storage);
+				}
+				initKho();
+			}
+		});
 		btnTaoMoiKho.setBounds(690, 13, 70, 23);
 		panelTonKho.add(btnTaoMoiKho);
 
@@ -459,6 +487,15 @@ public class Main {
 		txtDienThoai = new JTextField();
 		txtDienThoai.setColumns(10);
 		txtDienThoai.setBounds(615, 61, 90, 20);
+		txtDienThoai.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String phone = txtDienThoai.getText().trim();
+					findCustomer(phone);
+				}
+			}
+		});
 		panelXuat.add(txtDienThoai);
 
 		JLabel lblDiaChi = new JLabel("Địa chỉ");
@@ -526,11 +563,132 @@ public class Main {
 		btnHuy.setBounds(101, 470, 89, 23);
 		panelXuat.add(btnHuy);
 
-		// JPanel panelNhap = new JPanel();
-		// tabbedPane_1.addTab("Nhập", null, panelNhap, null);
+		JPanel panelNhap = new JPanel();
+		panelNhap.setLayout(null);
+		tabbedPaneNhapXuat.addTab("Nhập", null, panelNhap, null);
 
-		// JPanel panelLichSu = new JPanel();
-		// tabbedPane_1.addTab("Lịch sử", null, panelLichSu, null);
+		JLabel lblSanPhamNhap = new JLabel("Sản phẩm");
+		lblSanPhamNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSanPhamNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSanPhamNhap.setBounds(10, 13, 62, 17);
+		panelNhap.add(lblSanPhamNhap);
+
+		comboBoxSanPhamNhap = new JComboBox();
+		comboBoxSanPhamNhap.setEditable(true);
+		comboBoxSanPhamNhap.setBounds(82, 11, 240, 24);
+		comboBoxSanPhamNhap.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				searchImportItem(e);
+			}
+		});
+		panelNhap.add(comboBoxSanPhamNhap);
+
+		JScrollPane scrollPaneNhap = new JScrollPane((Component) null);
+		scrollPaneNhap.setBounds(10, 157, 750, 262);
+		panelNhap.add(scrollPaneNhap);
+
+		btnThemNhap = new JButton("Thêm");
+		btnThemNhap.setBounds(332, 12, 72, 23);
+		panelNhap.add(btnThemNhap);
+
+		btnLuuNhap = new JButton("Lưu");
+		btnLuuNhap.setBounds(602, 470, 89, 23);
+		panelNhap.add(btnLuuNhap);
+
+		JLabel lblSoLuongNhap = new JLabel("Số lượng\r\n");
+		lblSoLuongNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSoLuongNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSoLuongNhap.setBounds(10, 61, 62, 17);
+		panelNhap.add(lblSoLuongNhap);
+
+		JLabel lblGiaNhapNhap = new JLabel("Giá nhập");
+		lblGiaNhapNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblGiaNhapNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblGiaNhapNhap.setBounds(194, 115, 62, 17);
+		panelNhap.add(lblGiaNhapNhap);
+
+		txtGiaNhapNhap = new JTextField();
+		txtGiaNhapNhap.setColumns(10);
+		txtGiaNhapNhap.setBounds(271, 115, 133, 20);
+		panelNhap.add(txtGiaNhapNhap);
+
+		JLabel lblTongTienNhap = new JLabel("Tổng tiền");
+		lblTongTienNhap.setBounds(549, 429, 46, 14);
+		panelNhap.add(lblTongTienNhap);
+
+		txtTongTienNhap = new JTextField();
+		txtTongTienNhap.setEditable(false);
+		txtTongTienNhap.setColumns(10);
+		txtTongTienNhap.setBounds(631, 426, 110, 20);
+		panelNhap.add(txtTongTienNhap);
+
+		JLabel lblNhaCungCap = new JLabel("Nhà cung cấp");
+		lblNhaCungCap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNhaCungCap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNhaCungCap.setBounds(499, 13, 96, 17);
+		panelNhap.add(lblNhaCungCap);
+
+		JLabel lblSDTNhap = new JLabel("Điện thoại");
+		lblSDTNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSDTNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSDTNhap.setBounds(499, 61, 62, 17);
+		panelNhap.add(lblSDTNhap);
+
+		txtSDTNhap = new JTextField();
+		txtSDTNhap.setColumns(10);
+		txtSDTNhap.setBounds(602, 61, 139, 20);
+		panelNhap.add(txtSDTNhap);
+
+		JLabel lblDiaChiNhap = new JLabel("Địa chỉ");
+		lblDiaChiNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDiaChiNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDiaChiNhap.setBounds(499, 115, 50, 17);
+		panelNhap.add(lblDiaChiNhap);
+
+		txtDiaChiNhap = new JTextField();
+		txtDiaChiNhap.setEditable(false);
+		txtDiaChiNhap.setColumns(10);
+		txtDiaChiNhap.setBounds(602, 115, 139, 20);
+		panelNhap.add(txtDiaChiNhap);
+
+		comboBoxNCC = new JComboBox();
+		comboBoxNCC.setBounds(602, 13, 90, 20);
+		panelNhap.add(comboBoxNCC);
+
+		checkBoxNhap = new JCheckBox("Mới");
+		checkBoxNhap.setBounds(710, 9, 50, 23);
+		panelNhap.add(checkBoxNhap);
+
+		JLabel lblImeiNhap = new JLabel("Imei");
+		lblImeiNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblImeiNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblImeiNhap.setBounds(194, 64, 46, 17);
+		panelNhap.add(lblImeiNhap);
+
+		btnHuyNhap = new JButton("Hủy");
+		btnHuyNhap.setBounds(101, 470, 89, 23);
+		panelNhap.add(btnHuyNhap);
+
+		txtSoLuongNhap = new JTextField();
+		txtSoLuongNhap.setBounds(82, 60, 86, 20);
+		panelNhap.add(txtSoLuongNhap);
+		txtSoLuongNhap.setColumns(10);
+
+		txtImeiNhap = new JTextField();
+		txtImeiNhap.setBounds(271, 61, 132, 20);
+		panelNhap.add(txtImeiNhap);
+		txtImeiNhap.setColumns(10);
+
+		JLabel lblLoaiNhap = new JLabel("Loại");
+		lblLoaiNhap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblLoaiNhap.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblLoaiNhap.setBounds(10, 116, 62, 17);
+		panelNhap.add(lblLoaiNhap);
+
+		comboBoxLoaiNhap = new JComboBox();
+		comboBoxLoaiNhap.setBounds(82, 115, 86, 20);
+		panelNhap.add(comboBoxLoaiNhap);
 
 		JPanel panelThuChi = new JPanel();
 		tabbedPane.addTab("Thu/Chi", null, panelThuChi, null);
@@ -753,6 +911,8 @@ public class Main {
 			tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 		}
 
+		setTypes(ItemDAO.getTypes());
+
 	}
 
 	private void setValues() {
@@ -878,43 +1038,53 @@ public class Main {
 			}
 			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
 			warehouse = 0;
-		} else if (e.getItem().equals("Điện thoại")) {
-			listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
+		} else {
+			String type = e.getItem().toString();
+			listStorage = ItemDAO.getItem("From Item where type = '"+ type + "'");
 			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
 			tongTienKho = 0;
 			for (Item i : Convert.returnListItem(listStorage)) {
 				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
 			}
 			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-			warehouse = 1;
-		} else if (e.getItem().equals("Máy tính bảng")) {
-			listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
-			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-			tongTienKho = 0;
-			for (Item i : Convert.returnListItem(listStorage)) {
-				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-			}
-			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-			warehouse = 2;
-		} else if (e.getItem().equals("Linh kiện")) {
-			listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
-			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-			tongTienKho = 0;
-			for (Item i : Convert.returnListItem(listStorage)) {
-				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-			}
-			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-			warehouse = 3;
-		} else if (e.getItem().equals("Phụ kiện")) {
-			listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
-			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
-			tongTienKho = 0;
-			for (Item i : Convert.returnListItem(listStorage)) {
-				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
-			}
-			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
-			warehouse = 4;
 		}
+//		else if (e.getItem().equals("Điện thoại")) {
+//			listStorage = ItemDAO.getItem("From Item where type = 'Điện thoại'");
+//			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+//			tongTienKho = 0;
+//			for (Item i : Convert.returnListItem(listStorage)) {
+//				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+//			}
+//			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+//			warehouse = 1;
+//		} else if (e.getItem().equals("Máy tính bảng")) {
+//			listStorage = ItemDAO.getItem("From Item where type = 'Máy tính bảng'");
+//			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+//			tongTienKho = 0;
+//			for (Item i : Convert.returnListItem(listStorage)) {
+//				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+//			}
+//			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+//			warehouse = 2;
+//		} else if (e.getItem().equals("Linh kiện")) {
+//			listStorage = ItemDAO.getItem("From Item where type = 'Linh kiện'");
+//			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+//			tongTienKho = 0;
+//			for (Item i : Convert.returnListItem(listStorage)) {
+//				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+//			}
+//			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+//			warehouse = 3;
+//		} else if (e.getItem().equals("Phụ kiện")) {
+//			listStorage = ItemDAO.getItem("From Item where type = 'Phụ kiện'");
+//			tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(listStorage)));
+//			tongTienKho = 0;
+//			for (Item i : Convert.returnListItem(listStorage)) {
+//				tongTienKho += Integer.parseInt(i.getPrice()) * i.getQuantity();
+//			}
+//			txtTongTienKho.setText(Convert.numberToString(String.valueOf(tongTienKho)));
+//			warehouse = 4;
+//		}
 	}
 
 	private void searchItemStorageEvent(KeyEvent e) {
@@ -938,6 +1108,7 @@ public class Main {
 	private void searchItemSell(KeyEvent e) {
 		String price = "";
 		int quantity = 0;
+		model = new ComboBoxModel();
 		String name = comboBoxTimSP.getEditor().getItem().toString();
 		if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
 				|| e.getKeyCode() == 8) {
@@ -946,6 +1117,7 @@ public class Main {
 			comboBoxTimSP.getEditor().setItem(name);
 			((JTextComponent) comboBoxTimSP.getEditor().getEditorComponent()).select(name.length(), name.length());
 		}
+
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			countQuantity = comboBoxSoLuong.getItemCount();
 			for (int i = 0; i < countQuantity; i++) {
@@ -970,6 +1142,21 @@ public class Main {
 				}
 			}
 
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void searchImportItem(KeyEvent e) {
+		model = new ComboBoxModel();
+		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
+		System.out.println(name);
+		if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
+				|| e.getKeyCode() == 8) {
+			comboBoxSanPhamNhap.setModel(model.getList(name));
+			comboBoxSanPhamNhap.showPopup();
+			comboBoxSanPhamNhap.getEditor().setItem(name);
+			((JTextComponent) comboBoxSanPhamNhap.getEditor().getEditorComponent()).select(name.length(),
+					name.length());
 		}
 	}
 
@@ -1005,9 +1192,10 @@ public class Main {
 
 	private void saveSaveBill() {
 		Customer c = new Customer();
-		// c.setName(txtKhachHang.getText());
+		c.setName(comboBoxKhachHang.getSelectedItem().toString());
 		c.setPhone(txtDienThoai.getText());
 		c.setAddress(txtDiaChi.getText());
+		c.setProvider(false);
 		controller = new MainController();
 		for (Item i : listItem) {
 			i.setPrice(Convert.stringToNumber(i.getPrice()));
@@ -1016,7 +1204,9 @@ public class Main {
 		JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
 		listItem.removeAll(listItem);
 		tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listItem)));
-		// CustomerDAO.insert(c);
+		tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(ItemDAO.getItemes())));
+		CustomerDAO.insert(c);
+		tableThongTin.setModel(new CustomerTableModel(CustomerDAO.getCustomers()));
 		clearAll();
 	}
 
@@ -1194,4 +1384,37 @@ public class Main {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private void findCustomer(String phone) {
+		List<Customer> list = CustomerDAO.getCustomer("From Customer where phone = '" + phone + "' and provider = 0");
+		if (!list.isEmpty()) {
+			Customer c = list.get(0);
+			if (comboBoxKhachHang.getItemCount() != -1) {
+				comboBoxKhachHang.removeAllItems();
+				comboBoxKhachHang.addItem(c.getName());
+			}
+			txtDiaChi.setText(c.getAddress());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initKho() {
+		if (comboKho.getItemCount() != -1) {
+			comboKho.removeAllItems();
+		}
+		if (comboBoxLoaiNhap.getItemCount() != -1) {
+			comboBoxLoaiNhap.removeAllItems();
+		}
+		comboKho.addItem("Tất cả");
+		for (String s : getTypes()) {
+			comboKho.addItem(s);
+			comboBoxLoaiNhap.addItem(s);
+		}
+	}
+
+	private void addImportItem() {
+		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
+		int quantity = Integer.parseInt(txtSoLuongNhap.getText());
+		// String imei =
+	}
 }
