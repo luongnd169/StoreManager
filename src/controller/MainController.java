@@ -7,15 +7,15 @@ import java.util.StringTokenizer;
 
 import dao.ItemDAO;
 import dao.ItemDetailDAO;
-import dao.SaleBillDAO;
-import dao.SaleBillDetailDAO;
+import dao.BillDAO;
+import dao.BillDetailDAO;
 import gui.Main;
 import lib.Convert;
 import model.Customer;
 import model.Item;
 import model.ItemDetail;
-import model.SaleBill;
-import model.SaleBillDetail;
+import model.Bill;
+import model.BillDetail;
 
 public class MainController {
 
@@ -30,59 +30,78 @@ public class MainController {
 		listItem.add(ItemDAO.getItem("FROM Item where name = '" + name + "'").get(0));
 	}
 
-	public void saveSaleBill(List<Item> listSaleItem, List<ItemDetail> listSaleItemDetail, Customer c) {
-		Integer nextBillNo = 1;
-		if (SaleBillDAO.getSaleBills().size() != 0) {
-			nextBillNo = SaleBillDAO.getSaleBills().get(SaleBillDAO.getSaleBills().size() - 1).getBillNo() + 1;
-		}
+	public void saveBill(List<Item> listItem, List<ItemDetail> listItemDetail, Customer c, String type) {
+		String nextBill = BillDAO.getNextBill(type);
 		List<Item> list = ItemDAO.getItemes();
 		List<Item> temp = new ArrayList<>();
-		for (Item i : listSaleItem) {
+		for (Item i : listItem) {
 			temp.add(i);
 		}
-		SaleBill bill = new SaleBill();
-		bill.setBillNo(nextBillNo);
+		Bill bill = new Bill();
+		bill.setBillNo(nextBill);
 		int totalPrice = 0;
-		for (Item i : listSaleItem) {
+		for (Item i : listItem) {
 			totalPrice += Integer.parseInt(i.getPrice()) * i.getQuantity();
 		}
 		bill.setDate(new Date());
 		bill.setTotalPrice(totalPrice + "");
 		bill.setCustomerPhone(c.getPhone());
-		SaleBillDAO.insert(bill);
-		SaleBillDetail detail = new SaleBillDetail();
-		detail.setBillNo(nextBillNo);
+		BillDAO.insert(bill);
+		BillDetail detail = new BillDetail();
+		detail.setBillNo(nextBill);
 		detail.setDate(bill.getDate());
-		for (Item i : listSaleItem) {
+		for (Item i : listItem) {
 			detail.setName(i.getName());
 			detail.setPrice(i.getPrice());
 			detail.setQuantity(i.getQuantity());
-			SaleBillDetailDAO.insert(detail);
+			BillDetailDAO.insert(detail);
 		}
-		for (int i = 0; i < list.size(); i++) {
-			for (int j = 0; j < listSaleItem.size(); j++) {
-				if (list.get(i).getItemId().equals(listSaleItem.get(j).getItemId())) {
-					list.get(i).setQuantity(list.get(i).getQuantity() - listSaleItem.get(j).getQuantity());
+		// for (int i = 0; i < list.size(); i++) {
+		// for (int j = 0; j < listItem.size(); j++) {
+		// if (list.get(i).getItemId().equals(listItem.get(j).getItemId())) {
+		// list.get(i).setQuantity(list.get(i).getQuantity() -
+		// listItem.get(j).getQuantity());
+		//
+		// }
+		// }
+		// }
+		for (Item i1 : list) {
+			for (Item i2 : listItem) {
+				if (i1.getItemId().equals(i2.getItemId())) {
+					if (type.equals("X")) {
+						i1.setQuantity(i1.getQuantity() - i2.getQuantity());
+					} else {
+						i1.setQuantity(i1.getQuantity() + i2.getQuantity());
+					}
+				}
+			}
+		}
+		//
 
+		// for (int i = 0; i < list.size(); i++) {
+		// for (int j = 0; j < temp.size(); j++) {
+		// if (list.get(i).getItemId().equals(temp.get(j).getItemId())) {
+		// temp.get(j).setQuantity(list.get(i).getQuantity());
+		// temp.get(j).setPrice(list.get(i).getPrice());
+		// }
+		// }
+		// }
+
+		for (Item i1 : list) {
+			for (Item i2 : temp) {
+				if (i1.getItemId().equals(i2.getItemId())) {
+					i2.setQuantity(i1.getQuantity());
 				}
 			}
 		}
-		for (int i = 0; i < list.size(); i++) {
-			for (int j = 0; j < temp.size(); j++) {
-				if (list.get(i).getItemId().equals(temp.get(j).getItemId())) {
-					temp.get(j).setQuantity(list.get(i).getQuantity());
-					temp.get(j).setPrice(list.get(i).getPrice());
-				}
-			}
-		}
-		for (ItemDetail id : listSaleItemDetail) {
+		//
+		for (ItemDetail id : listItemDetail) {
 			id.setCustomer(c.getCustomerId());
 			id.setExportDate(Convert.formatDateSQL(new Date()));
 			id.setStatus(false);
 			ItemDetailDAO.update(id);
 		}
 		// sửa giá bình quân
-
 		for (Item i : temp) {
 			int updatePrice = 0;
 			List<ItemDetail> listDetail = ItemDetailDAO

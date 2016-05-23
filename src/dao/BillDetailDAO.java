@@ -4,30 +4,30 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import model.SaleBill;
+import model.BillDetail;
 
-public class SaleBillDAO {
+public class BillDetailDAO {
 	private static HibernateUtils utils = new HibernateUtils();
 
-	public static SaleBill getSaleBill(int id) {
+	public static BillDetail getSaleBillDetail(int id) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
-			SaleBill saleBill = (SaleBill) session.get(SaleBill.class, id);
+			BillDetail saleBillDetail = (BillDetail) session.get(BillDetail.class, id);
 			session.beginTransaction().commit();
-			return saleBill;
+			return saleBillDetail;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public static List<SaleBill> getSaleBills() {
+	public static List<BillDetail> getSaleBillDetails() {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<SaleBill> list = session.createQuery("FROM SaleBill").list();
+			List<BillDetail> list = session.createQuery("FROM SaleBillDetail").list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -36,13 +36,13 @@ public class SaleBillDAO {
 		}
 	}
 
-	public static List<SaleBill> getSaleBill(String query) {
+	public static List<BillDetail> getBillDetail(String query) {
 		System.out.println(query);
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 			@SuppressWarnings("unchecked")
-			List<SaleBill> list = session.createQuery(query).list();
+			List<BillDetail> list = session.createQuery(query).list();
 			session.beginTransaction().commit();
 			return list;
 		} catch (Exception e) {
@@ -51,32 +51,32 @@ public class SaleBillDAO {
 		}
 	}
 
-	public static void insert(SaleBill SaleBill) {
-		process(SaleBill, "insert");
+	public static void insert(BillDetail SaleBillDetail) {
+		process(SaleBillDetail, "insert");
 	}
 
-	public static void update(SaleBill SaleBill) {
-		process(SaleBill, "update");
+	public static void update(BillDetail SaleBillDetail) {
+		process(SaleBillDetail, "update");
 	}
 
-	public static void delete(SaleBill SaleBill) {
-		process(SaleBill, "delete");
+	public static void delete(BillDetail SaleBillDetail) {
+		process(SaleBillDetail, "delete");
 	}
 
-	private static void process(SaleBill SaleBill, String mode) {
+	private static void process(BillDetail SaleBillDetail, String mode) {
 		try {
 			Session session = utils.getSession();
 			session.beginTransaction();
 
 			switch (mode) {
 			case "insert":
-				session.save(SaleBill);
+				session.save(SaleBillDetail);
 				break;
 			case "update":
-				session.update(SaleBill);
+				session.update(SaleBillDetail);
 				break;
 			case "delete":
-				session.delete(SaleBill);
+				session.delete(SaleBillDetail);
 				break;
 			}
 

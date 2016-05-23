@@ -119,6 +119,7 @@ public class Main {
 	private String totalImportPrice;
 	private List<Item> listImportItem = new ArrayList<>();
 	private List<ItemDetail> listImportItemDetail = new ArrayList<>();
+	private JTable tableNhap;
 
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBoxTimSP() {
@@ -598,7 +599,11 @@ public class Main {
 
 		JScrollPane scrollPaneNhap = new JScrollPane((Component) null);
 		scrollPaneNhap.setBounds(10, 157, 750, 262);
+
 		panelNhap.add(scrollPaneNhap);
+
+		tableNhap = new JTable();
+		scrollPaneNhap.setViewportView(tableNhap);
 
 		btnThemNhap = new JButton("Thêm");
 		btnThemNhap.setBounds(332, 12, 72, 23);
@@ -900,15 +905,6 @@ public class Main {
 
 	}
 
-	public void clearAll() {
-		comboBoxTimSP.removeAllItems();
-		comboBoxSoLuong.removeAllItems();
-		txtGiaNhap.setText("");
-		txtGiaXuat.setText("");
-		txtLoiNhuan.setText("");
-		txtTongTien.setText("");
-	}
-
 	public void initData() {
 		listStorage = new ArrayList<Item>();
 		listStorage = ItemDAO.getItemes();
@@ -958,8 +954,8 @@ public class Main {
 				} else if (e.getActionCommand().equals("Sửa")) {
 					Item selectedItem = listStorage.get(tableTonKho.getSelectedRow());
 					selectedItem = ItemDAO.getItem(selectedItem.getItemId());
-					List<ItemDetail> listDetail = ItemDetailDAO
-							.getItemDetail("From ItemDetail where itemId = " + selectedItem.getItemId() + " and status = 1");
+					List<ItemDetail> listDetail = ItemDetailDAO.getItemDetail(
+							"From ItemDetail where itemId = " + selectedItem.getItemId() + " and status = 1");
 					editItem = new EditItem(listDetail);
 					editItem.getTxtMaSP().transferFocus();
 					editItem.getTxtMaSP().setEditable(false);
@@ -1095,6 +1091,11 @@ public class Main {
 		}
 	}
 
+	private void countProfits() {
+		txtLoiNhuan.setText(Convert.numberToString(String.valueOf(Integer.parseInt(txtGiaXuat.getText())
+				- Integer.parseInt(Convert.stringToNumber(txtGiaNhap.getText())))));
+	}
+
 	@SuppressWarnings("unchecked")
 	private void searchItemSell(KeyEvent e) {
 		String price = "";
@@ -1137,33 +1138,12 @@ public class Main {
 		}
 	}
 
-	private void generateImportPrice() {
-		String imei = comboBoxImei.getSelectedItem().toString();
-		System.out.println("imei = " + imei);
-		String importPrice = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'").get(0)
-				.getImportPrice();
-		txtGiaNhap.setText(Convert.numberToString(importPrice));
-	}
-
-	@SuppressWarnings("unchecked")
-	private void searchImportItem(KeyEvent e) {
-		model = new ComboBoxModel();
-		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
-		System.out.println(name);
-		if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
-				|| e.getKeyCode() == 8) {
-			comboBoxSanPhamNhap.setModel(model.getList(name));
-			comboBoxSanPhamNhap.showPopup();
-			comboBoxSanPhamNhap.getEditor().setItem(name);
-			((JTextComponent) comboBoxSanPhamNhap.getEditor().getEditorComponent()).select(name.length(),
-					name.length());
-		}
-	}
-
 	private void addItemSell() {
 		Item i = ItemDAO.getItem("FROM Item where name = '" + comboBoxTimSP.getEditor().getItem().toString() + "'")
 				.get(0);
-		ItemDetail id = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + comboBoxImei.getSelectedItem().toString() + "'").get(0);
+		ItemDetail id = ItemDetailDAO
+				.getItemDetail("From ItemDetail where imei = '" + comboBoxImei.getSelectedItem().toString() + "'")
+				.get(0);
 		listSaleItemDetail.add(id);
 		i.setQuantity(Integer.parseInt(comboBoxSoLuong.getSelectedItem().toString()));
 		if (!txtGiaXuat.getText().trim().equals("")) {
@@ -1189,7 +1169,7 @@ public class Main {
 			txtTongTien.setText(Convert.numberToString(String.valueOf(total)));
 
 		} else {
-			JOptionPane.showMessageDialog(null, "Chưa nhập giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Chưa điền giá xuất", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1206,19 +1186,116 @@ public class Main {
 		for (Item i : listSaleItem) {
 			i.setPrice(Convert.stringToNumber(i.getPrice()));
 		}
-		controller.saveSaleBill(listSaleItem, listSaleItemDetail, c);
+		controller.saveBill(listSaleItem, listSaleItemDetail, c, "X");
 		JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
 		listSaleItem.removeAll(listSaleItem);
 		listSaleItemDetail.removeAll(listSaleItemDetail);
 		tableXuat.setModel(new ItemTableModel(Convert.convertListItem(listSaleItem)));
 		tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(ItemDAO.getItemes())));
 		tableThongTin.setModel(new CustomerTableModel(CustomerDAO.getCustomers()));
-		clearAll();
+		clearSale();
 	}
 
-	private void countProfits() {
-		txtLoiNhuan.setText(Convert.numberToString(String.valueOf(Integer.parseInt(txtGiaXuat.getText())
-				- Integer.parseInt(Convert.stringToNumber(txtGiaNhap.getText())))));
+	public void clearSale() {
+		comboBoxTimSP.removeAllItems();
+		comboBoxSoLuong.removeAllItems();
+		comboBoxImei.removeAllItems();
+		txtGiaNhap.setText("");
+		txtGiaXuat.setText("");
+		txtLoiNhuan.setText("");
+		txtTongTien.setText("");
+	}
+
+	private void generateImportPrice() {
+		String imei = comboBoxImei.getSelectedItem().toString();
+		System.out.println("imei = " + imei);
+		String importPrice = ItemDetailDAO.getItemDetail("From ItemDetail where imei = '" + imei + "'").get(0)
+				.getImportPrice();
+		txtGiaNhap.setText(Convert.numberToString(importPrice));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void searchImportItem(KeyEvent e) {
+		model = new ComboBoxModel();
+		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
+		System.out.println(name);
+		if (e.getKeyCode() >= 65 && e.getKeyCode() <= 90 || e.getKeyCode() >= 96 && e.getKeyCode() <= 105
+				|| e.getKeyCode() == 8) {
+			comboBoxSanPhamNhap.setModel(model.getList(name));
+			comboBoxSanPhamNhap.showPopup();
+			comboBoxSanPhamNhap.getEditor().setItem(name);
+			((JTextComponent) comboBoxSanPhamNhap.getEditor().getEditorComponent()).select(name.length(),
+					name.length());
+		}
+	}
+
+	private void addImportItem() {
+		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
+		int quantity = Integer.parseInt(txtSoLuongNhap.getText());
+		String type = comboBoxLoaiNhap.getSelectedItem().toString();
+		String imei = "";
+		if (type.equals("Điện thoại") || type.equals("Máy tính bảng")) {
+			imei = txtImeiNhap.getText();
+		}
+		if (!txtGiaNhapNhap.getText().equals("")) {
+			String price = txtGiaNhapNhap.getText();
+			String providerName = comboBoxNCC.getSelectedItem().toString();
+
+			Item item = new Item();
+			item.setItemId(ItemDAO.getNextId());
+			item.setName(name);
+			item.setType(type);
+			item.setQuantity(quantity);
+			item.setPrice(Convert.numberToString(price));
+			listImportItem.add(item);
+			tableNhap.setModel(new ItemTableModel(listImportItem));
+
+			ItemDetail detail = new ItemDetail();
+			detail.setItemId(item.getItemId());
+			detail.setImportDate(Convert.formatDateSQL(new Date()));
+			detail.setImportPrice(price);
+			detail.setStatus(true);
+			detail.setImei(imei);
+			detail.setProvider(CustomerDAO.getId(providerName));
+			listImportItemDetail.add(detail);
+			int total = 0;
+			for (Item i : listImportItem) {
+				total += Integer.parseInt(Convert.stringToNumber(i.getPrice())) * i.getQuantity();
+			}
+			txtTongTienNhap.setText(Convert.numberToString(String.valueOf(total)));
+		} else {
+			JOptionPane.showMessageDialog(null, "Chưa điền giá nhập", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void saveImportBill() {
+		Customer c = new Customer();
+		c.setName(comboBoxNCC.getSelectedItem().toString());
+		c.setPhone(txtSDTNhap.getText());
+		c.setAddress(txtDiaChiNhap.getText());
+		c.setProvider(true);
+
+		controller = new MainController();
+		for (Item i : listImportItem) {
+			i.setPrice(Convert.stringToNumber(i.getPrice()));
+		}
+		controller.saveBill(listImportItem, listImportItemDetail, c, "N");
+		JOptionPane.showMessageDialog(null, "Lưu hóa đơn thành công");
+		listImportItem.removeAll(listImportItem);
+		listImportItemDetail.removeAll(listImportItemDetail);
+		tableNhap.setModel(new ItemTableModel(Convert.convertListItem(listSaleItem)));
+		tableTonKho.setModel(new ItemTableModel(Convert.convertListItem(ItemDAO.getItemes())));
+		clearImport();
+
+	}
+
+	private void clearImport() {
+		comboBoxSanPhamNhap.removeAllItems();
+		txtSoLuongNhap.setText("");
+		txtImeiNhap.setText("");
+		txtGiaNhapNhap.setText("");
+		txtTongTienNhap.setText("");
+
 	}
 
 	private void showCustomer() {
@@ -1256,7 +1333,7 @@ public class Main {
 	}
 
 	private void cancelSell() {
-		clearAll();
+		clearSale();
 		listSaleItem = new ArrayList<>();
 		listSaleItemDetail = new ArrayList<>();
 		tableXuat.setModel(new ItemTableModel(listSaleItem));
@@ -1350,18 +1427,6 @@ public class Main {
 		this.listProvider = listProvider;
 	}
 
-	// private void tranfer() {
-	// txtMuc.addKeyListener(new KeyAdapter() {
-	// @Override
-	// public void keyReleased(KeyEvent e) {
-	// if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-	// txtMuc.transferFocus();
-	// }
-	// }
-	//
-	// });
-	// }
-
 	private void confirmSaveFee(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			int rep = JOptionPane.showConfirmDialog(null, "Lưu phiếu?", null, JOptionPane.YES_NO_OPTION);
@@ -1413,27 +1478,5 @@ public class Main {
 			comboKho.addItem(s);
 			comboBoxLoaiNhap.addItem(s);
 		}
-	}
-
-	private void addImportItem() {
-		String name = comboBoxSanPhamNhap.getEditor().getItem().toString();
-		int quantity = Integer.parseInt(txtSoLuongNhap.getText());
-		String type = comboBoxLoaiNhap.getSelectedItem().toString();
-		String imei = "";
-		if (type.equals("Điện thoại") || type.equals("Máy tính bảng")) {
-			imei = txtImeiNhap.getText();
-		}
-		String price = txtGiaNhapNhap.getText();
-		// String privider = comboBoxNCC.getSelectedItem().toString();
-		// String phone = txtSDTNhap.getText();
-		// String address = txtDiaChiNhap.getText();
-
-		Item item = new Item();
-		item.setItemId(ItemDAO.getNextId());
-		item.setName(name);
-		item.setType(type);
-		item.setQuantity(quantity);
-		item.setPrice(price);
-
 	}
 }

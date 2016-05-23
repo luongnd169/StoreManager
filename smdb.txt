@@ -18,8 +18,8 @@ CREATE TABLE itemdetail (
 	customer int
 );
 
-create table salebill(billId int primary key auto_increment, billNo int not NULL, totalPrice varchar(20), customerPhone varchar(11), date DATE);
-create table salebilldetail(bdId int primary key auto_increment, billNo int not NULL, name nvarchar(50), price varchar(20), quantity int, date DATE);
+create table bill(billId int primary key auto_increment, billNo varchar(10) not NULL, totalPrice varchar(20), customerPhone varchar(11), date DATE);
+create table billdetail(bdId int primary key auto_increment, billNo varchar(10) not NULL, name nvarchar(50), price varchar(20), quantity int, date DATE);
 create table fee(feeId int primary key auto_increment, name nvarchar(100), value varchar(20), type boolean, date date);
 create table customer(customerId int primary key auto_increment, name nvarchar(50), phone varchar(12), address nvarchar(100), provider boolean);
 

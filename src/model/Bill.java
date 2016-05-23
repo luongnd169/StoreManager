@@ -9,14 +9,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class SaleBill {
+public class Bill {
 	private Integer billId;
-	private Integer billNo;
+	private String billNo;
 	private String totalPrice;
 	private Date date;
 	private String customerPhone;
 
-	public SaleBill() {
+	public Bill() {
 
 	}
 
@@ -30,11 +30,11 @@ public class SaleBill {
 		this.billId = billId;
 	}
 
-	public Integer getBillNo() {
+	public String getBillNo() {
 		return billNo;
 	}
 
-	public void setBillNo(Integer billNo) {
+	public void setBillNo(String billNo) {
 		this.billNo = billNo;
 	}
 

@@ -37,7 +37,7 @@ public class Convert {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(numberToString("9500000"));
+		System.out.println(numberToString(""));
 	}
 
 	public static List<Item> convertListItem(List<Item> list) {
@@ -45,7 +45,7 @@ public class Convert {
 		for (Item i : list) {
 			temp.add(i);
 		}
-		for(Item i : temp){
+		for (Item i : temp) {
 			i.setPrice(numberToString(i.getPrice()));
 		}
 		return temp;
@@ -80,7 +80,7 @@ public class Convert {
 		}
 		return temp;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static String getDate(String date) {
 		StringTokenizer st = new StringTokenizer(date, " ,-");

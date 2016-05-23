@@ -52,6 +52,10 @@ public class CustomerDAO {
 		}
 	}
 
+	public static Integer getId(String providerName) {
+		return getCustomer("From Customer where name = '" + providerName + "' and provider = 1").get(0).getCustomerId();
+	}
+
 	public static void insert(Customer customer) {
 		process(customer, "insert");
 	}
