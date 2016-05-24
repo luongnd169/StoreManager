@@ -52,8 +52,30 @@ public class CustomerDAO {
 		}
 	}
 
-	public static Integer getId(String providerName) {
-		return getCustomer("From Customer where name = '" + providerName + "' and provider = 1").get(0).getCustomerId();
+	public static Integer getId(String name, String type) {
+		String query = "";
+		switch (type) {
+		case "customer":
+			query = "From Customer where name = '" + name + "' and provider = 0";
+			break;
+
+		case "provider":
+			query = "From Customer where name = '" + name + "' and provider = 1";
+			break;
+		}
+		List<Customer> list = getCustomer(query);
+		if (list.isEmpty()) {
+			return null;
+		}
+		return list.get(0).getCustomerId();
+	}
+
+	public static Customer getCustomerByPhone(String phone) {
+		List<Customer> list = getCustomer("From Customer where phone = '" + phone + "'");
+		if (list.isEmpty()) {
+			return null;
+		}
+		return list.get(0);
 	}
 
 	public static void insert(Customer customer) {

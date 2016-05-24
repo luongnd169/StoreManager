@@ -60,4 +60,12 @@ public class Item {
 		this.price = price;
 	}
 
+	@Override
+	public String toString() {
+		return "Item [itemId=" + itemId + ", name=" + name + ", type=" + type + ", price=" + price + ", quantity="
+				+ quantity + "]";
+	}
+	
+	
+
 }

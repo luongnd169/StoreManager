@@ -93,4 +93,13 @@ public class ItemDetail {
 		this.customer = customer;
 	}
 
+	@Override
+	public String toString() {
+		return "ItemDetail [id=" + id + ", itemId=" + itemId + ", importPrice=" + importPrice + ", imei=" + imei
+				+ ", provider=" + provider + ", importDate=" + importDate + ", status=" + status + ", exportDate="
+				+ exportDate + ", customer=" + customer + "]";
+	}
+	
+	
+
 }

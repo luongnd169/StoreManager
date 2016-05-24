@@ -606,10 +606,20 @@ public class Main {
 		scrollPaneNhap.setViewportView(tableNhap);
 
 		btnThemNhap = new JButton("Thêm");
+		btnThemNhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				addImportItem();
+			}
+		});
 		btnThemNhap.setBounds(332, 12, 72, 23);
 		panelNhap.add(btnThemNhap);
 
 		btnLuuNhap = new JButton("Lưu");
+		btnLuuNhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveImportBill();
+			}
+		});
 		btnLuuNhap.setBounds(602, 470, 89, 23);
 		panelNhap.add(btnLuuNhap);
 
@@ -672,6 +682,24 @@ public class Main {
 		comboBoxNCC = new JComboBox();
 		comboBoxNCC.setBounds(602, 13, 90, 20);
 		panelNhap.add(comboBoxNCC);
+		List<Customer> listProvider = CustomerDAO.getCustomer("From Customer where provider = 1");
+		if (!listProvider.isEmpty()) {
+			for (Customer c : listProvider) {
+				comboBoxNCC.addItem(c.getName());
+			}
+			txtSDTNhap.setText(listCustomer.get(0).getPhone());
+			txtDiaChiNhap.setText(listCustomer.get(0).getAddress());
+		}
+		comboBoxNCC.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (comboBoxNCC.getSelectedIndex() != -1) {
+					showProvider();
+				}
+
+			}
+		});
 
 		checkBoxNhap = new JCheckBox("Mới");
 		checkBoxNhap.setBounds(710, 9, 50, 23);
@@ -684,6 +712,11 @@ public class Main {
 		panelNhap.add(lblImeiNhap);
 
 		btnHuyNhap = new JButton("Hủy");
+		btnHuyNhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelImport();
+			}
+		});
 		btnHuyNhap.setBounds(101, 470, 89, 23);
 		panelNhap.add(btnHuyNhap);
 
@@ -1181,6 +1214,8 @@ public class Main {
 		c.setProvider(false);
 		if (chckbxM.isSelected()) {
 			CustomerDAO.insert(c);
+		} else {
+			c.setCustomerId(CustomerDAO.getId(c.getName(), "customer"));
 		}
 		controller = new MainController();
 		for (Item i : listSaleItem) {
@@ -1239,10 +1274,10 @@ public class Main {
 		}
 		if (!txtGiaNhapNhap.getText().equals("")) {
 			String price = txtGiaNhapNhap.getText();
-			String providerName = comboBoxNCC.getSelectedItem().toString();
+			// String providerName = comboBoxNCC.getSelectedItem().toString();
 
 			Item item = new Item();
-			item.setItemId(ItemDAO.getNextId());
+			item.setItemId(ItemDAO.getId(name));
 			item.setName(name);
 			item.setType(type);
 			item.setQuantity(quantity);
@@ -1256,7 +1291,7 @@ public class Main {
 			detail.setImportPrice(price);
 			detail.setStatus(true);
 			detail.setImei(imei);
-			detail.setProvider(CustomerDAO.getId(providerName));
+			// detail.setProvider(CustomerDAO.getId(providerName));
 			listImportItemDetail.add(detail);
 			int total = 0;
 			for (Item i : listImportItem) {
@@ -1274,7 +1309,7 @@ public class Main {
 		c.setPhone(txtSDTNhap.getText());
 		c.setAddress(txtDiaChiNhap.getText());
 		c.setProvider(true);
-
+		c.setCustomerId(CustomerDAO.getId(comboBoxNCC.getSelectedItem().toString(), "provider"));
 		controller = new MainController();
 		for (Item i : listImportItem) {
 			i.setPrice(Convert.stringToNumber(i.getPrice()));
@@ -1301,13 +1336,23 @@ public class Main {
 	private void showCustomer() {
 		if (!chckbxM.isSelected()) {
 			Customer customer = CustomerDAO
-					.getCustomer("From Customer where name ='" + comboBoxKhachHang.getSelectedItem().toString() + "'")
+					.getCustomer("From Customer where name = '" + comboBoxKhachHang.getSelectedItem().toString() + "'")
 					.get(0);
 			if (customer != null) {
 				txtDienThoai.setText(customer.getPhone());
 				txtDiaChi.setText(customer.getAddress());
 			}
 		}
+	}
+
+	private void showProvider() {
+		Customer provider = CustomerDAO
+				.getCustomer("From Customer where name = '" + comboBoxNCC.getSelectedItem().toString() + "'").get(0);
+		if(provider != null){
+			txtSDTNhap.setText(provider.getPhone());
+			txtDiaChiNhap.setText(provider.getAddress());
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1337,6 +1382,13 @@ public class Main {
 		listSaleItem = new ArrayList<>();
 		listSaleItemDetail = new ArrayList<>();
 		tableXuat.setModel(new ItemTableModel(listSaleItem));
+	}
+
+	private void cancelImport() {
+		clearImport();
+		listImportItem = new ArrayList<>();
+		listImportItemDetail = new ArrayList<>();
+		tableNhap.setModel(new ItemTableModel(listImportItem));
 	}
 
 	private void saveFee() {

@@ -61,6 +61,14 @@ public class ItemDAO {
 		return id;
 	}
 
+	public static int getId(String name) {
+		List<Item> list = getItem("From Item where name = '" + name + "'");
+		if (list.isEmpty()) {
+			return -1;
+		}
+		return list.get(0).getItemId();
+	}
+
 	public static List<String> getTypes() {
 		String type = "";
 		List<Item> list = getItemes();
@@ -71,7 +79,7 @@ public class ItemDAO {
 		}
 		StringTokenizer st = new StringTokenizer(type, "-");
 		List<String> types = new ArrayList<>();
-		while(st.hasMoreTokens()){
+		while (st.hasMoreTokens()) {
 			types.add(st.nextToken());
 		}
 		return types;

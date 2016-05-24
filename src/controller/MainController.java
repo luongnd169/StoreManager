@@ -43,9 +43,10 @@ public class MainController {
 		for (Item i : listItem) {
 			totalPrice += Integer.parseInt(i.getPrice()) * i.getQuantity();
 		}
-		bill.setDate(new Date());
+		bill.setDate(Convert.formatDateSQL(new Date()));
 		bill.setTotalPrice(totalPrice + "");
 		bill.setCustomerPhone(c.getPhone());
+		System.out.println(bill.toString());
 		BillDAO.insert(bill);
 		BillDetail detail = new BillDetail();
 		detail.setBillNo(nextBill);
@@ -96,10 +97,19 @@ public class MainController {
 		}
 		//
 		for (ItemDetail id : listItemDetail) {
-			id.setCustomer(c.getCustomerId());
-			id.setExportDate(Convert.formatDateSQL(new Date()));
-			id.setStatus(false);
-			ItemDetailDAO.update(id);
+
+			if (type.equals("X")) {
+				id.setCustomer(c.getCustomerId());
+				id.setStatus(false);
+				id.setExportDate(Convert.formatDateSQL(new Date()));
+				ItemDetailDAO.update(id);
+			} else {
+				id.setProvider(c.getCustomerId());
+				id.setStatus(true);
+				id.setImportDate(Convert.formatDateSQL(new Date()));
+				ItemDetailDAO.insert(id);
+			}
+
 		}
 		// sửa giá bình quân
 		for (Item i : temp) {
@@ -110,10 +120,12 @@ public class MainController {
 				for (ItemDetail id : listDetail) {
 					updatePrice += Integer.parseInt(id.getImportPrice());
 				}
+				i.setPrice(String.valueOf(updatePrice / listDetail.size()));
 			}
-			i.setPrice(String.valueOf(updatePrice / listDetail.size()));
+
 		}
 		for (Item i : temp) {
+			System.out.println(i.toString());
 			ItemDAO.update(i);
 		}
 

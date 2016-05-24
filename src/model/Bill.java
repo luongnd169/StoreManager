@@ -13,7 +13,7 @@ public class Bill {
 	private Integer billId;
 	private String billNo;
 	private String totalPrice;
-	private Date date;
+	private String date;
 	private String customerPhone;
 
 	public Bill() {
@@ -46,12 +46,11 @@ public class Bill {
 		this.totalPrice = totalPrice;
 	}
 
-	@Temporal(TemporalType.DATE)
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -62,5 +61,13 @@ public class Bill {
 	public void setCustomerPhone(String customerPhone) {
 		this.customerPhone = customerPhone;
 	}
+
+	@Override
+	public String toString() {
+		return "Bill [billId=" + billId + ", billNo=" + billNo + ", totalPrice=" + totalPrice + ", date=" + date
+				+ ", customerPhone=" + customerPhone + "]";
+	}
+	
+	
 
 }

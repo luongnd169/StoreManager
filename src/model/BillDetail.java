@@ -13,7 +13,7 @@ public class BillDetail {
 	private String billNo;
 	private String price;
 	private Integer quantity;
-	private Date date;
+	private String date;
 
 	public BillDetail() {
 
@@ -53,11 +53,11 @@ public class BillDetail {
 		this.price = price;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
